@@ -1,1546 +1,367 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Чек-лист для подготовки к выступлению</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #4361ee;
-      --primary-light: #4895ef;
-      --secondary: #3f37c9;
-      --accent: #f72585;
-      --light: #f8f9fa;
-      --dark: #212529;
-      --success: #4cc9f0;
-      --warning: #f8961e;
-      --danger: #ef233c;
-      --gray: #adb5bd;
-      --white: #ffffff;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Montserrat', sans-serif;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 15px;
-      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-      min-height: 100vh;
-      color: var(--dark);
-      line-height: 1.6;
-      -webkit-text-size-adjust: 100%;
-    }
-    .container {
-      padding: 20px 0 40px;
-    }
-    h1 {
-      font-family: 'Playfair Display', serif;
-      text-align: center;
-      color: var(--secondary);
-      font-size: 1.8rem;
-      margin-bottom: 25px;
-      position: relative;
-      padding-bottom: 15px;
-      line-height: 1.3;
-    }
-    h1::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--primary-light));
-      border-radius: 2px;
-    }
-    ul {
-      list-style-type: none;
-      padding-left: 0;
-      margin: 0;
-    }
-    .checklist-item {
-      margin: 15px 0;
-      padding: 15px;
-      background: var(--white);
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      border-left: 4px solid var(--primary);
-    }
-    .checklist-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-    .checklist-item input[type="checkbox"] {
-      -webkit-appearance: none;
-      appearance: none;
-      margin-right: 12px;
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--gray);
-      border-radius: 5px;
-      cursor: pointer;
-      vertical-align: middle;
-      position: relative;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
-    .checklist-item input[type="checkbox"]:checked {
-      background-color: var(--success);
-      border-color: var(--success);
-    }
-    .checklist-item input[type="checkbox"]:checked::after {
-      content: '✓';
-      position: absolute;
-      color: white;
-      font-size: 12px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .checklist-header {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      padding: 5px 0;
-    }
-    .checklist-item .main-label {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--dark);
-      flex-grow: 1;
-      margin-right: 40px;
-      word-break: break-word;
-      line-height: 1.4;
-    }
-    .checklist-item .main-label.checked {
-      color: var(--success);
-      text-decoration: line-through;
-    }
-    .checklist-item .edit-main-label {
-      position: absolute;
-      right: 15px;
-      top: 15px;
-      background: var(--primary-light);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 4px 8px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .checklist-item .edit-main-label:hover {
-      background: var(--primary);
-      transform: scale(1.05);
-    }
-    .sub-list {
-      display: none;
-      margin-left: 20px;
-      margin-top: 12px;
-      font-size: 0.95rem;
-      color: var(--dark);
-      background: rgba(248, 249, 250, 0.8);
-      padding: 12px;
-      border-radius: 8px;
-      box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05);
-      opacity: 0;
-      transform: translateY(-5px);
-      transition: all 0.3s ease;
-      border-left: 2px solid var(--primary-light);
-    }
-    .sub-list.active {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .sub-list ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-    .sub-list li {
-      margin: 6px 0;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      padding: 6px 10px;
-      border-radius: 5px;
-      background: rgba(255, 255, 255, 0.9);
-      position: relative;
-    }
-    .sub-list li:hover {
-      background: rgba(67, 97, 238, 0.1);
-    }
-    .sub-list input[type="checkbox"] {
-      -webkit-appearance: none;
-      appearance: none;
-      margin-right: 10px;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--gray);
-      border-radius: 4px;
-      cursor: pointer;
-      vertical-align: middle;
-      position: relative;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
-    .sub-list input[type="checkbox"]:checked {
-      background-color: var(--success);
-      border-color: var(--success);
-    }
-    .sub-list input[type="checkbox"]:checked::after {
-      content: '✓';
-      position: absolute;
-      color: white;
-      font-size: 10px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .sub-list label {
-      font-size: 0.95rem;
-      color: var(--dark);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      flex-grow: 1;
-      word-break: break-word;
-      padding-right: 50px;
-    }
-    .sub-list .checked label {
-      color: var(--success);
-      text-decoration: line-through;
-    }
-    .sub-item-buttons {
-      position: absolute;
-      right: 5px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      gap: 5px;
-    }
-    .edit-sub-button, .delete-button {
-      background: var(--gray);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 3px 6px;
-      cursor: pointer;
-      font-size: 0.75rem;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-    .edit-sub-button:hover {
-      background: var(--primary-light);
-      transform: scale(1.05);
-    }
-    .delete-button:hover {
-      background: var(--danger);
-      transform: scale(1.05);
-    }
-    .add-button {
-      margin-top: 12px;
-      padding: 7px 12px;
-      background: var(--primary-light);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      width: fit-content;
-    }
-    .add-button:hover {
-      background: var(--primary);
-      transform: translateY(-2px);
-    }
-    .add-main-item-button {
-      margin: 25px auto;
-      padding: 10px 20px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      max-width: 300px;
-      box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2);
-    }
-    .add-main-item-button:hover {
-      background: var(--secondary);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
-    }
-    .add-input-container {
-      display: flex;
-      flex-direction: column;
-      margin-top: 12px;
-      gap: 8px;
-    }
-    .add-input {
-      padding: 10px 12px;
-      width: 100%;
-      border: 2px solid var(--gray);
-      border-radius: 6px;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      font-family: 'Montserrat', sans-serif;
-    }
-    .add-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
-    }
-    .ok-button {
-      padding: 8px 16px;
-      background: var(--success);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      width: 100%;
-    }
-    .ok-button:hover {
-      background: #3aa8d8;
-      transform: translateY(-1px);
-    }
-    .edit-input-container {
-      display: flex;
-      flex-direction: column;
-      margin-top: 12px;
-      width: 100%;
-      gap: 8px;
-      flex-direction: row;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .edit-input {
-      padding: 10px 12px;
-      width: 100%;
-      border: 2px solid var(--primary-light);
-      border-radius: 6px;
-      font-size: 1rem;
-      font-family: 'Montserrat', sans-serif;
-      transition: all 0.3s ease;
-      flex-grow: 1;
-    }
-    .edit-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
-    }
-    .delete-main-button {
-      background: var(--danger);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 8px 12px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-      margin-left: 8px;
-    }
-    .delete-main-button:hover {
-      background: #d90429;
-      transform: translateY(-1px);
-    }
-    .download-button {
-      display: block;
-      margin: 30px auto;
-      padding: 10px 20px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(247, 37, 133, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      max-width: 300px;
-    }
-    .download-button:hover {
-      background: #e5177e;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(247, 37, 133, 0.3);
-    }
-    .reset-button {
-      display: block;
-      margin: 15px auto 30px;
-      padding: 10px 20px;
-      background: var(--warning);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(248, 150, 30, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      max-width: 300px;
-    }
-    .reset-button:hover {
-      background: #e07c0c;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(248, 150, 30, 0.3);
-    }
-    #image-template {
-      position: absolute;
-      left: -9999px;
-      top: -9999px;
-      width: 794px;
-      padding: 20px;
-      background: white;
-      font-family: 'Montserrat', sans-serif;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    #image-template h2 {
-      text-align: center;
-      color: var(--secondary);
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      font-family: 'Playfair Display', serif;
-      position: relative;
-      padding-bottom: 10px;
-    }
-    #image-template h2::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--primary-light));
-      border-radius: 2px;
-    }
-    #image-template .list-item {
-      font-size: 1rem;
-      margin-bottom: 12px;
-      color: var(--dark);
-      font-weight: 600;
-      padding-left: 8px;
-      border-left: 2px solid var(--primary);
-    }
-    #image-template .sub-item {
-      font-size: 0.9rem;
-      margin-left: 20px;
-      margin-bottom: 8px;
-      color: var(--dark);
-      position: relative;
-      padding-left: 12px;
-    }
-    #image-template .sub-item::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 8px;
-      width: 6px;
-      height: 6px;
-      background: var(--primary-light);
-      border-radius: 50%;
-    }
-    .progress-container {
-      width: 100%;
-      height: 6px;
-      background: #e9ecef;
-      border-radius: 3px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary-light), var(--accent));
-      border-radius: 3px;
-      transition: width 0.5s ease;
-    }
-    .progress-text {
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--gray);
-      margin-top: 3px;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px);
-    }
-    .modal-content {
-      background-color: #fefefe;
-      margin: 3% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 800px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      position: relative;
-      text-align: center;
-    }
-    .close {
-      color: #aaa;
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .close:hover,
-    .close:focus {
-      color: var(--danger);
-    }
-    #modalImageCanvas {
-      max-width: 100%;
-      height: auto;
-      border-radius: 5px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      margin-bottom: 15px;
-    }
-    #downloadImageBtn {
-      padding: 10px 20px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(247, 37, 133, 0.2);
-      margin-top: 10px;
-    }
-    #downloadImageBtn:hover {
-      background: #e5177e;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(247, 37, 133, 0.3);
-    }
-    #downloadImageBtn:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-    .loading {
-      display: none;
-      margin: 20px 0;
-    }
-    .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid var(--accent);
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spin 2s linear infinite;
-      margin: 0 auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @media only screen and (max-width: 600px) {
-      body {
-        padding: 0 10px;
-      }
-      .container {
-        padding: 15px 0 30px;
-      }
-      h1 {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-      }
-      .checklist-item {
-        padding: 12px;
-        margin: 12px 0;
-      }
-      .checklist-item .main-label {
-        font-size: 1rem;
-        margin-right: 35px;
-      }
-      .checklist-item .edit-main-label {
-        right: 12px;
-        top: 12px;
-        padding: 3px 6px;
-        font-size: 0.75rem;
-      }
-      .sub-list {
-        margin-left: 15px;
-        padding: 10px;
-      }
-      .sub-list li {
-        padding: 5px 8px;
-      }
-      .sub-list label {
-        font-size: 0.9rem;
-      }
-      .sub-item-buttons {
-        right: 3px;
-      }
-      .edit-sub-button, .delete-button {
-        padding: 2px 5px;
-        font-size: 0.7rem;
-        width: 18px;
-        height: 18px;
-      }
-      .edit-input-container {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .edit-input {
-        margin-bottom: 8px;
-      }
-      .delete-main-button {
-        margin-left: 0;
-        width: 100%;
-      }
-      .add-button, .ok-button, .delete-button {
-        font-size: 0.85rem;
-      }
-      .add-main-item-button, .download-button, .reset-button {
-        font-size: 0.95rem;
-        padding: 9px 18px;
-      }
-      .modal-content {
-        width: 95%;
-        margin: 5% auto;
-        padding: 15px;
-      }
-      .close {
-        top: 10px;
-        right: 15px;
-        font-size: 24px;
-      }
-    }
-    @media only screen and (max-width: 400px) {
-      h1 {
-        font-size: 1.3rem;
-      }
-      .checklist-item {
-        padding: 10px;
-      }
-      .checklist-item .main-label {
-        font-size: 0.95rem;
-      }
-      .sub-list label {
-        font-size: 0.9rem;
-      }
-    }
-    @media screen and (max-width: 900px) and (orientation: landscape) {
-      .container {
-        padding: 15px 0 25px;
-      }
-      h1 {
-        font-size: 1.4rem;
-        margin-bottom: 15px;
-      }
-      .checklist-item {
-        margin: 10px 0;
-        padding: 10px;
-      }
-      .sub-list {
-        margin-left: 15px;
-        padding: 8px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Мотивационные шортсы, которые заряжают каждый день">
+    <title>Мои Шорты • Мотивация</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e94560;
+            --secondary: #8a2be2;
+            --bg: #0f0f1e;
+            --card: rgba(255, 255, 255, 0.04);
+            --text: #f0f0f0;
+            --text-light: #ccc;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            height: 100dvh;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(15,15,30,0.9), transparent);
+            backdrop-filter: blur(12px);
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .social-links {
+            margin-top: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+        .social-links a {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .social-links a:hover { background: rgba(233,69,96,0.3); transform: translateY(-4px); }
+
+        /* Вертикальные шортсы */
+        .shorts-container {
+            height: 100dvh;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            scrollbar-width: none;
+        }
+        .shorts-container::-webkit-scrollbar { display: none; }
+
+        .short-item {
+            height: 100dvh;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            background: #000;
+        }
+        .short-video {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 100px 20px 30px;
+            z-index: 2;
+        }
+        .video-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        .video-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.7s ease;
+        }
+        .tag {
+            display: inline-block;
+            background: rgba(233,69,96,0.25);
+            color: var(--primary);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(233,69,96,0.4);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        .short-item.active .video-title,
+        .short-item.active .video-text,
+        .short-item.active .tag {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Прогресс-бар */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            z-index: 9999;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* Индикаторы снизу */
+        .dots {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.4);
+        }
+
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.6s ease;
+        }
+        .loader.hidden { opacity: 0; pointer-events: none; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.9rem; }
+            .video-title { font-size: 1.6rem; }
+            .video-text { font-size: 1.1rem; }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Чек-лист для подготовки к выступлению</h1>
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar"></div>
+
+<div class="loader" id="loader">
+    <h1>Мои Шорты</h1>
+</div>
+
+<div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+
+<header>
+    <h1>Мои Шорты</h1>
+    <div class="social-links">
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
     </div>
-    <div class="progress-text" id="progressText">0% завершено</div>
-    <ul id="main-checklist">
-      <!-- Пункт 1 -->
-      <li class="checklist-item">
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="item1" onchange="toggleChecked(this)">
-          <label class="main-label">Определение цели<br>и аудитории</label>
-        </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Определите цель выступления (информировать, убедить, вдохновить и т.д.).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Изучите аудиторию: возраст, интересы, уровень знаний по теме.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Сформулируйте ключевой посыл (основная идея, которую хотите донести).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-          </ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
-        </div>
-      </li>
-      <!-- Пункт 2 -->
-      <li class="checklist-item">
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="item2" onchange="toggleChecked(this)">
-          <label class="main-label">Подготовка содержания</label>
-        </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Составьте структуру выступления: введение, основная часть, заключение.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Подготовьте тезисы или полный текст выступления.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Выберите ключевые факты, примеры, истории или данные для поддержки тезисов.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Проверьте, чтобы информация была актуальной и достоверной.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Добавьте элементы вовлечения (вопросы к аудитории, юмор, визуальные образы).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-          </ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
-        </div>
-      </li>
-      <!-- Пункт 3 -->
-      <li class="checklist-item">
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="item3" onchange="toggleChecked(this)">
-          <label class="main-label">Создание визуальных материалов</label>
-        </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Подготовьте слайды или другие визуальные материалы (если требуется).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Убедитесь, что слайды минималистичны, читаемы и содержат только ключевую информацию.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Проверьте техническую совместимость (шрифты, форматы, проектор).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-          </ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
-        </div>
-      </li>
-      <!-- Пункт 4 -->
-      <li class="checklist-item">
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="item4" onchange="toggleChecked(this)">
-          <label class="main-label">Репетиция</label>
-        </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Практикуйте выступление перед зеркалом, друзьями или запишите на видео.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Отрепетируйте тайминг: уложитесь в отведенное время.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Проверьте произношение сложных слов и терминов.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Потренируйтесь в управлении голосом: громкость, интонация, паузы.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Отработайте жесты и мимику для усиления речи.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-          </ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
-        </div>
-      </li>
-      <!-- Пункт 5 -->
-      <li class="checklist-item">
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="item5" onchange="toggleChecked(this)">
-          <label class="main-label">Подготовка к вопросам</label>
-        </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Подумайте о возможных вопросах от аудитории.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Подготовьте краткие и четкие ответы на сложные или спорные темы.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Решите, как будете реагировать на неожиданные вопросы (например, "Я уточню этот момент позже").</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-          </ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
-        </div>
-      </li>
-      <!-- Пункт 6 -->
-      <li class="checklist-item">
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="item6" onchange="toggleChecked(this)">
-          <label class="main-label">Техническая подготовка</label>
-        </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Проверьте оборудование: микрофон, проектор, ноутбук, кликер.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Убедитесь, что у вас есть резервные копии материалов (USB, облако).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Проверьте подключение к интернету (если требуется).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Посетите место выступления заранее, чтобы ознакомиться с пространством.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-          </ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
-        </div>
-      </li>
-      <!-- Пункт 7 -->
-      <li class="checklist-item">
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="item7" onchange="toggleChecked(this)">
-          <label class="main-label">Личная подготовка</label>
-        </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Подготовьте подходящую одежду: чистую, удобную, соответствующую событию.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Выспитесь перед выступлением.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Сделайте разминку для голоса и тела (дыхательные упражнения, легкая растяжка).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Подготовьте воду или чай для поддержания голоса во время выступления.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-          </ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
-        </div>
-      </li>
-      <!-- Пункт 8 -->
-      <li class="checklist-item">
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="item8" onchange="toggleChecked(this)">
-          <label class="main-label">День выступления</label>
-        </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Прибудьте на место заранее (за 30–60 минут).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Проверьте технику и материалы еще раз.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Познакомьтесь с организаторами и уточните тайминг.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Сделайте несколько глубоких вдохов для снятия волнения.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Улыбнитесь и настройтесь на позитивное взаимодействие с аудиторией.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-          </ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
-        </div>
-      </li>
-      <!-- Пункт 9 -->
-      <li class="checklist-item">
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="item9" onchange="toggleChecked(this)">
-          <label class="main-label">После выступления</label>
-        </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Поблагодарите аудиторию и организаторов.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Соберите обратную связь (вопросы, комментарии, анкеты).</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Проанализируйте свое выступление: что удалось, что можно улучшить.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-            <li>
-              <input type="checkbox" onchange="toggleChecked(this)">
-              <label>Сохраните материалы для будущих выступлений.</label>
-              <div class="sub-item-buttons">
-                <button class="edit-sub-button" onclick="editSubItem(this)">✏️</button>
-                <button class="delete-button" onclick="removeSubItem(this)">×</button>
-              </div>
-            </li>
-          </ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
-        </div>
-      </li>
-    </ul>
-    <button class="add-main-item-button" onclick="addNewMainItem()">➕ Добавить новый раздел</button>
-    <button class="download-button" onclick="showChecklistImage()">📷 Показать и скачать чек-лист (JPG)</button>
-    <button class="reset-button" onclick="resetChecklist()">🔄 Сбросить все изменения</button>
-  </div>
+</header>
 
-  <!-- Скрытый шаблон для изображения -->
-  <div id="image-template">
-    <h2>Чек-лист для подготовки к выступлению</h2>
-    <div id="image-content"></div>
-  </div>
+<div class="dots" id="dots"></div>
 
-  <!-- Модальное окно -->
-  <div id="imageModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <canvas id="modalImageCanvas"></canvas>
-      <br>
-      <button id="downloadImageBtn">💾 Скачать изображение</button>
-      <p style="color: #ccc; font-size: 0.9rem; margin-top: 10px;">
-        Если изображение не скачивается → Нажмите на 3 точки в правом верхнем углу → Настройки → Выключите "Использовать встроенный браузер" → Запустите заново
-      </p>
-      <div class="loading" id="modalLoading">
-        <div class="spinner"></div>
-        <p>Подготовка файла к скачиванию...</p>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script>
-    function updateProgress() {
-      const totalItems = document.querySelectorAll('.checklist-item input[type="checkbox"], .sub-list input[type="checkbox"]').length;
-      const checkedItems = document.querySelectorAll('.checklist-item input[type="checkbox"]:checked, .sub-list input[type="checkbox"]:checked').length;
-      const progress = totalItems > 0 ? Math.round((checkedItems / totalItems) * 100) : 0;
-      document.getElementById('progressBar').style.width = `${progress}%`;
-      document.getElementById('progressText').textContent = `${progress}% завершено`;
-      const progressBar = document.getElementById('progressBar');
-      if (progress < 30) {
-        progressBar.style.background = 'linear-gradient(90deg, #ef233c, #f72585)';
-      } else if (progress < 70) {
-        progressBar.style.background = 'linear-gradient(90deg, #f8961e, #f9c74f)';
-      } else {
-        progressBar.style.background = 'linear-gradient(90deg, #4cc9f0, #4895ef)';
-      }
-    }
-
-    function toggleSubList(header) {
-      const subList = header.parentElement.querySelector('.sub-list');
-      subList.classList.toggle('active');
-      saveChecklistState();
-      updateProgress();
-    }
-
-    function toggleChecked(checkbox) {
-      const label = checkbox.nextElementSibling;
-      if (checkbox.checked) {
-        label.classList.add('checked');
-      } else {
-        label.classList.remove('checked');
-      }
-      saveChecklistState();
-      updateProgress();
-    }
-
-    function showAddInput(button) {
-      const subList = button.parentElement;
-      let inputContainer = subList.querySelector('.add-input-container');
-      if (inputContainer) {
-        inputContainer.remove();
-        return;
-      }
-      inputContainer = document.createElement('div');
-      inputContainer.className = 'add-input-container';
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'add-input';
-      input.placeholder = 'Введите новый подпункт';
-      input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && this.value.trim()) {
-          addNewSubItem(this);
-        }
-      });
-      const okButton = document.createElement('button');
-      okButton.className = 'ok-button';
-      okButton.textContent = 'Добавить';
-      okButton.onclick = function() {
-        if (input.value.trim()) {
-          addNewSubItem(input);
-        }
-      };
-      inputContainer.appendChild(input);
-      inputContainer.appendChild(okButton);
-      subList.insertBefore(inputContainer, button);
-      input.focus();
-    }
-
-    function addNewSubItem(input) {
-      const subListUl = input.closest('.sub-list').querySelector('ul');
-      const newItemText = input.value.trim();
-      if (newItemText) {
-        const li = document.createElement('li');
-        li.className = 'custom-item';
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.onchange = function() { toggleChecked(this); };
-        const label = document.createElement('label');
-        label.textContent = newItemText;
-        const buttonsContainer = document.createElement('div');
-        buttonsContainer.className = 'sub-item-buttons';
-        const editButton = document.createElement('button');
-        editButton.className = 'edit-sub-button';
-        editButton.textContent = '✏️';
-        editButton.onclick = function() { editSubItem(this); };
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'delete-button';
-        deleteButton.textContent = '×';
-        deleteButton.onclick = function() { removeSubItem(this); };
-        buttonsContainer.appendChild(editButton);
-        buttonsContainer.appendChild(deleteButton);
-        li.appendChild(checkbox);
-        li.appendChild(label);
-        li.appendChild(buttonsContainer);
-        subListUl.appendChild(li);
-        input.value = '';
-        input.focus();
-        saveChecklistState();
-        updateProgress();
-      }
-    }
-
-    function removeSubItem(button) {
-      const li = button.closest('li');
-      if (confirm('Удалить этот подпункт?')) {
-        li.remove();
-        saveChecklistState();
-        updateProgress();
-      }
-    }
-
-    function editSubItem(button) {
-      const li = button.closest('li');
-      const label = li.querySelector('label');
-      const currentText = label.textContent;
-      const editContainer = document.createElement('div');
-      editContainer.className = 'edit-input-container';
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'edit-input';
-      input.value = currentText;
-      const saveButton = document.createElement('button');
-      saveButton.className = 'ok-button';
-      saveButton.textContent = 'Сохранить';
-      const saveChanges = function() {
-        if (input.value.trim()) {
-          label.textContent = input.value.trim();
-          editContainer.remove();
-          label.style.display = 'block';
-          const buttonsContainer = li.querySelector('.sub-item-buttons');
-          if (buttonsContainer) buttonsContainer.style.display = 'flex';
-          saveChecklistState();
-        }
-      };
-      saveButton.onclick = saveChanges;
-      input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') saveChanges();
-      });
-      editContainer.appendChild(input);
-      editContainer.appendChild(saveButton);
-      label.style.display = 'none';
-      const buttonsContainer = li.querySelector('.sub-item-buttons');
-      if (buttonsContainer) buttonsContainer.style.display = 'none';
-      if (buttonsContainer) {
-        li.insertBefore(editContainer, buttonsContainer);
-      } else {
-        li.appendChild(editContainer);
-      }
-      input.focus();
-      input.select();
-    }
-
-    function addNewMainItem() {
-      const mainList = document.getElementById('main-checklist');
-      const newId = 'item' + (mainList.children.length + 1);
-      const newItem = document.createElement('li');
-      newItem.className = 'checklist-item';
-      newItem.innerHTML = `
-        <div class="checklist-header" onclick="toggleSubList(this)">
-          <input type="checkbox" id="${newId}" onchange="toggleChecked(this)">
-          <label class="main-label">Новый раздел</label>
+<main class="shorts-container" id="shortsContainer">
+    <!-- Шортс 1 -->
+    <section class="short-item active" data-index="0">
+        <video class="short-video" id="video-0" loop muted playsinline preload="auto">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+            <h2 class="video-title">Как начать с нуля</h2>
+            <p class="video-text">Первый шаг — это не про идеальный план. Это про то, чтобы просто начать. Даже если боишься, даже если сомневаешься — сделай это. Всё остальное придёт позже.</p>
+            <span class="tag">Начало</span>
         </div>
-        <button class="edit-main-label" onclick="editMainItem(this)">✏️ Изменить</button>
-        <div class="sub-list">
-          <ul></ul>
-          <button class="add-button" onclick="showAddInput(this)">➕ Добавить пункт</button>
+    </section>
+
+    <!-- Шортс 2 -->
+    <section class="short-item" data-index="1">
+        <video class="short-video" id="video-1" loop muted playsinline preload="auto">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+            <h2 class="video-title">Сила привычки</h2>
+            <p class="video-text">Пять минут каждый день — это больше, чем пять часов раз в месяц. Маленькие действия, повторяющиеся во времени, создают великие перемены.</p>
+            <span class="tag">Привычка</span>
         </div>
-      `;
-      mainList.appendChild(newItem);
-      saveChecklistState();
-      updateProgress();
-      editMainItem(newItem.querySelector('.edit-main-label'));
-    }
+    </section>
 
-    function editMainItem(button) {
-      const item = button.closest('.checklist-item');
-      const label = item.querySelector('.main-label');
-      const currentText = label.textContent;
-      const editContainer = document.createElement('div');
-      editContainer.className = 'edit-input-container';
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'edit-input';
-      input.value = currentText;
-      const saveButton = document.createElement('button');
-      saveButton.className = 'ok-button';
-      saveButton.textContent = 'Сохранить';
-      const deleteButton = document.createElement('button');
-      deleteButton.className = 'delete-main-button';
-      deleteButton.textContent = 'Удалить ❌';
-      const saveChanges = function() {
-        if (input.value.trim()) {
-          label.textContent = input.value.trim();
-          editContainer.remove();
-          label.style.display = 'inline';
-          button.style.display = 'block';
-          saveChecklistState();
-        }
-      };
-      saveButton.onclick = saveChanges;
-      input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') saveChanges();
-      });
-      const deleteItem = function() {
-        if (confirm('Удалить этот раздел и все подпункты?')) {
-          item.remove();
-          saveChecklistState();
-          updateProgress();
-        }
-      };
-      deleteButton.onclick = deleteItem;
-      editContainer.appendChild(input);
-      editContainer.appendChild(saveButton);
-      editContainer.appendChild(deleteButton);
-      label.style.display = 'none';
-      button.style.display = 'none';
-      const subList = item.querySelector('.sub-list');
-      item.insertBefore(editContainer, subList);
-      input.focus();
-      input.select();
-    }
+    <!-- Шортс 3 -->
+    <section class="short-item" data-index="2">
+        <video class="short-video" id="video-2" loop muted playsinline preload="auto">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+            <h2 class="video-title">Вдохновение в деталях</h2>
+            <p class="video-text">Иногда именно мелочи создают настроение. Утренний свет на кухне, звук дождя за окном — в этих моментах и живёт настоящая красота.</p>
+            <span class="tag">Детали</span>
+        </div>
+    </section>
 
-    function saveChecklistState() {
-      const checklistData = {};
-      document.querySelectorAll('.checklist-item').forEach((item, index) => {
-        const itemId = `item${index + 1}`;
-        const subList = item.querySelector('.sub-list');
-        checklistData[itemId] = {
-          checked: item.querySelector('input[type="checkbox"]').checked,
-          mainLabel: item.querySelector('.main-label').textContent,
-          subListOpen: subList.classList.contains('active'),
-          subItems: []
-        };
-        const subListUl = subList.querySelector('ul');
-        subListUl.querySelectorAll('li').forEach(li => {
-          const label = li.querySelector('label').textContent;
-          const checked = li.querySelector('input[type="checkbox"]').checked;
-          const isCustom = li.classList.contains('custom-item');
-          checklistData[itemId].subItems.push({ label, checked, isCustom });
+    <!-- Шортс 4 -->
+    <section class="short-item" data-index="3">
+        <video class="short-video" id="video-3" loop muted playsinline preload="auto">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+            <h2 class="video-title">Признание ошибки</h2>
+            <p class="video-text">Сильный человек — не тот, кто никогда не падает, а тот, кто умеет остановиться, признать, что ошибся, и начать заново.</p>
+            <span class="tag">Рост</span>
+        </div>
+    </section>
+
+    <!-- Шортс 5 -->
+    <section class="short-item" data-index="4">
+        <video class="short-video" id="video-4" loop muted playsinline preload="auto">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+            <h2 class="video-title">Ты не один</h2>
+            <p class="video-text">Каждый, кто идёт по своему пути, когда-то чувствовал, что теряется. Ты не один. Ты не сломан. Ты просто на пути к тому, кто ты есть на самом деле.</p>
+            <span class="tag">Поддержка</span>
+        </div>
+    </section>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById('shortsContainer');
+        const videos = document.querySelectorAll('.short-video');
+        const items = document.querySelectorAll('.short-item');
+        const progress = document.getElementById('progress');
+        const loader = document.getElementById('loader');
+        const dotsContainer = document.getElementById('dots');
+
+        let currentIndex = 0;
+
+        // Создаём точки-индикаторы
+        items.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dotsContainer.appendChild(dot);
         });
-      });
-      localStorage.setItem('checklistState', JSON.stringify(checklistData));
-    }
+        const dots = document.querySelectorAll('.dot');
 
-    function loadChecklistState() {
-      const checklistData = JSON.parse(localStorage.getItem('checklistState') || '{}');
-      document.querySelectorAll('.checklist-item').forEach((item, index) => {
-        const itemId = `item${index + 1}`;
-        const data = checklistData[itemId];
-        if (data) {
-          const mainCheckbox = item.querySelector('input[type="checkbox"]');
-          const mainLabel = item.querySelector('.main-label');
-          const subList = item.querySelector('.sub-list');
-          mainCheckbox.checked = data.checked;
-          mainLabel.textContent = data.mainLabel;
-          if (data.checked) mainLabel.classList.add('checked');
-          if (data.subListOpen) {
-            subList.classList.add('active');
-          }
-          const subListUl = subList.querySelector('ul');
-          if (data.subItems && data.subItems.length > 0) {
-            subListUl.innerHTML = '';
-            data.subItems.forEach(subItem => {
-              const li = document.createElement('li');
-              if (subItem.isCustom) li.className = 'custom-item';
-              const checkbox = document.createElement('input');
-              checkbox.type = 'checkbox';
-              checkbox.checked = subItem.checked;
-              checkbox.onchange = function() { toggleChecked(this); };
-              const label = document.createElement('label');
-              label.textContent = subItem.label;
-              const buttonsContainer = document.createElement('div');
-              buttonsContainer.className = 'sub-item-buttons';
-              const editButton = document.createElement('button');
-              editButton.className = 'edit-sub-button';
-              editButton.textContent = '✏️';
-              editButton.onclick = function() { editSubItem(this); };
-              const deleteButton = document.createElement('button');
-              deleteButton.className = 'delete-button';
-              deleteButton.textContent = '×';
-              deleteButton.onclick = function() { removeSubItem(this); };
-              buttonsContainer.appendChild(editButton);
-              buttonsContainer.appendChild(deleteButton);
-              li.appendChild(checkbox);
-              li.appendChild(label);
-              li.appendChild(buttonsContainer);
-              subListUl.appendChild(li);
-              if (subItem.checked) label.classList.add('checked');
+        // Управление видео
+        const playCurrentVideo = () => {
+            videos.forEach((video, i) => {
+                if (i === currentIndex) {
+                    video.play();
+                } else {
+                    video.pause();
+                    video.currentTime = 0;
+                }
             });
-          }
-        }
-      });
-      updateProgress();
-    }
-
-    function showChecklistImage() {
-      try {
-        const mainItems = document.querySelectorAll('.checklist-item');
-        const imageContent = document.getElementById('image-content');
-        imageContent.innerHTML = '';
-        mainItems.forEach(item => {
-          const mainLabel = item.querySelector('.main-label').textContent.replace(/<br>/g, ' ');
-          const mainItemDiv = document.createElement('div');
-          mainItemDiv.className = 'list-item';
-          mainItemDiv.textContent = mainLabel;
-          imageContent.appendChild(mainItemDiv);
-          const subItems = item.querySelectorAll('.sub-list li');
-          subItems.forEach(subItem => {
-            const subLabel = subItem.querySelector('label').textContent;
-            const subItemDiv = document.createElement('div');
-            subItemDiv.className = 'sub-item';
-            subItemDiv.textContent = subLabel;
-            imageContent.appendChild(subItemDiv);
-          });
-          imageContent.appendChild(document.createElement('br'));
-        });
-        const template = document.getElementById('image-template');
-        template.style.display = 'block';
-        const targetDPI = 96;
-        const scale = window.devicePixelRatio || 1;
-        const templateWidthMM = 210;
-        const expectedWidthPx = (templateWidthMM / 25.4) * targetDPI;
-        const canvasOptions = {
-          scale: scale,
-          backgroundColor: '#ffffff',
-          logging: false,
-          useCORS: true,
-          allowTaint: true,
-          width: expectedWidthPx,
-          windowWidth: expectedWidthPx
         };
+
+        // Обновление активного состояния
+        const setActive = (index) => {
+            items.forEach((item, i) => item.classList.toggle('active', i === index));
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            currentIndex = index;
+            playCurrentVideo();
+        };
+
+        // Прогресс текущего видео
+        const updateProgress = () => {
+            const video = videos[currentIndex];
+            if (video.duration) {
+                const percent = (video.currentTime / video.duration) * 100;
+                progress.style.width = percent + '%';
+            }
+        };
+
+        // Intersection Observer для определения видимого видео
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const index = parseInt(entry.target.dataset.index);
+                    setActive(index);
+                }
+            });
+        }, { threshold: 0.7 });
+
+        items.forEach(item => observer.observe(item));
+
+        // Swipe на мобильных
+        let touchStartY = 0;
+        container.addEventListener('touchstart', e => touchStartY = e.touches[0].clientY);
+        container.addEventListener('touchend', e => {
+            const touchEndY = e.changedTouches[0].clientY;
+            const diff = touchStartY - touchEndY;
+            if (Math.abs(diff) > 80) {
+                if (diff > 0 && currentIndex < items.length - 1) {
+                    items[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+                } else if (diff < 0 && currentIndex > 0) {
+                    items[currentIndex - 1].scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+
+        // Прогресс-бар
+        videos.forEach(video => {
+            video.addEventListener('timeupdate', updateProgress);
+        });
+
+        // Скрываем лоадер
         setTimeout(() => {
-          html2canvas(template, canvasOptions).then(canvas => {
-            template.style.display = 'none';
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImageCanvas');
-            const downloadBtn = document.getElementById('downloadImageBtn');
-            const span = document.getElementsByClassName("close")[0];
-            const ctx = modalImg.getContext('2d');
-            ctx.clearRect(0, 0, modalImg.width, modalImg.height);
-            modalImg.width = canvas.width;
-            modalImg.height = canvas.height;
-            ctx.drawImage(canvas, 0, 0);
-            downloadBtn.disabled = false;
-            downloadBtn.textContent = "💾 Скачать изображение";
-            modal.style.display = "block";
-            span.onclick = function() { modal.style.display = "none"; };
-            window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } };
-            downloadBtn.onclick = function() {
-              downloadBtn.disabled = true;
-              downloadBtn.textContent = "Подготовка...";
-              const loadingIndicator = document.getElementById('modalLoading');
-              loadingIndicator.style.display = 'block';
-              canvas.toBlob(function(blob) {
-                if (!blob) {
-                  alert('Ошибка при создании изображения.');
-                  loadingIndicator.style.display = 'none';
-                  downloadBtn.disabled = false;
-                  downloadBtn.textContent = "💾 Скачать изображение";
-                  return;
-                }
-                try {
-                  const url = window.URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.style.display = 'none';
-                  a.href = url;
-                  a.download = 'чек-лист_выступление_A4.jpg';
-                  document.body.appendChild(a);
-                  a.click();
-                  window.URL.revokeObjectURL(url);
-                  document.body.removeChild(a);
-                  loadingIndicator.style.display = 'none';
-                  downloadBtn.disabled = false;
-                  downloadBtn.textContent = "💾 Скачать изображение";
-                } catch (error) {
-                  alert('Ошибка при скачивании.');
-                  loadingIndicator.style.display = 'none';
-                  downloadBtn.disabled = false;
-                  downloadBtn.textContent = "💾 Скачать изображение";
-                }
-              }, 'image/jpeg', 0.92);
-            };
-          }).catch(error => {
-            template.style.display = 'none';
-            alert('Ошибка при создании изображения.');
-          });
-        }, 100);
-      } catch (error) {
-        const template = document.getElementById('image-template');
-        if (template) template.style.display = 'none';
-        alert('Ошибка при подготовке изображения.');
-      }
-    }
-
-    function resetChecklist() {
-      if (confirm('Сбросить все изменения?')) {
-        localStorage.removeItem('checklistState');
-        location.reload();
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      loadChecklistState();
+            loader.classList.add('hidden');
+            playCurrentVideo();
+        }, 800);
     });
-  </script>
+</script>
 </body>
 </html>
-```
