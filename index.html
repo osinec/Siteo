@@ -461,6 +461,25 @@
             font-size: 0.8rem;
         }
 
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            z-index: 1000;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+        
+        .admin-link:hover {
+            opacity: 1;
+        }
+
         /* Адаптивность */
         @media (max-width: 768px) {
             .carousel {
@@ -609,6 +628,8 @@
         <p>Используйте <span class="key-hint">← →</span> для навигации • <span class="key-hint">ПРОБЕЛ</span> для воспроизведения</p>
     </div>
 
+    <a href="admin.html" class="admin-link">Админ-панель</a>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const carousel = document.getElementById('carousel');
@@ -618,69 +639,78 @@
             const articleTitle = document.getElementById('articleTitle');
             const articleContent = document.getElementById('articleContent');
             
-            const videos = [
-                {
-                    id: 1,
-                    title: "Морской закат",
-                    videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                    article: {
-                        title: "Искусство визуального повествования",
-                        content: `
-                            <div class="article-text">
-                                <p>В современном цифровом мире <span class="highlight-primary">короткие видео</span> стали мощным инструментом для передачи эмоций, идей и историй.</p>
-                                
-                                <div class="important-note">
-                                    <strong>Важно:</strong> Первые <span class="text-warning">3 секунды</span> видео критически важны.
-                                </div>
-                                
-                                <h3 class="article-subtitle">Сила краткости</h3>
-                                <p>Короткие видео обладают уникальной способностью захватывать внимание зрителя с первых же кадров.</p>
-                            </div>
-                        `
-                    }
-                },
-                {
-                    id: 2,
-                    title: "Ночной город",
-                    videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-                    article: {
-                        title: "Городская эстетика в цифровую эпоху",
-                        content: `
-                            <div class="article-text">
-                                <p>Городские пейзажи всегда вдохновляли художников и фотографов. В эпоху цифровых технологий эта тема обрела новое звучание через <span class="highlight-accent">короткие видеоформаты</span>.</p>
-                                
-                                <div class="info-note">
-                                    <strong>Интересный факт:</strong> <span class="text-primary">Ночная съемка</span> требует особого подхода к освещению и настройкам камеры.
-                                </div>
-                                
-                                <h3 class="article-subtitle">Неоновая поэзия</h3>
-                                <p>Ночной город с его <span class="highlight-warning">неоновыми огнями</span> создает уникальную атмосферу, которую так сложно передать словами.</p>
-                            </div>
-                        `
-                    }
-                },
-                {
-                    id: 3,
-                    title: "Горные вершины",
-                    videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-                    article: {
-                        title: "Природа как источник вдохновения",
-                        content: `
-                            <div class="article-text">
-                                <p>Горные пейзажи обладают особой магией — они одновременно умиротворяют и вдохновляют на свершения. <span class="highlight-success">Видеосъемка в горах</span> требует особого подхода и подготовки.</p>
-                                
-                                <div class="success-note">
-                                    <strong>Успех:</strong> Правильно выбранный <span class="text-accent">ракурс съемки</span> может превратить обычный пейзаж в шедевр.
-                                </div>
-                                
-                                <h3 class="article-subtitle">Высота и перспектива</h3>
-                                <p>Съемка на высоте открывает <span class="highlight-primary">уникальные ракурсы</span> и возможности для создания захватывающего контента.</p>
-                            </div>
-                        `
-                    }
+            // АВТОМАТИЧЕСКАЯ ЗАГРУЗКА ДАННЫХ ИЗ АДМИН-ПАНЕЛИ
+            function loadVideosData() {
+                const savedVideos = localStorage.getItem('vibeShortsVideos');
+                if (savedVideos) {
+                    return JSON.parse(savedVideos);
                 }
-            ];
+                // Видео по умолчанию (если админка не использовалась)
+                return [
+                    {
+                        id: 1,
+                        title: "Морской закат",
+                        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        article: {
+                            title: "Искусство визуального повествования",
+                            content: `
+                                <div class="article-text">
+                                    <p>В современном цифровом мире <span class="highlight-primary">короткие видео</span> стали мощным инструментом для передачи эмоций, идей и историй.</p>
+                                    
+                                    <div class="important-note">
+                                        <strong>Важно:</strong> Первые <span class="text-warning">3 секунды</span> видео критически важны.
+                                    </div>
+                                    
+                                    <h3 class="article-subtitle">Сила краткости</h3>
+                                    <p>Короткие видео обладают уникальной способностью захватывать внимание зрителя с первых же кадров.</p>
+                                </div>
+                            `
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: "Ночной город",
+                        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+                        article: {
+                            title: "Городская эстетика в цифровую эпоху",
+                            content: `
+                                <div class="article-text">
+                                    <p>Городские пейзажи всегда вдохновляли художников и фотографов. В эпоху цифровых технологий эта тема обрела новое звучание через <span class="highlight-accent">короткие видеоформаты</span>.</p>
+                                    
+                                    <div class="info-note">
+                                        <strong>Интересный факт:</strong> <span class="text-primary">Ночная съемка</span> требует особого подхода к освещению и настройкам камеры.
+                                    </div>
+                                    
+                                    <h3 class="article-subtitle">Неоновая поэзия</h3>
+                                    <p>Ночной город с его <span class="highlight-warning">неоновыми огнями</span> создает уникальную атмосферу, которую так сложно передать словами.</p>
+                                </div>
+                            `
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: "Горные вершины",
+                        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                        article: {
+                            title: "Природа как источник вдохновения",
+                            content: `
+                                <div class="article-text">
+                                    <p>Горные пейзажи обладают особой магией — они одновременно умиротворяют и вдохновляют на свершения. <span class="highlight-success">Видеосъемка в горах</span> требует особого подхода и подготовки.</p>
+                                    
+                                    <div class="success-note">
+                                        <strong>Успех:</strong> Правильно выбранный <span class="text-accent">ракурс съемки</span> может превратить обычный пейзаж в шедевр.
+                                    </div>
+                                    
+                                    <h3 class="article-subtitle">Высота и перспектива</h3>
+                                    <p>Съемка на высоте открывает <span class="highlight-primary">уникальные ракурсы</span> и возможности для создания захватывающего контента.</p>
+                                </div>
+                            `
+                        }
+                    }
+                ];
+            }
             
+            const videos = loadVideosData();
             let currentIndex = 0;
             let currentlyPlayingVideo = null;
             
