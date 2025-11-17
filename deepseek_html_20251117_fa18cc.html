@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeShorts | Галерея со статьями</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --primary-light: #A78BFA;
+            --accent: #06B6D4;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --dark: #0F0F23;
+            --darker: #070711;
+            --light: #F8FAFC;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        header {
+            text-align: center;
+            padding: 25px 20px 20px;
+            background: transparent;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--light), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .gallery-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            perspective: 1400px;
+            padding: 20px 0;
+            min-height: 600px;
+        }
+        
+        .carousel {
+            position: relative;
+            width: 320px;
+            height: 560px;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .video-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            background: var(--dark);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            top: 0;
+            left: 0;
+        }
+        
+        .video-player-container {
+            width: 100%;
+            height: 85%;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            transition: opacity 0.2s ease;
+        }
+        
+        .play-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .play-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            transition: transform 0.2s ease;
+        }
+        
+        .video-info {
+            padding: 20px;
+            height: 15%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 15, 35, 0.9);
+        }
+        
+        .video-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .prev-btn {
+            left: 15px;
+        }
+        
+        .next-btn {
+            right: 15px;
+        }
+        
+        .nav-btn i {
+            font-size: 1.4rem;
+            color: white;
+        }
+        
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--glass);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+        
+        /* УВЕЛИЧЕННЫЙ РАЗДЕЛ ДЛЯ СТАТЬИ */
+        .article-section {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            padding: 40px;
+            background: rgba(15, 15, 35, 0.7);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            z-index: 5;
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .article-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+        
+        .article-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .article-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+        
+        .article-text p {
+            margin-bottom: 25px;
+        }
+        
+        .article-subtitle {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            margin: 40px 0 20px 0;
+            border-left: 4px solid var(--primary);
+            padding-left: 20px;
+        }
+        
+        .article-list {
+            margin: 25px 0;
+            padding-left: 30px;
+        }
+        
+        .article-list li {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .article-image {
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        .article-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .article-quote {
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 30px;
+            margin: 40px 0;
+            border-radius: 0 15px 15px 0;
+            font-style: italic;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        /* СТИЛИ ДЛЯ ВЫДЕЛЕНИЯ ТЕКСТА */
+        .highlight-primary {
+            background: linear-gradient(120deg, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 100%);
+            color: var(--primary-light);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .highlight-accent {
+            background: linear-gradient(120deg, rgba(6, 182, 212, 0.3) 0%, rgba(6, 182, 212, 0.1) 100%);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .highlight-success {
+            background: linear-gradient(120deg, rgba(16, 185, 129, 0.3) 0%, rgba(16, 185, 129, 0.1) 100%);
+            color: var(--success);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-left: 3px solid var(--success);
+        }
+        
+        .highlight-warning {
+            background: linear-gradient(120deg, rgba(245, 158, 11, 0.3) 0%, rgba(245, 158, 11, 0.1) 100%);
+            color: var(--warning);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-left: 3px solid var(--warning);
+        }
+        
+        .highlight-error {
+            background: linear-gradient(120deg, rgba(239, 68, 68, 0.3) 0%, rgba(239, 68, 68, 0.1) 100%);
+            color: var(--error);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-left: 3px solid var(--error);
+        }
+        
+        .text-primary {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        
+        .text-accent {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .text-success {
+            color: var(--success);
+            font-weight: 600;
+        }
+        
+        .text-warning {
+            color: var(--warning);
+            font-weight: 600;
+        }
+        
+        .text-error {
+            color: var(--error);
+            font-weight: 600;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+        
+        .badge-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .badge-accent {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .badge-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .badge-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .badge-error {
+            background: var(--error);
+            color: white;
+        }
+        
+        .important-note {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning);
+            border-left: 4px solid var(--warning);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+        
+        .success-note {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            border-left: 4px solid var(--success);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+        
+        .info-note {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--accent);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .instructions {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .key-hint {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass);
+            border-radius: 6px;
+            padding: 4px 8px;
+            margin: 0 4px;
+            font-size: 0.8rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .carousel {
+                width: 300px;
+                height: 520px;
+            }
+            
+            .nav-btn {
+                width: 45px;
+                height: 45px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .article-section {
+                padding: 30px 25px;
+                margin: 0 20px 30px;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-text {
+                font-size: 1.1rem;
+            }
+            
+            .article-subtitle {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .carousel {
+                width: 280px;
+                height: 480px;
+            }
+            
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .article-section {
+                padding: 25px 20px;
+                margin: 0 15px 25px;
+            }
+            
+            .article-title {
+                font-size: 1.8rem;
+            }
+            
+            .article-text {
+                font-size: 1rem;
+            }
+            
+            .article-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VibeShorts</h1>
+        <p class="subtitle">Галерея видео с пространством для статей</p>
+    </header>
+    
+    <div class="gallery-container">
+        <button class="nav-btn prev-btn" id="prevBtn">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <div class="carousel" id="carousel"></div>
+        
+        <button class="nav-btn next-btn" id="nextBtn">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <div class="progress-dots" id="progressDots"></div>
+    </div>
+    
+    <!-- УВЕЛИЧЕННЫЙ РАЗДЕЛ ДЛЯ СТАТЬИ -->
+    <section class="article-section">
+        <div class="article-header">
+            <h2 class="article-title" id="articleTitle">Искусство визуального повествования</h2>
+            <div class="article-meta">
+                <span>Автор: Ваше Имя</span>
+                <span>Дата: 15 декабря 2024</span>
+                <span>Время чтения: 8 минут</span>
+            </div>
+        </div>
+        
+        <div class="article-content" id="articleContent">
+            <div class="article-text">
+                <p>В современном цифровом мире <span class="highlight-primary">короткие видео</span> стали мощным инструментом для передачи эмоций, идей и историй. Этот формат сочетает в себе <span class="text-accent">визуальную привлекательность</span>, динамику и лаконичность, что делает его идеальным для современного зрителя.</p>
+                
+                <div class="important-note">
+                    <strong>Важно:</strong> Первые <span class="text-warning">3 секунды</span> видео критически важны для удержания внимания зрителя.
+                </div>
+                
+                <h3 class="article-subtitle">Сила краткости</h3>
+                <p>Короткие видео, продолжительностью <span class="highlight-warning">от 15 до 60 секунд</span>, обладают уникальной способностью захватывать внимание зрителя с первых же кадров. В эпоху, когда время становится самым ценным ресурсом, <span class="text-primary">умение донести сообщение быстро и эффективно</span> становится настоящим искусством.</p>
+                
+                <div class="article-quote">
+                    "<span class="highlight-accent">Видео</span> — это не просто движущиеся картинки. Это возможность создать <span class="text-success">эмоциональную связь</span> со зрителем за считанные секунды."
+                </div>
+                
+                <h3 class="article-subtitle">Ключевые элементы успешного видео</h3>
+                <ul class="article-list">
+                    <li><span class="badge badge-primary">1</span> <strong>Сильный старт</strong> — <span class="highlight-error">первые 3 секунды</span> решают, останется ли зритель смотреть дальше</li>
+                    <li><span class="badge badge-accent">2</span> <strong>Эмоциональный резонанс</strong> — видео должно вызывать чувства: <span class="text-success">радость, удивление, ностальгию</span></li>
+                    <li><span class="badge badge-success">3</span> <strong>Визуальное качество</strong> — четкое изображение, продуманная цветовая палитра</li>
+                    <li><span class="badge badge-warning">4</span> <strong>Звуковое сопровождение</strong> — музыка и звуковые эффекты усиливают восприятие</li>
+                    <li><span class="badge badge-error">5</span> <strong>Четкий посыл</strong> — зритель должен понять основную идею без лишних объяснений</li>
+                </ul>
+
+                <div class="success-note">
+                    <strong>Успех:</strong> Видео, которые сочетают <span class="highlight-success">визуальную привлекательность</span> с <span class="text-accent">эмоциональным воздействием</span>, показывают наилучшие результаты.
+                </div>
+                
+                <h3 class="article-subtitle">Будущее короткого контента</h3>
+                <p>С развитием технологий и изменением потребительских привычек, <span class="highlight-primary">короткие видео продолжают набирать популярность</span>. Платформы социальных сетей постоянно внедряют новые функции для создания и распространения такого контента, что открывает <span class="text-warning">безграничные возможности для творцов</span>.</p>
+                
+                <div class="info-note">
+                    <strong>Совет:</strong> Используйте <span class="highlight-accent">аналитику просмотров</span> для понимания предпочтений вашей аудитории и улучшения контента.
+                </div>
+                
+                <p>Важно помнить, что технологии — это лишь инструмент. Настоящая магия происходит тогда, когда <span class="highlight-success">техническое совершенство</span> встречается с <span class="text-primary">человеческой креативностью и искренностью</span>.</p>
+            </div>
+        </div>
+    </section>
+    
+    <div class="instructions">
+        <p>Используйте <span class="key-hint">← →</span> для навигации • <span class="key-hint">ПРОБЕЛ</span> для воспроизведения</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carousel = document.getElementById('carousel');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progressDots = document.getElementById('progressDots');
+            const articleTitle = document.getElementById('articleTitle');
+            const articleContent = document.getElementById('articleContent');
+            
+            const videos = [
+                {
+                    id: 1,
+                    title: "Морской закат",
+                    videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                    article: {
+                        title: "Искусство визуального повествования",
+                        content: `
+                            <div class="article-text">
+                                <p>В современном цифровом мире <span class="highlight-primary">короткие видео</span> стали мощным инструментом для передачи эмоций, идей и историй.</p>
+                                
+                                <div class="important-note">
+                                    <strong>Важно:</strong> Первые <span class="text-warning">3 секунды</span> видео критически важны.
+                                </div>
+                                
+                                <h3 class="article-subtitle">Сила краткости</h3>
+                                <p>Короткие видео обладают уникальной способностью захватывать внимание зрителя с первых же кадров.</p>
+                            </div>
+                        `
+                    }
+                },
+                {
+                    id: 2,
+                    title: "Ночной город",
+                    videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+                    article: {
+                        title: "Городская эстетика в цифровую эпоху",
+                        content: `
+                            <div class="article-text">
+                                <p>Городские пейзажи всегда вдохновляли художников и фотографов. В эпоху цифровых технологий эта тема обрела новое звучание через <span class="highlight-accent">короткие видеоформаты</span>.</p>
+                                
+                                <div class="info-note">
+                                    <strong>Интересный факт:</strong> <span class="text-primary">Ночная съемка</span> требует особого подхода к освещению и настройкам камеры.
+                                </div>
+                                
+                                <h3 class="article-subtitle">Неоновая поэзия</h3>
+                                <p>Ночной город с его <span class="highlight-warning">неоновыми огнями</span> создает уникальную атмосферу, которую так сложно передать словами.</p>
+                            </div>
+                        `
+                    }
+                },
+                {
+                    id: 3,
+                    title: "Горные вершины",
+                    videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                    article: {
+                        title: "Природа как источник вдохновения",
+                        content: `
+                            <div class="article-text">
+                                <p>Горные пейзажи обладают особой магией — они одновременно умиротворяют и вдохновляют на свершения. <span class="highlight-success">Видеосъемка в горах</span> требует особого подхода и подготовки.</p>
+                                
+                                <div class="success-note">
+                                    <strong>Успех:</strong> Правильно выбранный <span class="text-accent">ракурс съемки</span> может превратить обычный пейзаж в шедевр.
+                                </div>
+                                
+                                <h3 class="article-subtitle">Высота и перспектива</h3>
+                                <p>Съемка на высоте открывает <span class="highlight-primary">уникальные ракурсы</span> и возможности для создания захватывающего контента.</p>
+                            </div>
+                        `
+                    }
+                }
+            ];
+            
+            let currentIndex = 0;
+            let currentlyPlayingVideo = null;
+            
+            function createVideoCards() {
+                const fragment = document.createDocumentFragment();
+                
+                videos.forEach((video, index) => {
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card';
+                    videoCard.dataset.index = index;
+                    
+                    videoCard.innerHTML = `
+                        <div class="video-player-container">
+                            <video class="video-player" loop preload="metadata">
+                                <source src="${video.videoUrl}" type="video/mp4">
+                            </video>
+                            <div class="play-overlay">
+                                <div class="play-icon">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">${video.title}</div>
+                        </div>
+                    `;
+                    
+                    const videoElement = videoCard.querySelector('.video-player');
+                    const playOverlay = videoCard.querySelector('.play-overlay');
+                    
+                    videoCard.addEventListener('click', () => toggleVideoPlayback(videoElement, playOverlay));
+                    videoElement.addEventListener('ended', () => playOverlay.classList.remove('hidden'));
+                    
+                    fragment.appendChild(videoCard);
+                });
+                
+                carousel.appendChild(fragment);
+                createProgressDots();
+                updateCarousel();
+                updateArticle();
+            }
+            
+            function createProgressDots() {
+                progressDots.innerHTML = '';
+                videos.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.className = `dot ${index === currentIndex ? 'active' : ''}`;
+                    dot.addEventListener('click', () => goToVideo(index));
+                    progressDots.appendChild(dot);
+                });
+            }
+            
+            function toggleVideoPlayback(videoElement, playOverlay) {
+                if (currentlyPlayingVideo && currentlyPlayingVideo !== videoElement) {
+                    currentlyPlayingVideo.pause();
+                    currentlyPlayingVideo.currentTime = 0;
+                    currentlyPlayingVideo.parentElement.querySelector('.play-overlay').classList.remove('hidden');
+                }
+                
+                if (videoElement.paused) {
+                    videoElement.play().then(() => {
+                        playOverlay.classList.add('hidden');
+                        currentlyPlayingVideo = videoElement;
+                    });
+                } else {
+                    videoElement.pause();
+                    playOverlay.classList.remove('hidden');
+                    currentlyPlayingVideo = null;
+                }
+            }
+            
+            function updateCarousel() {
+                const cards = carousel.children;
+                const dots = progressDots.children;
+                const totalCards = cards.length;
+                
+                for (let i = 0; i < totalCards; i++) {
+                    const card = cards[i];
+                    const position = (i - currentIndex + totalCards) % totalCards;
+                    
+                    card.style.transform = '';
+                    card.style.opacity = '1';
+                    card.style.zIndex = '1';
+                    card.style.pointerEvents = 'auto';
+                    
+                    if (position === 0) {
+                        card.style.transform = 'translateZ(0)';
+                        card.style.zIndex = '10';
+                    } else if (position === 1) {
+                        card.style.transform = 'translateX(340px) translateZ(-120px) rotateY(-12deg)';
+                        card.style.opacity = '0.8';
+                        card.style.zIndex = '9';
+                    } else if (position === totalCards - 1) {
+                        card.style.transform = 'translateX(-340px) translateZ(-120px) rotateY(12deg)';
+                        card.style.opacity = '0.8';
+                        card.style.zIndex = '9';
+                    } else if (position === 2) {
+                        card.style.transform = 'translateX(680px) translateZ(-240px) rotateY(-24deg)';
+                        card.style.opacity = '0.4';
+                        card.style.zIndex = '8';
+                    } else if (position === totalCards - 2) {
+                        card.style.transform = 'translateX(-680px) translateZ(-240px) rotateY(24deg)';
+                        card.style.opacity = '0.4';
+                        card.style.zIndex = '8';
+                    } else {
+                        card.style.transform = 'translateZ(-360px)';
+                        card.style.opacity = '0';
+                        card.style.zIndex = '1';
+                        card.style.pointerEvents = 'none';
+                    }
+                }
+                
+                for (let i = 0; i < dots.length; i++) {
+                    dots[i].className = `dot ${i === currentIndex ? 'active' : ''}`;
+                }
+            }
+            
+            function updateArticle() {
+                const currentVideo = videos[currentIndex];
+                articleTitle.textContent = currentVideo.article.title;
+                articleContent.innerHTML = currentVideo.article.content;
+            }
+            
+            function goToVideo(index) {
+                if (currentlyPlayingVideo) {
+                    currentlyPlayingVideo.pause();
+                    currentlyPlayingVideo.currentTime = 0;
+                    currentlyPlayingVideo.parentElement.querySelector('.play-overlay').classList.remove('hidden');
+                    currentlyPlayingVideo = null;
+                }
+                
+                currentIndex = index;
+                updateCarousel();
+                updateArticle();
+            }
+            
+            function nextVideo() {
+                goToVideo((currentIndex + 1) % videos.length);
+            }
+            
+            function prevVideo() {
+                goToVideo((currentIndex - 1 + videos.length) % videos.length);
+            }
+            
+            // Обработчики событий
+            nextBtn.addEventListener('click', nextVideo);
+            prevBtn.addEventListener('click', prevVideo);
+            
+            let startX = 0;
+            carousel.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            carousel.addEventListener('touchend', (e) => {
+                const endX = e.changedTouches[0].clientX;
+                if (startX - endX > 50) nextVideo();
+                else if (endX - startX > 50) prevVideo();
+            }, { passive: true });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') nextVideo();
+                else if (e.key === 'ArrowLeft') prevVideo();
+                else if (e.key === ' ') {
+                    e.preventDefault();
+                    const activeCard = carousel.children[currentIndex];
+                    if (activeCard) {
+                        const videoElement = activeCard.querySelector('.video-player');
+                        const playOverlay = activeCard.querySelector('.play-overlay');
+                        toggleVideoPlayback(videoElement, playOverlay);
+                    }
+                }
+            });
+            
+            // Запуск
+            createVideoCards();
+        });
+    </script>
+</body>
+</html>
