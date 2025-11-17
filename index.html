@@ -1,117 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои Шорты • Горизонтальная лента</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #e94560;
+            --secondary: #8a2be2;
+            --bg: #0f0f1e;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --text: #f0f0f0;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 25px 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(15,15,30,0.95), transparent);
+            backdrop-filter: blur(15px);
+        }
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .social-links {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .social-links a {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: white;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .social-links a:hover {
+            background: rgba(233,69,96,0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Горизонтальная лента шортсов */
+        .shorts-wrapper {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+        }
+        .shorts-container {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 20px 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .shorts-container::-webkit-scrollbar { display: none; }
+
+        .short-item {
+            flex: 0 0 320px;
+            height: 620px;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            scroll-snap-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            cursor: pointer;
+        }
+        .short-item.active {
+            flex: 0 0 380px;
+            height: 680px;
+            transform: translateY(-20px) scale(1.05);
+            box-shadow: 0 30px 80px rgba(233,69,96,0.5);
+            z-index: 10;
+        }
+
+        .short-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Оверлей с текстом */
+        .overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 40px 24px 30px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+        .short-item.active .overlay {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .overlay h2 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: white;
+        }
+        .overlay p {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            opacity: 0.95;
+        }
+        .tag {
+            display: inline-block;
+            background: rgba(233,69,96,0.3);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid rgba(233,69,96,0.4);
+        }
+
+        /* Стрелки навигации */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            z-index: 100;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .nav-arrow:hover {
+            background: rgba(233,69,96,0.3);
+            transform: translateY(-50%) scale(1.15);
+        }
+        .nav-arrow:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+            transform: translateY(-50%) scale(1);
+        }
+        #prevArrow { left: 30px; }
+        #nextArrow { right: 30px; }
+
+        /* Точки-индикаторы снизу */
+        .dots {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.4s;
+        }
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.4);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .short-item { flex: 0 0 280px; height: 560px; }
+            .short-item.active { flex: 0 0 320px; height: 600px; }
+        }
+        @media (max-width: 768px) {
+            .short-item { flex: 0 0 240px; height: 500px; }
+            .short-item.active { flex: 0 0 270px; height: 540px; transform: translateY(-15px) scale(1.05); }
+            .nav-arrow { width: 50px; height: 50px; font-size: 1.6rem; }
+            #prevArrow { left: 15px; }
+            #nextArrow { right: 15px; }
+            h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Мои Шорты</h1>
+    <div class="social-links">
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+    </div>
+</header>
+
+<div class="nav-arrow" id="prevArrow">←</div>
+<div class="nav-arrow" id="nextArrow">→</div>
+
+<div class="dots" id="dots"></div>
+
+<div class="shorts-wrapper">
+    <div class="shorts-container" id="shortsContainer">
+
+        <!-- Шортс 1 -->
+        <div class="short-item active" data-index="0">
+            <video class="short-video" loop muted playsinline preload="auto">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
+            </video>
+            <div class="overlay">
+                <h2>Как начать с нуля</h2>
+                <p>Первый шаг — это не про идеальный план. Это про то, чтобы просто начать. Даже если боишься — сделай это.</p>
+                <span class="tag">Начало</span>
+            </div>
+        </div>
+
+        <!-- Шортс 2 -->
+        <div class="short-item" data-index="1">
+            <video class="short-video" loop muted playsinline preload="auto">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+            </video>
+            <div class="overlay">
+                <h2>Сила привычки</h2>
+                <p>Пять минут каждый день — это больше, чем пять часов раз в месяц.</p>
+                <span class="tag">Привычка</span>
+            </div>
+        </div>
+
+        <!-- Шортс 3 -->
+        <div class="short-item" data-index="2">
+            <video class="short-video" loop muted playsinline preload="auto">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4">
+            </video>
+            <div class="overlay">
+                <h2>Вдохновение в деталях</h2>
+                <p>Иногда именно мелочи создают настроение. Настоящая красота живёт в них.</p>
+                <span class="tag">Детали</span>
+            </div>
+        </div>
+
+        <!-- Шортс 4 -->
+        <div class="short-item" data-index="3">
+            <video class="short-video" loop muted playsinline preload="auto">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
+            </video>
+            <div class="overlay">
+                <h2>Признание ошибки</h2>
+                <p>Сильный человек — тот, кто умеет признать ошибку и начать заново.</p>
+                <span class="tag">Рост</span>
+            </div>
+        </div>
+
+        <!-- Шортс 5 -->
+        <div class="short-item" data-index="4">
+            <video class="short-video" loop muted playsinline preload="auto">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+            </video>
+            <div class="overlay">
+                <h2>Ты не один</h2>
+                <p>Каждый, кто идёт своим путём, когда-то чувствовал себя потерянным. Ты на правильном пути.</p>
+                <span class="tag">Поддержка</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const shortsList = document.getElementById('shortsList');
-        const shortItems = [...document.querySelectorAll('.short-item')];
-        const globalArticle = document.getElementById('globalArticle');
-        const prevArrow = document.getElementById('prevArrow');
-        const nextArrow = document.getElementById('nextArrow');
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById('shortsContainer');
+        const items = document.querySelectorAll('.short-item');
+        const videos = document.querySelectorAll('.short-video');
+        const prevBtn = document.getElementById('prevArrow');
+        const nextBtn = document.getElementById('nextArrow');
+        const dotsContainer = document.getElementById('dots');
 
-        const descriptions = [
-            { title: "Как начать с нуля", text: "Первый шаг — это не идеальный план.", tag: "Начало" },
-            { title: "Сила привычки", text: "Маленькие действия меняют жизнь.", tag: "Привычка" },
-            { title: "Вдохновение в деталях", text: "Красота в мелочах.", tag: "Детали" },
-            { title: "Ошибки — опыт", text: "Ошибки не тормозят — они учат.", tag: "Рост" },
-            { title: "Ты не один", text: "Каждый теряется. Это нормально.", tag: "Поддержка" }
-        ];
+        let currentIndex = 0;
 
-        let activeIndex = 0;
+        // Создаём точки
+        items.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dotsContainer.appendChild(dot);
+        });
+        const dots = document.querySelectorAll('.dot');
 
-        // ⛔ Больше нет автозапуска — убрано видео.play() отовсюду.
-        function stopAllVideos() {
-            shortItems.forEach(item => {
-                const video = item.querySelector("video");
-                video.pause();
-            });
-        }
+        const setActive = (index) => {
+            items.forEach((item, i) => item.classList.toggle('active', i === index));
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            currentIndex = index;
 
-        // Установка активного элемента (видео не запускаем!)
-        function setActive(index) {
-            shortItems.forEach((item, i) => item.classList.toggle('active', i === index));
-
-            const desc = descriptions[index];
-            globalArticle.querySelector('h2').textContent = desc.title;
-            globalArticle.querySelector('p').textContent = desc.text;
-            globalArticle.querySelector('.tag').textContent = desc.tag;
-
-            globalArticle.classList.remove("active");
-            setTimeout(() => globalArticle.classList.add("active"), 10);
-
-            activeIndex = index;
-            updateArrows();
-            stopAllVideos();
-        }
-
-        // Стрелки становятся бесконечными
-        function next() {
-            activeIndex = (activeIndex + 1) % shortItems.length;
-            scrollToActive();
-            setActive(activeIndex);
-        }
-
-        function prev() {
-            activeIndex = (activeIndex - 1 + shortItems.length) % shortItems.length;
-            scrollToActive();
-            setActive(activeIndex);
-        }
-
-        function updateArrows() {
-            // Стрелки всегда активны — бесконечный цикл
-            prevArrow.style.opacity = 1;
-            nextArrow.style.opacity = 1;
-        }
-
-        function scrollToActive() {
-            shortItems[activeIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' });
-        }
-
-        // 🎬 Запуск видео только по клику
-        shortItems.forEach((item, index) => {
-            const video = item.querySelector("video");
-
-            item.addEventListener("click", () => {
-                if (activeIndex !== index) {
-                    // Просто выделение шорта — видео НЕ запускаем
-                    setActive(index);
-                    scrollToActive();
+            // Автоплей только активного видео
+            videos.forEach((video, i) => {
+                if (i === index) {
+                    video.play();
                 } else {
-                    // Если уже активный — запускаем по клику
-                    if (video.paused) {
-                        stopAllVideos();
-                        video.play();
-                    } else {
-                        video.pause();
-                    }
+                    video.pause();
+                    video.currentTime = 0;
                 }
+            });
+
+            updateArrows();
+        };
+
+        const updateArrows = () => {
+            prevBtn.style.opacity = currentIndex === 0 ? 0.3 : 1;
+            prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
+            nextBtn.style.opacity = currentIndex === items.length - 1 ? 0.3 : 1;
+            nextBtn.style.pointerEvents = currentIndex === items.length - 1 ? 'none' : 'auto';
+        };
+
+        // Клик по карточке
+        items.forEach((item, i) => {
+            item.addEventListener('click', () => {
+                setActive(i);
+                item.scrollIntoView({ behavior: 'smooth', inline: 'center' });
             });
         });
 
-        // Бесконечная прокрутка стрелками
-        prevArrow.onclick = prev;
-        nextArrow.onclick = next;
-
-        // Автовыбор ближайшего (видео не запускаем)
-        let timer;
-        shortsList.addEventListener("scroll", () => {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                const centerX = shortsList.getBoundingClientRect().left + shortsList.offsetWidth / 2;
-                let closest = null, min = Infinity;
-
-                shortItems.forEach(item => {
-                    const r = item.getBoundingClientRect();
-                    const dist = Math.abs((r.left + r.width / 2) - centerX);
-                    if (dist < min) { min = dist; closest = item; }
-                });
-
-                if (closest) {
-                    const newIndex = Number(closest.dataset.index);
-                    if (newIndex !== activeIndex) {
-                        setActive(newIndex);
-                    }
-                }
-            }, 120);
+        // Стрелки
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                setActive(currentIndex - 1);
+                items[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+            }
+        });
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < items.length - 1) {
+                setActive(currentIndex + 1);
+                items[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+            }
         });
 
+        // Определение ближайшего к центру при скролле
+        container.addEventListener('scroll', () => {
+            let closest = null;
+            let minDist = Infinity;
+
+            items.forEach((item, i) => {
+                const rect = item.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const containerCenter = window.innerWidth / 2;
+                const distance = Math.abs(centerX - containerCenter);
+
+                if (distance < minDist) {
+                    minDist = distance;
+                    closest = i;
+                }
+            });
+
+            if (closest !== null && closest !== currentIndex) {
+                setActive(closest);
+            }
+        });
+
+        // Инициализация
         setActive(0);
+
+        // Поддержка клавиш ← →
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') prevBtn.click();
+            if (e.key === 'ArrowRight') nextBtn.click();
+        });
     });
 </script>
+</body>
+</html>
