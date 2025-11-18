@@ -461,23 +461,89 @@
             font-size: 0.8rem;
         }
 
-        .admin-link {
+        /* Стили для модального окна пароля */
+        .password-modal {
+            display: none;
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            z-index: 1000;
-            opacity: 0.3;
-            transition: opacity 0.3s ease;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 7, 17, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
         }
         
-        .admin-link:hover {
-            opacity: 1;
+        .password-modal.active {
+            display: flex;
+        }
+        
+        .password-container {
+            background: var(--dark);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .password-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--primary-light);
+        }
+        
+        .password-subtitle {
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            background: var(--darker);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .password-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        
+        .password-submit:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .password-error {
+            color: var(--error);
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .password-error.active {
+            display: block;
         }
 
         /* Адаптивность */
@@ -549,6 +615,14 @@
             .article-meta {
                 flex-direction: column;
                 gap: 10px;
+            }
+            
+            .password-container {
+                padding: 30px 25px;
+            }
+            
+            .password-title {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -628,7 +702,16 @@
         <p>Используйте <span class="key-hint">← →</span> для навигации • <span class="key-hint">ПРОБЕЛ</span> для воспроизведения</p>
     </div>
 
-    <a href="admin.html" class="admin-link">Админ-панель</a>
+    <!-- Модальное окно для ввода пароля -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-container">
+            <h2 class="password-title">Доступ к админ-панели</h2>
+            <p class="password-subtitle">Введите пароль для продолжения</p>
+            <input type="password" class="password-input" id="passwordInput" placeholder="Введите пароль" autocomplete="off">
+            <button class="password-submit" id="passwordSubmit">Войти</button>
+            <p class="password-error" id="passwordError">Неверный пароль. Попробуйте снова.</p>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -638,6 +721,15 @@
             const progressDots = document.getElementById('progressDots');
             const articleTitle = document.getElementById('articleTitle');
             const articleContent = document.getElementById('articleContent');
+            const passwordModal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordSubmit = document.getElementById('passwordSubmit');
+            const passwordError = document.getElementById('passwordError');
+            
+            // Настройки безопасности
+            const ADMIN_PASSWORD = "admin123"; // Пароль для доступа к админ-панели
+            const ADMIN_KEY_SEQUENCE = ["Control", "Shift", "A"]; // Комбинация клавиш для открытия админки
+            let keySequence = [];
             
             // АВТОМАТИЧЕСКАЯ ЗАГРУЗКА ДАННЫХ ИЗ АДМИН-ПАНЕЛИ
             function loadVideosData() {
@@ -714,6 +806,7 @@
             let currentIndex = 0;
             let currentlyPlayingVideo = null;
             
+            // Функции для карусели видео
             function createVideoCards() {
                 const fragment = document.createDocumentFragment();
                 
@@ -855,7 +948,32 @@
                 goToVideo((currentIndex - 1 + videos.length) % videos.length);
             }
             
-            // Обработчики событий
+            // Функции для админ-панели
+            function openAdminPanel() {
+                window.open('admin.html', '_blank');
+            }
+            
+            function checkPassword() {
+                if (passwordInput.value === ADMIN_PASSWORD) {
+                    passwordModal.classList.remove('active');
+                    passwordInput.value = '';
+                    passwordError.classList.remove('active');
+                    openAdminPanel();
+                } else {
+                    passwordError.classList.add('active');
+                    passwordInput.value = '';
+                    setTimeout(() => {
+                        passwordError.classList.remove('active');
+                    }, 3000);
+                }
+            }
+            
+            function showPasswordModal() {
+                passwordModal.classList.add('active');
+                passwordInput.focus();
+            }
+            
+            // Обработчики событий для карусели
             nextBtn.addEventListener('click', nextVideo);
             prevBtn.addEventListener('click', prevVideo);
             
@@ -881,6 +999,34 @@
                         const playOverlay = activeCard.querySelector('.play-overlay');
                         toggleVideoPlayback(videoElement, playOverlay);
                     }
+                }
+                
+                // Проверка комбинации клавиш для админ-панели
+                keySequence.push(e.key);
+                if (keySequence.length > ADMIN_KEY_SEQUENCE.length) {
+                    keySequence.shift();
+                }
+                
+                if (keySequence.join(',') === ADMIN_KEY_SEQUENCE.join(',')) {
+                    showPasswordModal();
+                    keySequence = [];
+                }
+            });
+            
+            // Обработчики событий для модального окна пароля
+            passwordSubmit.addEventListener('click', checkPassword);
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+            
+            // Закрытие модального окна при клике вне его
+            passwordModal.addEventListener('click', (e) => {
+                if (e.target === passwordModal) {
+                    passwordModal.classList.remove('active');
+                    passwordInput.value = '';
+                    passwordError.classList.remove('active');
                 }
             });
             
