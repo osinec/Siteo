@@ -230,7 +230,47 @@
             font-style: normal;
         }
         
-        /* СТИЛИ ДЛЯ ПРЕДПРОСМОТРА */
+        /* КАСТОМНЫЕ СТИЛИ ДЛЯ РЕДАКТОРА */
+        .quote-block {
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #8B5CF6;
+        }
+        
+        .important-block {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning);
+            border-left: 4px solid var(--warning);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .success-block {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            border-left: 4px solid var(--success);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .info-block {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--accent);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        /* СТИЛИ ДЛЯ ПРЕДПРОСМОТРА (как на основном сайте) */
         .preview-section {
             margin-top: 30px;
             padding: 20px;
@@ -247,9 +287,21 @@
         
         .preview-content {
             background: rgba(15, 15, 35, 0.9);
-            padding: 20px;
+            padding: 40px;
             border-radius: 8px;
-            min-height: 200px;
+            min-height: 300px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+        
+        .preview-content .article-text {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .preview-content .article-text p {
+            margin-bottom: 25px;
+            text-align: justify;
         }
         
         /* СТИЛИ ДЛЯ ВЫДЕЛЕНИЙ (как в основном сайте) */
@@ -304,32 +356,25 @@
         .text-warning { color: var(--warning); font-weight: 600; }
         .text-error { color: var(--error); font-weight: 600; }
         
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
+        .article-subtitle {
+            font-size: 1.8rem;
             font-weight: 600;
-            margin: 0 5px;
+            color: var(--primary-light);
+            margin: 40px 0 20px 0;
+            border-left: 4px solid var(--primary);
+            padding-left: 20px;
         }
-        
-        .badge-primary { background: var(--primary); color: white; }
-        .badge-accent { background: var(--accent); color: white; }
-        .badge-success { background: var(--success); color: white; }
-        .badge-warning { background: var(--warning); color: white; }
-        .badge-error { background: var(--error); color: white; }
         
         /* ЦИТАТА КАК В TELEGRAM */
         .article-quote {
             background: rgba(139, 92, 246, 0.1);
             border-left: 4px solid var(--primary);
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 0 10px 10px 0;
+            padding: 30px;
+            margin: 40px 0;
+            border-radius: 0 15px 15px 0;
             font-style: italic;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             line-height: 1.6;
-            color: var(--primary-light);
         }
         
         /* ЦВЕТНЫЕ РАМКИ */
@@ -338,7 +383,7 @@
             border: 1px solid var(--warning);
             border-left: 4px solid var(--warning);
             padding: 20px;
-            margin: 20px 0;
+            margin: 25px 0;
             border-radius: 8px;
         }
         
@@ -347,7 +392,7 @@
             border: 1px solid var(--success);
             border-left: 4px solid var(--success);
             padding: 20px;
-            margin: 20px 0;
+            margin: 25px 0;
             border-radius: 8px;
         }
         
@@ -356,16 +401,7 @@
             border: 1px solid var(--accent);
             border-left: 4px solid var(--accent);
             padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        
-        .error-note {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--error);
-            border-left: 4px solid var(--error);
-            padding: 20px;
-            margin: 20px 0;
+            margin: 25px 0;
             border-radius: 8px;
         }
 
@@ -495,6 +531,11 @@
             .style-palette {
                 grid-template-columns: 1fr;
             }
+            
+            .preview-content {
+                padding: 20px;
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
@@ -562,15 +603,15 @@
                     
                     <!-- ПАНЕЛЬ БЫСТРЫХ СТИЛЕЙ -->
                     <div class="style-palette">
-                        <div class="style-btn primary" onclick="insertStyle('highlight-primary', 'Фиолетовый фон')">Фиолетовый фон</div>
-                        <div class="style-btn accent" onclick="insertStyle('highlight-accent', 'Голубой фон')">Голубой фон</div>
-                        <div class="style-btn success" onclick="insertStyle('highlight-success', 'Зеленый фон')">Зеленый фон</div>
-                        <div class="style-btn warning" onclick="insertStyle('highlight-warning', 'Оранжевый фон')">Оранжевый фон</div>
-                        <div class="style-btn error" onclick="insertStyle('highlight-error', 'Красный фон')">Красный фон</div>
+                        <div class="style-btn primary" onclick="applyStyle('highlight-primary')">Фиолетовый фон</div>
+                        <div class="style-btn accent" onclick="applyStyle('highlight-accent')">Голубой фон</div>
+                        <div class="style-btn success" onclick="applyStyle('highlight-success')">Зеленый фон</div>
+                        <div class="style-btn warning" onclick="applyStyle('highlight-warning')">Оранжевый фон</div>
+                        <div class="style-btn error" onclick="applyStyle('highlight-error')">Красный фон</div>
                         <div class="style-btn primary" onclick="insertQuote()">Цитата Telegram</div>
-                        <div class="style-btn warning" onclick="insertNote('important-note', 'Важно:', 'important')">Блок "Важно"</div>
-                        <div class="style-btn success" onclick="insertNote('success-note', 'Успех:', 'success')">Блок "Успех"</div>
-                        <div class="style-btn accent" onclick="insertNote('info-note', 'Совет:', 'info')">Блок "Совет"</div>
+                        <div class="style-btn warning" onclick="insertNote('important-note', 'Важно:')">Блок "Важно"</div>
+                        <div class="style-btn success" onclick="insertNote('success-note', 'Успех:')">Блок "Успех"</div>
+                        <div class="style-btn accent" onclick="insertNote('info-note', 'Совет:')">Блок "Совет"</div>
                     </div>
                     
                     <div class="editor-container">
@@ -583,9 +624,11 @@
             
             <!-- ПРЕДПРОСМОТР -->
             <div class="preview-section">
-                <div class="preview-title">👁️ Предпросмотр статьи:</div>
+                <div class="preview-title">👁️ Предпросмотр статьи (как будет выглядеть на сайте):</div>
                 <div class="preview-content" id="articlePreview">
-                    Здесь будет предпросмотр вашей статьи...
+                    <div class="article-text">
+                        <p>Здесь будет предпросмотр вашей статьи...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -612,7 +655,79 @@
 
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
-        // Инициализация редактора с расширенной панелью инструментов
+        // Регистрируем кастомные форматы для Quill
+        const BlockEmbed = Quill.import('blots/block/embed');
+        
+        class QuoteBlot extends BlockEmbed {
+            static create(value) {
+                const node = super.create();
+                node.innerHTML = value;
+                node.classList.add('quote-block');
+                return node;
+            }
+            
+            static value(node) {
+                return node.innerHTML;
+            }
+        }
+        
+        QuoteBlot.blotName = 'quote';
+        QuoteBlot.tagName = 'div';
+        
+        class ImportantBlot extends BlockEmbed {
+            static create(value) {
+                const node = super.create();
+                node.innerHTML = `<strong>Важно:</strong> ${value}`;
+                node.classList.add('important-block');
+                return node;
+            }
+            
+            static value(node) {
+                return node.innerHTML.replace('<strong>Важно:</strong> ', '');
+            }
+        }
+        
+        ImportantBlot.blotName = 'important';
+        ImportantBlot.tagName = 'div';
+        
+        class SuccessBlot extends BlockEmbed {
+            static create(value) {
+                const node = super.create();
+                node.innerHTML = `<strong>Успех:</strong> ${value}`;
+                node.classList.add('success-block');
+                return node;
+            }
+            
+            static value(node) {
+                return node.innerHTML.replace('<strong>Успех:</strong> ', '');
+            }
+        }
+        
+        SuccessBlot.blotName = 'success';
+        SuccessBlot.tagName = 'div';
+        
+        class InfoBlot extends BlockEmbed {
+            static create(value) {
+                const node = super.create();
+                node.innerHTML = `<strong>Совет:</strong> ${value}`;
+                node.classList.add('info-block');
+                return node;
+            }
+            
+            static value(node) {
+                return node.innerHTML.replace('<strong>Совет:</strong> ', '');
+            }
+        }
+        
+        InfoBlot.blotName = 'info';
+        InfoBlot.tagName = 'div';
+
+        Quill.register(QuoteBlot);
+        Quill.register(ImportantBlot);
+        Quill.register(SuccessBlot);
+        Quill.register(InfoBlot);
+
+        // Инициализация редактора
         const quill = new Quill('#editor', {
             theme: 'snow',
             modules: {
@@ -663,23 +778,14 @@
         let videos = JSON.parse(localStorage.getItem('vibeShortsVideos')) || defaultVideos;
         
         // ФУНКЦИИ ДЛЯ РЕДАКТОРА
-        function insertStyle(styleClass, text) {
+        function applyStyle(styleClass) {
             const range = quill.getSelection();
             if (range) {
-                quill.formatText(range.index, range.length, 'background', false); // Сначала убираем старый фон
-                quill.formatText(range.index, range.length, 'color', false); // Убираем старый цвет
-                
-                // Вставляем span с нужным классом
                 const selectedText = quill.getText(range.index, range.length);
-                quill.deleteText(range.index, range.length);
-                quill.insertText(range.index, selectedText);
-                quill.formatText(range.index, selectedText.length, 'background', styleClass);
-            } else {
-                // Если ничего не выделено, вставляем пример текста
-                const textToInsert = text || 'Пример текста';
-                const index = quill.getLength();
-                quill.insertText(index, textToInsert);
-                quill.formatText(index, textToInsert.length, 'background', styleClass);
+                if (selectedText.trim() !== '') {
+                    // Используем встроенное форматирование фона
+                    quill.formatText(range.index, range.length, 'background', styleClass);
+                }
             }
             updatePreview();
         }
@@ -688,42 +794,61 @@
             const range = quill.getSelection();
             const selectedText = range ? quill.getText(range.index, range.length) : 'Ваша цитата здесь...';
             
-            const quoteHTML = `<div class="article-quote">${selectedText}</div>`;
-            
             if (range) {
                 quill.deleteText(range.index, range.length);
             }
             
             const index = range ? range.index : quill.getLength();
-            quill.insertEmbed(index, 'text', quoteHTML, 'user');
+            quill.insertEmbed(index, 'quote', selectedText);
             updatePreview();
         }
         
-        function insertNote(noteClass, title, type) {
+        function insertNote(noteClass, title) {
             const range = quill.getSelection();
             const selectedText = range ? quill.getText(range.index, range.length) : 'Ваш текст здесь...';
             
-            const titles = {
-                'important': 'Важно:',
-                'success': 'Успех:',
-                'info': 'Совет:'
-            };
-            
-            const noteTitle = titles[type] || title;
-            const noteHTML = `<div class="${noteClass}"><strong>${noteTitle}</strong> ${selectedText}</div>`;
+            let blotType;
+            switch(noteClass) {
+                case 'important-note':
+                    blotType = 'important';
+                    break;
+                case 'success-note':
+                    blotType = 'success';
+                    break;
+                case 'info-note':
+                    blotType = 'info';
+                    break;
+                default:
+                    blotType = 'important';
+            }
             
             if (range) {
                 quill.deleteText(range.index, range.length);
             }
             
             const index = range ? range.index : quill.getLength();
-            quill.insertEmbed(index, 'text', noteHTML, 'user');
+            quill.insertEmbed(index, blotType, selectedText);
             updatePreview();
         }
         
         function updatePreview() {
-            const content = quill.root.innerHTML;
-            document.getElementById('articlePreview').innerHTML = content;
+            let content = quill.root.innerHTML;
+            
+            // Конвертируем кастомные классы редактора в финальные классы сайта
+            content = content.replace(/class="quote-block"/g, 'class="article-quote"');
+            content = content.replace(/class="important-block"/g, 'class="important-note"');
+            content = content.replace(/class="success-block"/g, 'class="success-note"');
+            content = content.replace(/class="info-block"/g, 'class="info-note"');
+            
+            // Конвертируем inline стили в классы highlight
+            content = content.replace(/background-color:\s*highlight-primary[^"]*"/g, 'class="highlight-primary"');
+            content = content.replace(/background-color:\s*highlight-accent[^"]*"/g, 'class="highlight-accent"');
+            content = content.replace(/background-color:\s*highlight-success[^"]*"/g, 'class="highlight-success"');
+            content = content.replace(/background-color:\s*highlight-warning[^"]*"/g, 'class="highlight-warning"');
+            content = content.replace(/background-color:\s*highlight-error[^"]*"/g, 'class="highlight-error"');
+            
+            // Оборачиваем в article-text для правильного отображения
+            document.getElementById('articlePreview').innerHTML = `<div class="article-text">${content}</div>`;
         }
         
         // ФУНКЦИИ АДМИН-ПАНЕЛИ
@@ -745,21 +870,16 @@
         }
         
         function showSection(sectionId) {
-            // Скрыть все секции
             document.querySelectorAll('.admin-section').forEach(section => {
                 section.classList.remove('active');
             });
-            
-            // Показать выбранную секцию
             document.getElementById(sectionId).classList.add('active');
             
-            // Обновить активную кнопку навигации
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // Если показана секция экспорта, обновить данные
             if (sectionId === 'exportSection') {
                 generateExportData();
             }
@@ -798,7 +918,20 @@
             const title = document.getElementById('videoTitle').value;
             const url = document.getElementById('videoUrl').value;
             const articleTitle = document.getElementById('articleTitle').value;
-            const articleContent = `<div class="article-text">${quill.root.innerHTML}</div>`;
+            
+            // Конвертируем контент редактора в финальный HTML
+            let content = quill.root.innerHTML;
+            content = content.replace(/class="quote-block"/g, 'class="article-quote"');
+            content = content.replace(/class="important-block"/g, 'class="important-note"');
+            content = content.replace(/class="success-block"/g, 'class="success-note"');
+            content = content.replace(/class="info-block"/g, 'class="info-note"');
+            content = content.replace(/background-color:\s*highlight-primary[^"]*"/g, 'class="highlight-primary"');
+            content = content.replace(/background-color:\s*highlight-accent[^"]*"/g, 'class="highlight-accent"');
+            content = content.replace(/background-color:\s*highlight-success[^"]*"/g, 'class="highlight-success"');
+            content = content.replace(/background-color:\s*highlight-warning[^"]*"/g, 'class="highlight-warning"');
+            content = content.replace(/background-color:\s*highlight-error[^"]*"/g, 'class="highlight-error"');
+            
+            const articleContent = `<div class="article-text">${content}</div>`;
             
             const newVideo = {
                 id: videos.length > 0 ? Math.max(...videos.map(v => v.id)) + 1 : 1,
@@ -813,15 +946,11 @@
             videos.push(newVideo);
             localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
             
-            // Очистить форму
             document.getElementById('videoForm').reset();
             quill.root.innerHTML = '';
             updatePreview();
             
-            // Показать сообщение об успехе
             showMessage('✅ Видео успешно добавлено!', 'success');
-            
-            // Обновить список видео
             loadVideosList();
         }
         
@@ -829,20 +958,22 @@
             const video = videos.find(v => v.id === id);
             if (!video) return;
             
-            // Заполнить форму данными видео
             document.getElementById('videoTitle').value = video.title;
             document.getElementById('videoUrl').value = video.videoUrl;
             document.getElementById('articleTitle').value = video.article.title;
             
-            // Убираем обертку article-text для редактирования
-            const content = video.article.content.replace('<div class="article-text">', '').replace('</div>', '');
+            // Конвертируем финальный HTML обратно в редактор
+            let content = video.article.content.replace('<div class="article-text">', '').replace('</div>', '');
+            content = content.replace(/class="article-quote"/g, 'class="quote-block"');
+            content = content.replace(/class="important-note"/g, 'class="important-block"');
+            content = content.replace(/class="success-note"/g, 'class="success-block"');
+            content = content.replace(/class="info-note"/g, 'class="info-block"');
+            
             quill.root.innerHTML = content;
             updatePreview();
             
-            // Показать секцию добавления видео
             showSection('addVideoSection');
             
-            // Изменить кнопку на "Обновить"
             const form = document.getElementById('videoForm');
             const submitBtn = form.querySelector('button[type="submit"]');
             submitBtn.textContent = '💾 Обновить видео';
@@ -857,7 +988,19 @@
             const title = document.getElementById('videoTitle').value;
             const url = document.getElementById('videoUrl').value;
             const articleTitle = document.getElementById('articleTitle').value;
-            const articleContent = `<div class="article-text">${quill.root.innerHTML}</div>`;
+            
+            let content = quill.root.innerHTML;
+            content = content.replace(/class="quote-block"/g, 'class="article-quote"');
+            content = content.replace(/class="important-block"/g, 'class="important-note"');
+            content = content.replace(/class="success-block"/g, 'class="success-note"');
+            content = content.replace(/class="info-block"/g, 'class="info-note"');
+            content = content.replace(/background-color:\s*highlight-primary[^"]*"/g, 'class="highlight-primary"');
+            content = content.replace(/background-color:\s*highlight-accent[^"]*"/g, 'class="highlight-accent"');
+            content = content.replace(/background-color:\s*highlight-success[^"]*"/g, 'class="highlight-success"');
+            content = content.replace(/background-color:\s*highlight-warning[^"]*"/g, 'class="highlight-warning"');
+            content = content.replace(/background-color:\s*highlight-error[^"]*"/g, 'class="highlight-error"');
+            
+            const articleContent = `<div class="article-text">${content}</div>`;
             
             const videoIndex = videos.findIndex(v => v.id === id);
             if (videoIndex !== -1) {
@@ -873,12 +1016,10 @@
                 
                 localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
                 
-                // Вернуть кнопку в исходное состояние
                 const submitBtn = document.querySelector('#videoForm button[type="submit"]');
                 submitBtn.textContent = '💾 Сохранить видео';
                 submitBtn.onclick = saveVideo;
                 
-                // Очистить форму
                 document.getElementById('videoForm').reset();
                 quill.root.innerHTML = '';
                 updatePreview();
@@ -920,23 +1061,16 @@
         }
         
         function showMessage(text, type) {
-            // Создать временное сообщение
             const message = document.createElement('div');
             message.className = `message ${type}`;
             message.textContent = text;
-            
             document.body.appendChild(message);
-            
-            // Удалить сообщение через 3 секунды
-            setTimeout(() => {
-                message.remove();
-            }, 3000);
+            setTimeout(() => { message.remove(); }, 3000);
         }
         
         // Инициализация
         document.getElementById('videoForm').addEventListener('submit', saveVideo);
         
-        // Если уже авторизован, показать админ-панель
         if (localStorage.getItem('adminAuthenticated') === 'true') {
             document.getElementById('loginSection').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
@@ -944,7 +1078,6 @@
             generateExportData();
         }
         
-        // Инициализация предпросмотра
         updatePreview();
     </script>
 </body>
