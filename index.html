@@ -686,6 +686,73 @@
             border: 1px solid #EF4444;
         }
 
+        /* СТИЛИ ДЛЯ РЕДАКТОРА */
+        .editor-tools {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .tool-btn {
+            padding: 8px 12px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            color: var(--light);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .tool-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .article-editor {
+            background: white;
+            border-radius: 10px;
+            min-height: 300px;
+            padding: 20px;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+            border: 2px solid var(--glass-border);
+            margin-bottom: 20px;
+        }
+
+        .article-editor:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .preview-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .preview-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary-light);
+        }
+        
+        .preview-content {
+            background: rgba(15, 15, 35, 0.9);
+            padding: 40px;
+            border-radius: 8px;
+            min-height: 300px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
         /* Адаптивность */
         @media (max-width: 768px) {
             .carousel {
@@ -725,6 +792,15 @@
             
             .video-list {
                 grid-template-columns: 1fr;
+            }
+            
+            .editor-tools {
+                flex-direction: column;
+            }
+            
+            .preview-content {
+                padding: 20px;
+                font-size: 1.1rem;
             }
         }
         
@@ -852,8 +928,34 @@
                     
                     <div class="form-group">
                         <label class="form-label">🖋️ Содержание статьи</label>
-                        <textarea id="articleContentAdmin" class="form-textarea" rows="10" required placeholder="Введите содержание статьи в формате HTML"></textarea>
-                        <small style="opacity: 0.7;">Можно использовать HTML-теги для форматирования</small>
+                        
+                        <!-- ПАНЕЛЬ ИНСТРУМЕНТОВ -->
+                        <div class="editor-tools">
+                            <button type="button" class="tool-btn" onclick="addNormalText()" title="Обычный текст">📝 Абзац</button>
+                            <button type="button" class="tool-btn" onclick="addHighlightText()" title="Выделенный текст">✨ Выделение</button>
+                            <button type="button" class="tool-btn" onclick="addSubtitle()" title="Подзаголовок">🔤 Подзаголовок</button>
+                            <button type="button" class="tool-btn" onclick="addQuote()" title="Цитата">💬 Цитата</button>
+                            <button type="button" class="tool-btn" onclick="addNote('important')" title="Важное примечание">⚠️ Важно</button>
+                            <button type="button" class="tool-btn" onclick="addNote('info')" title="Информация">ℹ️ Инфо</button>
+                            <button type="button" class="tool-btn" onclick="addNote('success')" title="Успех">✅ Успех</button>
+                            <button type="button" class="tool-btn" onclick="addList()" title="Список">📋 Список</button>
+                            <button type="button" class="tool-btn" onclick="clearEditor()" title="Очистить" style="color: #EF4444;">🗑️ Очистить</button>
+                        </div>
+                        
+                        <!-- РЕДАКТОР -->
+                        <div class="article-editor" id="articleEditor" contenteditable="true">
+                            <p>Начните писать вашу статью здесь...</p>
+                        </div>
+                        
+                        <!-- ПРЕДПРОСМОТР -->
+                        <div class="preview-section">
+                            <div class="preview-title">👁️ Предпросмотр:</div>
+                            <div class="preview-content" id="articlePreview">
+                                <div class="article-text">
+                                    <p>Предпросмотр статьи появится здесь...</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <button type="submit" class="admin-btn">💾 Сохранить видео</button>
@@ -863,6 +965,18 @@
     </div>
 
     <script>
+        // Глобальные переменные
+        let videos = [];
+        let currentIndex = 0;
+        let currentlyPlayingVideo = null;
+        let f12Pressed = false;
+        let codeSequence = [];
+        let codeTimeout = null;
+
+        // Настройки безопасности
+        const ADMIN_PASSWORD = "admin123";
+        const SECRET_CODE = ["0", "4", "5", "1"];
+
         document.addEventListener('DOMContentLoaded', function() {
             const carousel = document.getElementById('carousel');
             const prevBtn = document.getElementById('prevBtn');
@@ -871,473 +985,23 @@
             const articleTitle = document.getElementById('articleTitle');
             const articleContent = document.getElementById('articleContent');
             
-            // Настройки безопасности
-            const ADMIN_PASSWORD = "admin123";
-            const SECRET_CODE = ["0", "4", "5", "1"];
+            // Загрузка данных
+            loadVideosData();
             
-            let f12Pressed = false;
-            let codeSequence = [];
-            let codeTimeout = null;
-            let videos = [];
-            let currentIndex = 0;
-            let currentlyPlayingVideo = null;
-
-            // ЗАГРУЗКА ДАННЫХ
-            function loadVideosData() {
-                const savedVideos = localStorage.getItem('vibeShortsVideos');
-                if (savedVideos) {
-                    videos = JSON.parse(savedVideos);
-                } else {
-                    // Видео по умолчанию
-                    videos = [
-                        {
-                            id: 1,
-                            title: "Морской закат",
-                            videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                            article: {
-                                title: "Искусство визуального повествования",
-                                content: `
-                                    <div class="article-text">
-                                        <p>В современном цифровом мире <span class="highlight-primary">короткие видео</span> стали мощным инструментом для передачи эмоций, идей и историй.</p>
-                                        
-                                        <div class="important-note">
-                                            <strong>Важно:</strong> Первые <span class="text-warning">3 секунды</span> видео критически важны.
-                                        </div>
-                                        
-                                        <h3 class="article-subtitle">Сила краткости</h3>
-                                        <p>Короткие видео обладают уникальной способностью захватывать внимание зрителя с первых же кадров.</p>
-                                    </div>
-                                `
-                            }
-                        },
-                        {
-                            id: 2,
-                            title: "Ночной город",
-                            videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-                            article: {
-                                title: "Городская эстетика в цифровую эпоху",
-                                content: `
-                                    <div class="article-text">
-                                        <p>Городские пейзажи всегда вдохновляли художников и фотографов. В эпоху цифровых технологий эта тема обрела новое звучание через <span class="highlight-accent">короткие видеоформаты</span>.</p>
-                                        
-                                        <div class="info-note">
-                                            <strong>Интересный факт:</strong> <span class="text-primary">Ночная съемка</span> требует особого подхода к освещению и настройкам камеры.
-                                        </div>
-                                        
-                                        <h3 class="article-subtitle">Неоновая поэзия</h3>
-                                        <p>Ночной город с его <span class="highlight-warning">неоновыми огнями</span> создает уникальную атмосферу, которую так сложно передать словами.</p>
-                                    </div>
-                                `
-                            }
-                        },
-                        {
-                            id: 3,
-                            title: "Горные вершины",
-                            videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-                            article: {
-                                title: "Природа как источник вдохновения",
-                                content: `
-                                    <div class="article-text">
-                                        <p>Горные пейзажи обладают особой магией — они одновременно умиротворяют и вдохновляют на свершения. <span class="highlight-success">Видеосъемка в горах</span> требует особого подхода и подготовки.</p>
-                                        
-                                        <div class="success-note">
-                                            <strong>Успех:</strong> Правильно выбранный <span class="text-accent">ракурс съемки</span> может превратить обычный пейзаж в шедевр.
-                                        </div>
-                                        
-                                        <h3 class="article-subtitle">Высота и перспектива</h3>
-                                        <p>Съемка на высоте открывает <span class="highlight-primary">уникальные ракурсы</span> и возможности для создания захватывающего контента.</p>
-                                    </div>
-                                `
-                            }
-                        }
-                    ];
-                    localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
-                }
-                
-                createVideoCards();
-                updateCarousel();
-                updateArticle();
-                loadAdminVideosList();
-            }
-
-            // Функции для карусели видео
-            function createVideoCards() {
-                carousel.innerHTML = '';
-                const fragment = document.createDocumentFragment();
-                
-                videos.forEach((video, index) => {
-                    const videoCard = document.createElement('div');
-                    videoCard.className = 'video-card';
-                    videoCard.dataset.index = index;
-                    
-                    videoCard.innerHTML = `
-                        <div class="video-player-container">
-                            <video class="video-player" preload="metadata">
-                                <source src="${video.videoUrl}" type="video/mp4">
-                            </video>
-                            <div class="play-overlay">
-                                <div class="play-icon">
-                                    <i class="fas fa-play"></i>
-                                </div>
-                            </div>
-                            <div class="replay-icon" title="Перезапустить видео">
-                                <i class="fas fa-redo"></i>
-                            </div>
-                        </div>
-                        <div class="video-info">
-                            <div class="video-title">${video.title}</div>
-                        </div>
-                    `;
-                    
-                    const videoElement = videoCard.querySelector('.video-player');
-                    const playOverlay = videoCard.querySelector('.play-overlay');
-                    const replayIcon = videoCard.querySelector('.replay-icon');
-                    
-                    videoCard.addEventListener('click', (e) => {
-                        if (!e.target.closest('.replay-icon')) {
-                            toggleVideoPlayback(videoElement, playOverlay);
-                        }
-                    });
-                    
-                    videoElement.addEventListener('ended', () => {
-                        playOverlay.classList.remove('hidden');
-                        currentlyPlayingVideo = null;
-                    });
-                    
-                    replayIcon.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        restartVideo(videoElement, playOverlay);
-                    });
-                    
-                    fragment.appendChild(videoCard);
-                });
-                
-                carousel.appendChild(fragment);
-                createProgressDots();
-            }
-            
-            function createProgressDots() {
-                progressDots.innerHTML = '';
-                videos.forEach((_, index) => {
-                    const dot = document.createElement('div');
-                    dot.className = `dot ${index === currentIndex ? 'active' : ''}`;
-                    dot.addEventListener('click', () => goToVideo(index));
-                    progressDots.appendChild(dot);
-                });
-            }
-            
-            function toggleVideoPlayback(videoElement, playOverlay) {
-                if (currentlyPlayingVideo && currentlyPlayingVideo !== videoElement) {
-                    currentlyPlayingVideo.pause();
-                    currentlyPlayingVideo.currentTime = 0;
-                    currentlyPlayingVideo.parentElement.querySelector('.play-overlay').classList.remove('hidden');
-                }
-                
-                if (videoElement.paused) {
-                    videoElement.play().then(() => {
-                        playOverlay.classList.add('hidden');
-                        currentlyPlayingVideo = videoElement;
-                    });
-                } else {
-                    videoElement.pause();
-                    playOverlay.classList.remove('hidden');
-                    currentlyPlayingVideo = null;
-                }
-            }
-            
-            function restartVideo(videoElement, playOverlay) {
-                videoElement.currentTime = 0;
-                videoElement.play().then(() => {
-                    playOverlay.classList.add('hidden');
-                    currentlyPlayingVideo = videoElement;
-                });
-            }
-            
-            function updateCarousel() {
-                const cards = carousel.children;
-                const dots = progressDots.children;
-                const totalCards = cards.length;
-                
-                for (let i = 0; i < totalCards; i++) {
-                    const card = cards[i];
-                    const position = (i - currentIndex + totalCards) % totalCards;
-                    
-                    card.style.transform = '';
-                    card.style.opacity = '1';
-                    card.style.zIndex = '1';
-                    card.style.pointerEvents = 'auto';
-                    
-                    if (position === 0) {
-                        card.style.transform = 'translateZ(0)';
-                        card.style.zIndex = '10';
-                    } else if (position === 1) {
-                        card.style.transform = 'translateX(340px) translateZ(-120px) rotateY(-12deg)';
-                        card.style.opacity = '0.8';
-                        card.style.zIndex = '9';
-                    } else if (position === totalCards - 1) {
-                        card.style.transform = 'translateX(-340px) translateZ(-120px) rotateY(12deg)';
-                        card.style.opacity = '0.8';
-                        card.style.zIndex = '9';
-                    } else if (position === 2) {
-                        card.style.transform = 'translateX(680px) translateZ(-240px) rotateY(-24deg)';
-                        card.style.opacity = '0.4';
-                        card.style.zIndex = '8';
-                    } else if (position === totalCards - 2) {
-                        card.style.transform = 'translateX(-680px) translateZ(-240px) rotateY(24deg)';
-                        card.style.opacity = '0.4';
-                        card.style.zIndex = '8';
-                    } else {
-                        card.style.transform = 'translateZ(-360px)';
-                        card.style.opacity = '0';
-                        card.style.zIndex = '1';
-                        card.style.pointerEvents = 'none';
-                    }
-                }
-                
-                for (let i = 0; i < dots.length; i++) {
-                    dots[i].className = `dot ${i === currentIndex ? 'active' : ''}`;
-                }
-            }
-            
-            function updateArticle() {
-                if (videos.length > 0 && currentIndex < videos.length) {
-                    const currentVideo = videos[currentIndex];
-                    articleTitle.textContent = currentVideo.article.title;
-                    articleContent.innerHTML = currentVideo.article.content;
-                }
-            }
-            
-            function goToVideo(index) {
-                if (currentlyPlayingVideo) {
-                    currentlyPlayingVideo.pause();
-                    currentlyPlayingVideo.currentTime = 0;
-                    currentlyPlayingVideo.parentElement.querySelector('.play-overlay').classList.remove('hidden');
-                    currentlyPlayingVideo = null;
-                }
-                
-                currentIndex = index;
-                updateCarousel();
-                updateArticle();
-            }
-            
-            function nextVideo() {
-                goToVideo((currentIndex + 1) % videos.length);
-            }
-            
-            function prevVideo() {
-                goToVideo((currentIndex - 1 + videos.length) % videos.length);
-            }
-
-            // ФУНКЦИИ АДМИН-ПАНЕЛИ
-            function showAdminPanel() {
-                document.getElementById('adminPanel').classList.add('active');
-                loadAdminVideosList();
-            }
-            
-            function hideAdminPanel() {
-                document.getElementById('adminPanel').classList.remove('active');
-            }
-            
-            function showAdminSection(sectionId) {
-                document.querySelectorAll('.admin-section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                document.getElementById(sectionId).classList.add('active');
-                
-                document.querySelectorAll('.admin-nav-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                event.target.classList.add('active');
-            }
-            
-            function loadAdminVideosList() {
-                const videosList = document.getElementById('videosList');
-                videosList.innerHTML = '';
-                
-                if (videos.length === 0) {
-                    videosList.innerHTML = '<p>Нет добавленных видео</p>';
-                    return;
-                }
-                
-                videos.forEach(video => {
-                    const videoItem = document.createElement('div');
-                    videoItem.className = 'video-item';
-                    videoItem.innerHTML = `
-                        <div class="video-item-header">
-                            <div class="video-item-title">${video.title}</div>
-                            <div class="video-item-actions">
-                                <button class="action-btn" onclick="editVideo(${video.id})">✏️</button>
-                                <button class="action-btn" onclick="deleteVideo(${video.id})">🗑️</button>
-                            </div>
-                        </div>
-                        <div class="video-item-url" style="font-size: 0.9rem; opacity: 0.8;">${video.videoUrl}</div>
-                        <div class="video-item-article" style="margin-top: 10px; font-size: 0.9rem;">📄 ${video.article.title}</div>
-                    `;
-                    videosList.appendChild(videoItem);
-                });
-            }
-            
-            function saveVideo(event) {
-                event.preventDefault();
-                
-                const title = document.getElementById('videoTitle').value;
-                const url = document.getElementById('videoUrl').value;
-                const articleTitle = document.getElementById('articleTitle').value;
-                const content = document.getElementById('articleContentAdmin').value;
-                
-                const articleContent = `<div class="article-text">${content}</div>`;
-                
-                const newVideo = {
-                    id: videos.length > 0 ? Math.max(...videos.map(v => v.id)) + 1 : 1,
-                    title: title,
-                    videoUrl: url,
-                    article: {
-                        title: articleTitle,
-                        content: articleContent
-                    }
-                };
-                
-                videos.push(newVideo);
-                localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
-                
-                document.getElementById('videoForm').reset();
-                showAdminMessage('✅ Видео успешно добавлено!', 'success');
-                
-                // ОБНОВЛЯЕМ ОСНОВНОЙ САЙТ
-                createVideoCards();
-                updateCarousel();
-                updateArticle();
-                loadAdminVideosList();
-            }
-            
-            function editVideo(id) {
-                const video = videos.find(v => v.id === id);
-                if (!video) return;
-                
-                document.getElementById('videoTitle').value = video.title;
-                document.getElementById('videoUrl').value = video.videoUrl;
-                document.getElementById('articleTitle').value = video.article.title;
-                
-                // Извлекаем контент из article-text обертки
-                let content = video.article.content.replace('<div class="article-text">', '').replace('</div>', '');
-                document.getElementById('articleContentAdmin').value = content;
-                
-                showAdminSection('addVideoSection');
-                
-                const form = document.getElementById('videoForm');
-                const submitBtn = form.querySelector('button[type="submit"]');
-                submitBtn.textContent = '💾 Обновить видео';
-                submitBtn.onclick = function(e) {
-                    updateVideo(e, id);
-                };
-            }
-            
-            function updateVideo(event, id) {
-                event.preventDefault();
-                
-                const title = document.getElementById('videoTitle').value;
-                const url = document.getElementById('videoUrl').value;
-                const articleTitle = document.getElementById('articleTitle').value;
-                const content = document.getElementById('articleContentAdmin').value;
-                
-                const articleContent = `<div class="article-text">${content}</div>`;
-                
-                const videoIndex = videos.findIndex(v => v.id === id);
-                if (videoIndex !== -1) {
-                    videos[videoIndex] = {
-                        id: id,
-                        title: title,
-                        videoUrl: url,
-                        article: {
-                            title: articleTitle,
-                            content: articleContent
-                        }
-                    };
-                    
-                    localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
-                    
-                    const submitBtn = document.querySelector('#videoForm button[type="submit"]');
-                    submitBtn.textContent = '💾 Сохранить видео';
-                    submitBtn.onclick = saveVideo;
-                    
-                    document.getElementById('videoForm').reset();
-                    
-                    showAdminMessage('✅ Видео успешно обновлено!', 'success');
-                    
-                    // ОБНОВЛЯЕМ ОСНОВНОЙ САЙТ
-                    createVideoCards();
-                    updateCarousel();
-                    updateArticle();
-                    loadAdminVideosList();
-                }
-            }
-            
-            function deleteVideo(id) {
-                if (confirm('Вы уверены, что хотите удалить это видео?')) {
-                    videos = videos.filter(v => v.id !== id);
-                    localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
-                    showAdminMessage('✅ Видео удалено!', 'success');
-                    
-                    // ОБНОВЛЯЕМ ОСНОВНОЙ САЙТ
-                    createVideoCards();
-                    updateCarousel();
-                    updateArticle();
-                    loadAdminVideosList();
-                }
-            }
-            
-            function showAdminMessage(text, type) {
-                const message = document.createElement('div');
-                message.className = `message ${type}`;
-                message.textContent = text;
-                document.querySelector('.admin-container').appendChild(message);
-                setTimeout(() => { message.remove(); }, 3000);
-            }
-
-            // Проверка секретного кода для открытия админки
-            function checkCodeSequence(key) {
-                if (key === 'F12') {
-                    f12Pressed = true;
-                    codeSequence = [];
-                    codeTimeout = setTimeout(() => {
-                        f12Pressed = false;
-                        codeSequence = [];
-                    }, 10000);
-                    return;
-                }
-                
-                if (!f12Pressed) return;
-                
-                if (key >= '0' && key <= '9') {
-                    codeSequence.push(key);
-                    
-                    if (codeSequence.length === SECRET_CODE.length) {
-                        if (codeSequence.join('') === SECRET_CODE.join('')) {
-                            showAdminPanel();
-                            f12Pressed = false;
-                            codeSequence = [];
-                        } else {
-                            f12Pressed = false;
-                            codeSequence = [];
-                        }
-                    }
-                    
-                    if (codeTimeout) {
-                        clearTimeout(codeTimeout);
-                        codeTimeout = setTimeout(() => {
-                            f12Pressed = false;
-                            codeSequence = [];
-                        }, 10000);
-                    }
-                }
-            }
-            
-            // Обработчики событий
+            // Обработчики событий для карусели
             nextBtn.addEventListener('click', nextVideo);
             prevBtn.addEventListener('click', prevVideo);
             
-            document.getElementById('videoForm').addEventListener('submit', saveVideo);
+            // Обработчик формы админ-панели
+            document.getElementById('videoForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveVideo(e);
+            });
             
+            // Инициализация редактора
+            initEditor();
+            
+            // Обработчики клавиш
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowRight') nextVideo();
                 else if (e.key === 'ArrowLeft') prevVideo();
@@ -1353,14 +1017,390 @@
                 
                 checkCodeSequence(e.key);
             });
+
+            // Swipe для мобильных
+            let startX = 0;
+            carousel.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            }, { passive: true });
             
-            // Запуск
-            loadVideosData();
+            carousel.addEventListener('touchend', (e) => {
+                const endX = e.changedTouches[0].clientX;
+                if (startX - endX > 50) nextVideo();
+                else if (endX - startX > 50) prevVideo();
+            }, { passive: true });
         });
 
-        // Глобальные функции для админ-панели
+        // РЕДАКТОР СТАТЕЙ
+        function initEditor() {
+            const editor = document.getElementById('articleEditor');
+            
+            // Очистка placeholder при фокусе
+            editor.addEventListener('focus', function() {
+                if (this.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
+                    this.innerHTML = '';
+                }
+            });
+            
+            // Обработка Enter
+            editor.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleEnterKey(e);
+                }
+            });
+            
+            // Обновление предпросмотра
+            editor.addEventListener('input', updatePreview);
+        }
+        
+        function handleEnterKey(event) {
+            const editor = document.getElementById('articleEditor');
+            const selection = window.getSelection();
+            
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                
+                // Простой перенос строки
+                document.execCommand('insertHTML', false, '<br><br>');
+                
+                // Фокусируем курсор после вставки
+                setTimeout(() => {
+                    const newRange = document.createRange();
+                    newRange.setStart(editor, editor.childNodes.length);
+                    newRange.collapse(true);
+                    selection.removeAllRanges();
+                    selection.addRange(newRange);
+                }, 0);
+            }
+            
+            updatePreview();
+        }
+        
+        function updatePreview() {
+            const editor = document.getElementById('articleEditor');
+            const preview = document.getElementById('articlePreview');
+            
+            let content = editor.innerHTML.trim();
+            
+            // Если редактор пустой
+            if (!content || content === '<p><br></p>' || content === '<br>') {
+                preview.innerHTML = '<div class="article-text"><p>Предпросмотр статьи появится здесь...</p></div>';
+                return;
+            }
+            
+            // Оборачиваем в article-text для правильного отображения
+            preview.innerHTML = `<div class="article-text">${content}</div>`;
+        }
+        
+        // ФУНКЦИИ ДЛЯ ПАНЕЛИ СТИЛЕЙ
+        function addNormalText() {
+            const editor = document.getElementById('articleEditor');
+            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
+                editor.innerHTML = '';
+            }
+            
+            const text = '<p>Это обычный текст абзаца. Вы можете редактировать его как хотите.</p>';
+            editor.innerHTML += text;
+            updatePreview();
+        }
+        
+        function addHighlightText() {
+            const editor = document.getElementById('articleEditor');
+            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
+                editor.innerHTML = '';
+            }
+            
+            const text = '<p>Текст с <span class="highlight-primary">выделенными словами</span> для акцента.</p>';
+            editor.innerHTML += text;
+            updatePreview();
+        }
+        
+        function addSubtitle() {
+            const editor = document.getElementById('articleEditor');
+            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
+                editor.innerHTML = '';
+            }
+            
+            const text = '<h3 class="article-subtitle">Заголовок раздела</h3>';
+            editor.innerHTML += text;
+            updatePreview();
+        }
+        
+        function addQuote() {
+            const editor = document.getElementById('articleEditor');
+            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
+                editor.innerHTML = '';
+            }
+            
+            const text = '<div class="article-quote">"Вдохновляющая цитата, которая привлечет внимание читателей."</div>';
+            editor.innerHTML += text;
+            updatePreview();
+        }
+        
+        function addNote(type) {
+            const editor = document.getElementById('articleEditor');
+            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
+                editor.innerHTML = '';
+            }
+            
+            let text = '';
+            switch(type) {
+                case 'important':
+                    text = '<div class="important-note"><strong>Важно:</strong> Это важное сообщение для ваших читателей.</div>';
+                    break;
+                case 'info':
+                    text = '<div class="info-note"><strong>Информация:</strong> Полезная информация по теме.</div>';
+                    break;
+                case 'success':
+                    text = '<div class="success-note"><strong>Успех:</strong> Положительный результат или достижение.</div>';
+                    break;
+            }
+            
+            editor.innerHTML += text;
+            updatePreview();
+        }
+        
+        function addList() {
+            const editor = document.getElementById('articleEditor');
+            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
+                editor.innerHTML = '';
+            }
+            
+            const text = `
+                <ul class="article-list">
+                    <li>Первый пункт списка</li>
+                    <li>Второй пункт списка</li>
+                    <li>Третий пункт списка</li>
+                </ul>
+            `;
+            editor.innerHTML += text;
+            updatePreview();
+        }
+        
+        function clearEditor() {
+            if (confirm('Очистить редактор? Все несохраненные изменения будут потеряны.')) {
+                document.getElementById('articleEditor').innerHTML = '<p>Начните писать вашу статью здесь...</p>';
+                updatePreview();
+            }
+        }
+
+        // ФУНКЦИИ ДЛЯ ОСНОВНОГО САЙТА
+        function loadVideosData() {
+            const savedVideos = localStorage.getItem('vibeShortsVideos');
+            if (savedVideos) {
+                videos = JSON.parse(savedVideos);
+            } else {
+                // Видео по умолчанию
+                videos = [
+                    {
+                        id: 1,
+                        title: "Морской закат",
+                        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        article: {
+                            title: "Искусство визуального повествования",
+                            content: `
+                                <div class="article-text">
+                                    <p>В современном цифровом мире <span class="highlight-primary">короткие видео</span> стали мощным инструментом для передачи эмоций, идей и историй.</p>
+                                    
+                                    <div class="important-note">
+                                        <strong>Важно:</strong> Первые <span class="text-warning">3 секунды</span> видео критически важны.
+                                    </div>
+                                    
+                                    <h3 class="article-subtitle">Сила краткости</h3>
+                                    <p>Короткие видео обладают уникальной способностью захватывать внимание зрителя с первых же кадров.</p>
+                                </div>
+                            `
+                        }
+                    }
+                ];
+                localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
+            }
+            
+            createVideoCards();
+            updateCarousel();
+            updateArticle();
+            loadAdminVideosList();
+        }
+
+        function createVideoCards() {
+            const carousel = document.getElementById('carousel');
+            carousel.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+            
+            videos.forEach((video, index) => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.dataset.index = index;
+                
+                videoCard.innerHTML = `
+                    <div class="video-player-container">
+                        <video class="video-player" preload="metadata">
+                            <source src="${video.videoUrl}" type="video/mp4">
+                        </video>
+                        <div class="play-overlay">
+                            <div class="play-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="replay-icon" title="Перезапустить видео">
+                            <i class="fas fa-redo"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                    </div>
+                `;
+                
+                const videoElement = videoCard.querySelector('.video-player');
+                const playOverlay = videoCard.querySelector('.play-overlay');
+                const replayIcon = videoCard.querySelector('.replay-icon');
+                
+                videoCard.addEventListener('click', (e) => {
+                    if (!e.target.closest('.replay-icon')) {
+                        toggleVideoPlayback(videoElement, playOverlay);
+                    }
+                });
+                
+                videoElement.addEventListener('ended', () => {
+                    playOverlay.classList.remove('hidden');
+                    currentlyPlayingVideo = null;
+                });
+                
+                replayIcon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    restartVideo(videoElement, playOverlay);
+                });
+                
+                fragment.appendChild(videoCard);
+            });
+            
+            carousel.appendChild(fragment);
+            createProgressDots();
+        }
+        
+        function createProgressDots() {
+            const progressDots = document.getElementById('progressDots');
+            progressDots.innerHTML = '';
+            videos.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = `dot ${index === currentIndex ? 'active' : ''}`;
+                dot.addEventListener('click', () => goToVideo(index));
+                progressDots.appendChild(dot);
+            });
+        }
+        
+        function toggleVideoPlayback(videoElement, playOverlay) {
+            if (currentlyPlayingVideo && currentlyPlayingVideo !== videoElement) {
+                currentlyPlayingVideo.pause();
+                currentlyPlayingVideo.currentTime = 0;
+                currentlyPlayingVideo.parentElement.querySelector('.play-overlay').classList.remove('hidden');
+            }
+            
+            if (videoElement.paused) {
+                videoElement.play().then(() => {
+                    playOverlay.classList.add('hidden');
+                    currentlyPlayingVideo = videoElement;
+                });
+            } else {
+                videoElement.pause();
+                playOverlay.classList.remove('hidden');
+                currentlyPlayingVideo = null;
+            }
+        }
+        
+        function restartVideo(videoElement, playOverlay) {
+            videoElement.currentTime = 0;
+            videoElement.play().then(() => {
+                playOverlay.classList.add('hidden');
+                currentlyPlayingVideo = videoElement;
+            });
+        }
+        
+        function updateCarousel() {
+            const carousel = document.getElementById('carousel');
+            const progressDots = document.getElementById('progressDots');
+            const cards = carousel.children;
+            const dots = progressDots.children;
+            const totalCards = cards.length;
+            
+            for (let i = 0; i < totalCards; i++) {
+                const card = cards[i];
+                const position = (i - currentIndex + totalCards) % totalCards;
+                
+                card.style.transform = '';
+                card.style.opacity = '1';
+                card.style.zIndex = '1';
+                card.style.pointerEvents = 'auto';
+                
+                if (position === 0) {
+                    card.style.transform = 'translateZ(0)';
+                    card.style.zIndex = '10';
+                } else if (position === 1) {
+                    card.style.transform = 'translateX(340px) translateZ(-120px) rotateY(-12deg)';
+                    card.style.opacity = '0.8';
+                    card.style.zIndex = '9';
+                } else if (position === totalCards - 1) {
+                    card.style.transform = 'translateX(-340px) translateZ(-120px) rotateY(12deg)';
+                    card.style.opacity = '0.8';
+                    card.style.zIndex = '9';
+                } else if (position === 2) {
+                    card.style.transform = 'translateX(680px) translateZ(-240px) rotateY(-24deg)';
+                    card.style.opacity = '0.4';
+                    card.style.zIndex = '8';
+                } else if (position === totalCards - 2) {
+                    card.style.transform = 'translateX(-680px) translateZ(-240px) rotateY(24deg)';
+                    card.style.opacity = '0.4';
+                    card.style.zIndex = '8';
+                } else {
+                    card.style.transform = 'translateZ(-360px)';
+                    card.style.opacity = '0';
+                    card.style.zIndex = '1';
+                    card.style.pointerEvents = 'none';
+                }
+            }
+            
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].className = `dot ${i === currentIndex ? 'active' : ''}`;
+            }
+        }
+        
+        function updateArticle() {
+            const articleTitle = document.getElementById('articleTitle');
+            const articleContent = document.getElementById('articleContent');
+            
+            if (videos.length > 0 && currentIndex < videos.length) {
+                const currentVideo = videos[currentIndex];
+                articleTitle.textContent = currentVideo.article.title;
+                articleContent.innerHTML = currentVideo.article.content;
+            }
+        }
+        
+        function goToVideo(index) {
+            if (currentlyPlayingVideo) {
+                currentlyPlayingVideo.pause();
+                currentlyPlayingVideo.currentTime = 0;
+                currentlyPlayingVideo.parentElement.querySelector('.play-overlay').classList.remove('hidden');
+                currentlyPlayingVideo = null;
+            }
+            
+            currentIndex = index;
+            updateCarousel();
+            updateArticle();
+        }
+        
+        function nextVideo() {
+            goToVideo((currentIndex + 1) % videos.length);
+        }
+        
+        function prevVideo() {
+            goToVideo((currentIndex - 1 + videos.length) % videos.length);
+        }
+
+        // ФУНКЦИИ АДМИН-ПАНЕЛИ
         function showAdminPanel() {
             document.getElementById('adminPanel').classList.add('active');
+            loadAdminVideosList();
         }
         
         function hideAdminPanel() {
@@ -1379,14 +1419,198 @@
             event.target.classList.add('active');
         }
         
+        function loadAdminVideosList() {
+            const videosList = document.getElementById('videosList');
+            videosList.innerHTML = '';
+            
+            if (videos.length === 0) {
+                videosList.innerHTML = '<p>Нет добавленных видео</p>';
+                return;
+            }
+            
+            videos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.innerHTML = `
+                    <div class="video-item-header">
+                        <div class="video-item-title">${video.title}</div>
+                        <div class="video-item-actions">
+                            <button class="action-btn" onclick="editVideo(${video.id})">✏️</button>
+                            <button class="action-btn" onclick="deleteVideo(${video.id})">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="video-item-url" style="font-size: 0.9rem; opacity: 0.8;">${video.videoUrl}</div>
+                    <div class="video-item-article" style="margin-top: 10px; font-size: 0.9rem;">📄 ${video.article.title}</div>
+                `;
+                videosList.appendChild(videoItem);
+            });
+        }
+        
+        function saveVideo(event) {
+            const title = document.getElementById('videoTitle').value;
+            const url = document.getElementById('videoUrl').value;
+            const articleTitle = document.getElementById('articleTitle').value;
+            const editorContent = document.getElementById('articleEditor').innerHTML;
+            
+            // Проверяем, что статья не пустая
+            if (!editorContent || editorContent === '<p>Начните писать вашу статью здесь...</p>') {
+                showAdminMessage('❌ Напишите статью перед сохранением!', 'error');
+                return;
+            }
+            
+            const articleContent = `<div class="article-text">${editorContent}</div>`;
+            
+            const newVideo = {
+                id: videos.length > 0 ? Math.max(...videos.map(v => v.id)) + 1 : 1,
+                title: title,
+                videoUrl: url,
+                article: {
+                    title: articleTitle,
+                    content: articleContent
+                }
+            };
+            
+            videos.push(newVideo);
+            localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
+            
+            document.getElementById('videoForm').reset();
+            document.getElementById('articleEditor').innerHTML = '<p>Начните писать вашу статью здесь...</p>';
+            updatePreview();
+            
+            showAdminMessage('✅ Видео успешно добавлено!', 'success');
+            
+            // ОБНОВЛЯЕМ ОСНОВНОЙ САЙТ
+            createVideoCards();
+            updateCarousel();
+            updateArticle();
+            loadAdminVideosList();
+        }
+        
         function editVideo(id) {
-            // Функция реализована в основном скрипте
-            window.editVideo && window.editVideo(id);
+            const video = videos.find(v => v.id === id);
+            if (!video) return;
+            
+            document.getElementById('videoTitle').value = video.title;
+            document.getElementById('videoUrl').value = video.videoUrl;
+            document.getElementById('articleTitle').value = video.article.title;
+            
+            // Извлекаем контент из article-text обертки
+            let content = video.article.content.replace('<div class="article-text">', '').replace('</div>', '');
+            document.getElementById('articleEditor').innerHTML = content;
+            updatePreview();
+            
+            showAdminSection('addVideoSection');
+            
+            const form = document.getElementById('videoForm');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.textContent = '💾 Обновить видео';
+            submitBtn.onclick = function(e) {
+                e.preventDefault();
+                updateVideo(id);
+            };
+        }
+        
+        function updateVideo(id) {
+            const title = document.getElementById('videoTitle').value;
+            const url = document.getElementById('videoUrl').value;
+            const articleTitle = document.getElementById('articleTitle').value;
+            const editorContent = document.getElementById('articleEditor').innerHTML;
+            
+            const articleContent = `<div class="article-text">${editorContent}</div>`;
+            
+            const videoIndex = videos.findIndex(v => v.id === id);
+            if (videoIndex !== -1) {
+                videos[videoIndex] = {
+                    id: id,
+                    title: title,
+                    videoUrl: url,
+                    article: {
+                        title: articleTitle,
+                        content: articleContent
+                    }
+                };
+                
+                localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
+                
+                const submitBtn = document.querySelector('#videoForm button[type="submit"]');
+                submitBtn.textContent = '💾 Сохранить видео';
+                submitBtn.onclick = function(e) {
+                    e.preventDefault();
+                    saveVideo(e);
+                };
+                
+                document.getElementById('videoForm').reset();
+                document.getElementById('articleEditor').innerHTML = '<p>Начните писать вашу статью здесь...</p>';
+                updatePreview();
+                
+                showAdminMessage('✅ Видео успешно обновлено!', 'success');
+                
+                // ОБНОВЛЯЕМ ОСНОВНОЙ САЙТ
+                createVideoCards();
+                updateCarousel();
+                updateArticle();
+                loadAdminVideosList();
+            }
         }
         
         function deleteVideo(id) {
-            // Функция реализована в основном скрипте
-            window.deleteVideo && window.deleteVideo(id);
+            if (confirm('Вы уверены, что хотите удалить это видео?')) {
+                videos = videos.filter(v => v.id !== id);
+                localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
+                showAdminMessage('✅ Видео удалено!', 'success');
+                
+                // ОБНОВЛЯЕМ ОСНОВНОЙ САЙТ
+                createVideoCards();
+                updateCarousel();
+                updateArticle();
+                loadAdminVideosList();
+            }
+        }
+        
+        function showAdminMessage(text, type) {
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            document.querySelector('.admin-container').appendChild(message);
+            setTimeout(() => { message.remove(); }, 3000);
+        }
+
+        // Проверка секретного кода для открытия админки
+        function checkCodeSequence(key) {
+            if (key === 'F12') {
+                f12Pressed = true;
+                codeSequence = [];
+                codeTimeout = setTimeout(() => {
+                    f12Pressed = false;
+                    codeSequence = [];
+                }, 10000);
+                return;
+            }
+            
+            if (!f12Pressed) return;
+            
+            if (key >= '0' && key <= '9') {
+                codeSequence.push(key);
+                
+                if (codeSequence.length === SECRET_CODE.length) {
+                    if (codeSequence.join('') === SECRET_CODE.join('')) {
+                        showAdminPanel();
+                        f12Pressed = false;
+                        codeSequence = [];
+                    } else {
+                        f12Pressed = false;
+                        codeSequence = [];
+                    }
+                }
+                
+                if (codeTimeout) {
+                    clearTimeout(codeTimeout);
+                    codeTimeout = setTimeout(() => {
+                        f12Pressed = false;
+                        codeSequence = [];
+                    }, 10000);
+                }
+            }
         }
     </script>
 </body>
