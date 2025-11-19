@@ -27,14 +27,14 @@
         "content": "<div class=\"article-text\"><p>Горные пейзажи обладают особой магией — они одновременно умиротворяют и вдохновляют на свершения. <span class=\"highlight-success\">Видеосъемка в горах</span> требует особого подхода и подготовки.</p><div class=\"success-note\"><strong>Успех:</strong> Правильно выбранный <span class=\"text-accent\">ракурс съемки</span> может превратить обычный пейзаж в шедевр.</div><h3 class=\"article-subtitle\">Высота и перспектива</h3><p>Съемка на высоте открывает <span class=\"highlight-primary\">уникальные ракурсы</span> и возможности для создания захватывающего контента.</p><ul class=\"article-list\"><li><span class=\"badge badge-primary\">1</span> <strong>Широкоугольные объективы</strong> — подчеркивают масштаб</li><li><span class=\"badge badge-accent\">2</span> <strong>Золотые часы</strong> — лучшее время для съемки</li><li><span class=\"badge badge-success\">3</span> <strong>Стабилизация</strong> — ключ к качественному видео</li></ul></div>"
       }
     },
-   {
-  "id": 4,
-  "title": " 4 Название видео",
-  "videoUrl": "https://vk.com/clip-230131323_456239077",
-  "article": {
-    "title": "Заголовок статьи",
-    "content": "<div class=\"article-text\"><strong>Это любовь</strong>\n\n<span class=\"highlight-blue-preview\">пап</span> \n<span class=\"highlight-orange-preview\">Ну неее</span>\n\n<div class=\"article-quote\">Жизнь боль</div>\n\n<div class=\"important-note\"><strong>Важно:</strong> важно</div>\n\n<h3 class=\"article-subtitle\">та..</h3></div>"
-  }
-}
+    {
+      "id": 4,
+      "title": "Видео из ВК",
+      "videoUrl": "https://vk.com/clip-230131323_456239077",
+      "article": {
+        "title": "Пример статьи для ВК видео",
+        "content": "<div class=\"article-text\"><p><strong>Это любовь</strong></p><p><span class=\"highlight-blue-preview\">пап</span></p><p><span class=\"highlight-orange-preview\">Ну неее</span></p><div class=\"article-quote\">Жизнь боль</div><div class=\"important-note\"><strong>Важно:</strong> важно</div><h3 class=\"article-subtitle\">Заголовок</h3><p>Текст статьи...</p></div>"
+      }
+    }
   ]
 }
