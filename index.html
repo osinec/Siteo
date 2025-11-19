@@ -6,6 +6,9 @@
     <title>VibeShorts | Галерея со статьями</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ==================================== */
+        /* СТИЛИ CSS                  */
+        /* ==================================== */
         :root {
             --primary: #8B5CF6;
             --primary-light: #A78BFA;
@@ -19,87 +22,186 @@
             --glass: rgba(255, 255, 255, 0.08);
             --glass-border: rgba(255, 255, 255, 0.12);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: system-ui, -apple-system, sans-serif;
         }
-        
+
         html, body {
             overflow-x: hidden;
             width: 100%;
             position: relative;
         }
-        
+
         body {
-            background: var(--darker);
+            background-color: var(--darker);
             color: var(--light);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
         }
-        
-        header {
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- Header & Footer --- */
+        .header {
+            padding: 40px 0;
             text-align: center;
-            padding: 25px 20px 20px;
-            background: transparent;
+            border-bottom: 1px solid var(--glass-border);
         }
-        
-        h1 {
+
+        .header h1 {
             font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--light), var(--primary-light));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 8px;
+            color: var(--primary);
+            margin-bottom: 5px;
         }
-        
-        .subtitle {
-            font-size: 1rem;
+
+        .header p {
+            color: var(--light);
+            opacity: 0.7;
+        }
+
+        .footer {
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 40px;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+            color: var(--light);
+            opacity: 0.5;
+        }
+
+        /* --- Main Content & Layout --- */
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .carousel-section {
+            flex: 1 1 550px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .article-section {
+            flex: 1 1 400px;
+            padding: 20px;
+            background-color: var(--dark);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+        }
+
+        .article-title {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .article-content {
+            line-height: 1.7;
+            font-size: 1.05rem;
+            color: var(--light);
+        }
+
+        /* Article Content Styling (для отображения статей из data.json) */
+        .article-content p { margin-bottom: 15px; }
+        .article-content strong { color: var(--light); }
+        .article-content h3 { margin-top: 25px; margin-bottom: 15px; color: var(--primary-light); font-size: 1.4rem; }
+        .article-content ul { margin-left: 20px; list-style: none; }
+        .article-content ul li { margin-bottom: 8px; position: relative; padding-left: 25px; }
+        .article-content ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary-light);
+            font-weight: bold;
+        }
+        .highlight-primary { color: var(--primary-light); font-weight: bold; }
+        .highlight-accent { color: var(--accent); font-weight: bold; }
+        .highlight-success { color: var(--success); font-weight: bold; }
+        .highlight-warning { color: var(--warning); font-weight: bold; }
+
+        .article-quote {
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+            margin: 20px 0;
+            font-style: italic;
             opacity: 0.8;
         }
-        
-        .gallery-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            perspective: 1400px;
-            padding: 20px 0 80px;
-            min-height: 600px;
-            flex-direction: column;
+
+        .important-note, .success-note {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.95rem;
         }
-        
-        .carousel {
-            position: relative;
-            width: 320px;
-            height: 560px;
-            transform-style: preserve-3d;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 30px;
+
+        .important-note {
+            background-color: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning);
         }
-        
-        .video-card {
-            position: absolute;
+        .success-note {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+        }
+
+        /* --- Carousel --- */
+        .carousel-3d-wrapper {
+            position: relative;
+            width: 600px;
+            height: 380px;
+            perspective: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .carousel-3d {
             width: 100%;
             height: 100%;
-            border-radius: 20px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .video-card {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 400px;
+            height: 100%;
+            background-color: var(--dark);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--glass-border);
+            margin-left: -200px;
             display: flex;
             flex-direction: column;
-            background: var(--dark);
-            border: 1px solid var(--glass-border);
-            cursor: pointer;
-            top: 0;
-            left: 0;
         }
-        
+
         .video-player-container {
             width: 100%;
             height: 85%;
@@ -107,25 +209,103 @@
             background: #000;
             overflow: hidden;
         }
-        
+
         .video-player {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
+        /* ОПТИМИЗАЦИЯ: Стиль для iframe и div, который заменяется плеером YouTube */
         .video-iframe {
             width: 100%;
             height: 100%;
             border: none;
+            position: absolute; 
+            top: 0;
+            left: 0;
         }
-        
-        .video-preview {
+
+        .video-source-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            background: var(--darker);
+            color: var(--accent);
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            opacity: 0.8;
+            z-index: 100;
+        }
+
+        .video-info {
+            padding: 10px;
+            height: 15%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--dark);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            color: var(--primary-light);
+            text-align: center;
+        }
+
+        /* Overlay and Icons */
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            transition: opacity 0.3s;
         }
-        
+
+        .play-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .play-icon {
+            font-size: 3rem;
+            color: var(--light);
+            opacity: 0.9;
+            transition: transform 0.2s;
+        }
+
+        .play-overlay:hover .play-icon {
+            transform: scale(1.1);
+        }
+
+        .replay-icon {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: var(--light);
+            font-size: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 60;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .replay-icon:hover {
+            opacity: 1;
+        }
+
         .video-unsupported {
             width: 100%;
             height: 100%;
@@ -133,609 +313,224 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: var(--dark);
-            color: var(--light);
             text-align: center;
-            padding: 20px;
+            color: var(--error);
+            background-color: rgba(239, 68, 68, 0.1);
+            font-size: 1.2rem;
         }
-        
-        .video-unsupported i {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            opacity: 0.7;
-        }
-        
-        .video-source-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            z-index: 5;
-        }
-        
-        .play-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.7);
-            transition: opacity 0.2s ease;
-            cursor: pointer;
-            z-index: 2;
-            text-align: center;
-        }
-        
-        .play-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .play-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            color: white;
-            transition: transform 0.2s ease;
-            margin-bottom: 15px;
-        }
-        
-        .play-overlay:hover .play-icon {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 0.25);
-        }
-        
-        .external-link-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 10px;
-        }
-        
-        .external-link-btn:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-        }
-        
-        .replay-icon {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
-            color: white;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 5;
-        }
-        
-        .video-card:hover .replay-icon {
-            opacity: 1;
-        }
-        
-        .video-info {
-            padding: 20px;
-            height: 15%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(15, 15, 35, 0.9);
-        }
-        
-        .video-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            text-align: center;
-        }
-        
+
+        /* Navigation Buttons */
         .nav-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             background: var(--glass);
             border: 1px solid var(--glass-border);
-            width: 50px;
-            height: 50px;
+            color: var(--light);
+            font-size: 1.5rem;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             cursor: pointer;
-            z-index: 100;
-            transition: all 0.2s ease;
-            border: none;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s, color 0.3s;
         }
-        
+
         .nav-btn:hover {
-            background: rgba(139, 92, 246, 0.3);
-            transform: translateY(-50%) scale(1.1);
+            background: var(--primary);
+            color: var(--darker);
         }
-        
-        .prev-btn {
-            left: 15px;
-        }
-        
-        .next-btn {
-            right: 15px;
-        }
-        
-        .nav-btn i {
-            font-size: 1.4rem;
-            color: white;
-        }
-        
+
+        .prev-btn { left: -60px; }
+        .next-btn { right: -60px; }
+
+        /* Progress Dots */
         .progress-dots {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            position: relative;
-            z-index: 10;
-            margin-top: 20px;
+            gap: 8px;
+            margin-top: 10px;
         }
-        
+
         .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--glass-border);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dot.active {
+            background-color: var(--primary);
             width: 12px;
             height: 12px;
-            border-radius: 50%;
-            background: var(--glass);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .dot.active {
-            background: var(--primary);
-            transform: scale(1.3);
-        }
-        
-        .dot:hover {
-            background: var(--primary-light);
-            transform: scale(1.2);
         }
 
-        /* УВЕЛИЧЕННЫЙ РАЗДЕЛ ДЛЯ СТАТЬИ */
-        .article-section {
-            flex: 1;
-            max-width: 1200px;
-            margin: 0 auto 40px;
-            padding: 40px;
-            background: rgba(15, 15, 35, 0.7);
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            position: relative;
-            z-index: 5;
-        }
-        
-        .article-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .article-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-light);
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-        
-        .article-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        .article-text {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            margin-bottom: 30px;
-            text-align: justify;
-        }
-        
-        .article-text p {
-            margin-bottom: 25px;
-        }
-        
-        .article-subtitle {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary-light);
-            margin: 40px 0 20px 0;
-            border-left: 4px solid var(--primary);
-            padding-left: 20px;
-        }
-        
-        .article-list {
-            margin: 25px 0;
-            padding-left: 30px;
-        }
-        
-        .article-list li {
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        
-        .article-image {
+        /* Loading/Error Message */
+        .loading-message {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 800px;
-            margin: 30px auto;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-        }
-        
-        .article-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        .article-quote {
-            background: rgba(139, 92, 246, 0.1);
-            border-left: 4px solid var(--primary);
-            padding: 30px;
-            margin: 40px 0;
-            border-radius: 0 15px 15px 0;
-            font-style: italic;
-            font-size: 1.3rem;
-            line-height: 1.6;
-        }
-
-        /* СТИЛИ ДЛЯ ВЫДЕЛЕНИЯ ТЕКСТА */
-        .highlight-primary {
-            background: linear-gradient(120deg, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 100%);
-            color: var(--primary-light);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            border-left: 3px solid var(--primary);
-        }
-        
-        .highlight-accent {
-            background: linear-gradient(120deg, rgba(6, 182, 212, 0.3) 0%, rgba(6, 182, 212, 0.1) 100%);
-            color: var(--accent);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            border-left: 3px solid var(--accent);
-        }
-        
-        .highlight-success {
-            background: linear-gradient(120deg, rgba(16, 185, 129, 0.3) 0%, rgba(16, 185, 129, 0.1) 100%);
-            color: var(--success);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            border-left: 3px solid var(--success);
-        }
-        
-        .highlight-warning {
-            background: linear-gradient(120deg, rgba(245, 158, 11, 0.3) 0%, rgba(245, 158, 11, 0.1) 100%);
-            color: var(--warning);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            border-left: 3px solid var(--warning);
-        }
-        
-        .highlight-error {
-            background: linear-gradient(120deg, rgba(239, 68, 68, 0.3) 0%, rgba(239, 68, 68, 0.1) 100%);
-            color: var(--error);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            border-left: 3px solid var(--error);
-        }
-        
-        .highlight-blue-preview {
-            background: linear-gradient(120deg, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.1) 100%);
-            color: #3B82F6;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            border-left: 3px solid #3B82F6;
-        }
-        
-        .highlight-orange-preview {
-            background: linear-gradient(120deg, rgba(249, 115, 22, 0.3) 0%, rgba(249, 115, 22, 0.1) 100%);
-            color: #F97316;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            border-left: 3px solid #F97316;
-        }
-        
-        .text-primary {
-            color: var(--primary-light);
-            font-weight: 600;
-        }
-        
-        .text-accent {
-            color: var(--accent);
-            font-weight: 600;
-        }
-        
-        .text-success {
-            color: var(--success);
-            font-weight: 600;
-        }
-        
-        .text-warning {
-            color: var(--warning);
-            font-weight: 600;
-        }
-        
-        .text-error {
-            color: var(--error);
-            font-weight: 600;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin: 0 5px;
-        }
-        
-        .badge-primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .badge-accent {
-            background: var(--accent);
-            color: white;
-        }
-        
-        .badge-success {
-            background: var(--success);
-            color: white;
-        }
-        
-        .badge-warning {
-            background: var(--warning);
-            color: white;
-        }
-        
-        .badge-error {
-            background: var(--error);
-            color: white;
-        }
-        
-        .important-note {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid var(--warning);
-            border-left: 4px solid var(--warning);
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 8px;
-        }
-        
-        .success-note {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--success);
-            border-left: 4px solid var(--success);
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 8px;
-        }
-        
-        .info-note {
-            background: rgba(6, 182, 212, 0.1);
-            border: 1px solid var(--accent);
-            border-left: 4px solid var(--accent);
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 8px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-            opacity: 0.8;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-size: 1.5rem;
+            color: var(--primary);
         }
 
         .error-message {
             text-align: center;
-            padding: 40px;
+            padding: 30px;
+            border: 2px solid var(--error);
+            border-radius: 10px;
+            background-color: rgba(239, 68, 68, 0.1);
             color: var(--error);
-            font-size: 1.2rem;
         }
 
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .carousel {
-                width: 300px;
-                height: 520px;
+        /* Media Queries */
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .carousel-section, .article-section {
+                flex: 1 1 100%;
+                max-width: 600px;
+            }
+
+            .carousel-3d-wrapper {
+                width: 100%;
+                max-width: 600px;
+                height: 350px;
             }
             
-            .nav-btn {
-                width: 45px;
-                height: 45px;
-            }
+            .nav-btn { display: none; } /* Скрыть кнопки навигации на узких экранах */
             
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .article-section {
-                padding: 30px 25px;
-                margin: 0 20px 30px;
-            }
-            
-            .article-title {
-                font-size: 2rem;
-            }
-            
-            .article-text {
-                font-size: 1.1rem;
-            }
-            
-            .article-subtitle {
-                font-size: 1.5rem;
+            .video-card {
+                width: 350px;
+                margin-left: -175px;
             }
         }
-        
-        @media (max-width: 480px) {
-            .carousel {
-                width: 280px;
-                height: 480px;
+
+        @media (max-width: 650px) {
+            .header h1 { font-size: 2rem; }
+            .header p { font-size: 0.9rem; }
+            
+            .carousel-3d-wrapper {
+                height: 300px;
             }
             
-            .nav-btn {
-                width: 40px;
-                height: 40px;
+            .video-card {
+                width: 90%;
+                left: 5%;
+                margin-left: 0;
             }
             
-            h1 {
-                font-size: 2rem;
-            }
+            /* Сдвиги для 3D эффекта на мобильных */
+            .video-card[style*="translateX(340px)"] { transform: translateX(80vw) translateZ(-120px) rotateY(-12deg) !important; }
+            .video-card[style*="translateX(-340px)"] { transform: translateX(-80vw) translateZ(-120px) rotateY(12deg) !important; }
             
-            .article-section {
-                padding: 25px 20px;
-                margin: 0 15px 25px;
-            }
-            
-            .article-title {
-                font-size: 1.8rem;
-            }
-            
-            .article-text {
-                font-size: 1rem;
-            }
-            
-            .article-subtitle {
-                font-size: 1.3rem;
-            }
+            .video-card[style*="translateX(680px)"] { display: none !important; }
+            .video-card[style*="translateX(-680px)"] { display: none !important; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>VibeShorts</h1>
-        <p class="subtitle">Галерея видео с пространством для статей</p>
-    </header>
-    
-    <div class="gallery-container">
-        <button class="nav-btn prev-btn" id="prevBtn">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        
-        <div class="carousel" id="carousel">
-            <div class="loading" id="loading">
-                <p>🔄 Загрузка видео...</p>
-            </div>
-        </div>
-        
-        <button class="nav-btn next-btn" id="nextBtn">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-        
-        <div class="progress-dots" id="progressDots"></div>
+    <div id="loading" class="loading-message"></div>
+    <div class="content-wrapper">
+        <header class="header">
+            <h1>VibeShorts</h1>
+            <p>Галерея коротких видео и статей</p>
+        </header>
+
+        <main class="main-content">
+            <section class="carousel-section">
+                <div class="carousel-3d-wrapper">
+                    <div id="carousel" class="carousel-3d">
+                        </div>
+                    <button id="prevBtn" class="nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button id="nextBtn" class="nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div id="progressDots" class="progress-dots"></div>
+            </section>
+
+            <section class="article-section">
+                <h2 id="articleTitle" class="article-title"></h2>
+                <div id="articleContent" class="article-content"></div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 VibeShorts. Все права защищены.</p>
+        </footer>
     </div>
     
-    <!-- УВЕЛИЧЕННЫЙ РАЗДЕЛ ДЛЯ СТАТЬИ -->
-    <section class="article-section">
-        <div class="article-header">
-            <h2 class="article-title" id="articleTitle"></h2>
-        </div>
-        
-        <div class="article-content" id="articleContent">
-            <div class="article-text">
-                <p></p>
-            </div>
-        </div>
-    </section>
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    </script>
 
     <script>
+        /* ==================================== */
+        /* КОД JavaScript             */
+        /* ==================================== */
+        
         // Глобальные переменные
         let videos = [];
         let currentIndex = 0;
-        let currentlyPlayingVideo = null;
+        let currentlyPlayingVideo = null; // Для прямого (MP4) видео
+        let ytPlayers = {}; // Хранилище для объектов YT.Player
 
-        // Блокировка горизонтального скролла
+        // Инициализация при загрузке DOM
         document.addEventListener('DOMContentLoaded', function() {
-            // Предотвращаем горизонтальный скролл
+            
+            // Блокировка горизонтального скролла
             document.body.style.overflowX = 'hidden';
             document.documentElement.style.overflowX = 'hidden';
             
-            // Блокируем горизонтальные свайпы
-            document.addEventListener('touchmove', function(e) {
-                if (e.touches.length > 1) return;
-                
-                const touch = e.touches[0];
-                const startX = touch.pageX;
-                
-                // Если движение в основном горизонтальное - блокируем
-                if (Math.abs(e.touches[0].pageX - startX) > Math.abs(e.touches[0].pageY - startX)) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            // Блокируем горизонтальную прокрутку колесиком мыши
-            document.addEventListener('wheel', function(e) {
-                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-
             const carousel = document.getElementById('carousel');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const progressDots = document.getElementById('progressDots');
-            const articleTitle = document.getElementById('articleTitle');
-            const articleContent = document.getElementById('articleContent');
-            const loading = document.getElementById('loading');
             
-            // Загрузка данных из JSON файла
             loadVideosData();
             
-            // Обработчики событий для карусели
             nextBtn.addEventListener('click', nextVideo);
             prevBtn.addEventListener('click', prevVideo);
             
-            // Обработчики клавиш
+            // Обработчики клавиш (стрелки влево/вправо, пробел)
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight') nextVideo();
-                else if (e.key === 'ArrowLeft') prevVideo();
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault(); 
+                    nextVideo();
+                }
+                else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevVideo();
+                }
                 else if (e.key === ' ') {
                     e.preventDefault();
                     const activeCard = carousel.children[currentIndex];
-                    if (activeCard) {
-                        const videoElement = activeCard.querySelector('.video-player');
-                        const playOverlay = activeCard.querySelector('.play-overlay');
-                        if (videoElement && playOverlay) {
-                            toggleVideoPlayback(videoElement, playOverlay);
-                        }
+                    const videoElement = activeCard ? activeCard.querySelector('.video-player') : null;
+                    const playOverlay = activeCard ? activeCard.querySelector('.play-overlay') : null;
+                    
+                    if (videoElement && videoElement.tagName === 'VIDEO') {
+                        toggleVideoPlayback(videoElement, playOverlay);
+                    } else if (ytPlayers[currentIndex]) {
+                        toggleYouTubePlayback(ytPlayers[currentIndex], playOverlay);
+                    } else if (playOverlay && !playOverlay.classList.contains('hidden')) {
+                         // Для VK и других iframe - просто скрываем оверлей, чтобы показать плеер
+                         playOverlay.classList.add('hidden');
+                         stopAllOtherVideos(currentIndex, 'iframe');
                     }
                 }
             });
@@ -748,20 +543,26 @@
             
             carousel.addEventListener('touchend', (e) => {
                 const endX = e.changedTouches[0].clientX;
-                if (startX - endX > 50) nextVideo();
-                else if (endX - startX > 50) prevVideo();
+                const diff = startX - endX;
+                if (diff > 50) nextVideo(); // Swipe left
+                else if (diff < -50) prevVideo(); // Swipe right
             }, { passive: true });
         });
+
+        // ФУНКЦИЯ API YOUTUBE: Вызывается, когда API загружен
+        function onYouTubeIframeAPIReady() {
+            console.log('YouTube IFrame API Ready.');
+            // При необходимости, можно вызвать дополнительную инициализацию
+        }
 
         // ФУНКЦИЯ ДЛЯ ОПРЕДЕЛЕНИЯ ТИПА ВИДЕО
         function getVideoType(videoUrl) {
             if (!videoUrl) return 'unsupported';
-            
             if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
                 return 'youtube';
             } else if (videoUrl.includes('vimeo.com')) {
-                return 'vimeo';
-            } else if (videoUrl.includes('vk.com') || videoUrl.includes('vk.ru')) {
+                return 'vimeo'; 
+            } else if (videoUrl.includes('vk.com') || videoUrl.includes('vk.ru') || videoUrl.includes('video_ext.php')) {
                 return 'vk';
             } else if (videoUrl.endsWith('.mp4') || videoUrl.includes('mp4')) {
                 return 'direct';
@@ -770,14 +571,35 @@
             }
         }
 
+        // ФУНКЦИЯ ДЛЯ ИЗВЛЕЧЕНИЯ ID YOUTUBE
+        function getYouTubeId(videoUrl) {
+            const match = videoUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+            return match ? match[1] : null;
+        }
+
         // ФУНКЦИЯ ДЛЯ СОЗДАНИЯ IFrame ВСТАВКИ VK
         function createVKEmbed(videoUrl) {
-            // Извлекаем ID видео из ссылки ВК
-            const match = videoUrl.match(/clip-(\d+)_(\d+)/);
-            if (match) {
-                const ownerId = match[1];
-                const videoId = match[2];
-                return `https://vk.com/video_ext.php?oid=${ownerId}&id=${videoId}&hash=`;
+            let ownerId = null;
+            let videoId = null;
+            
+            const clipMatch = videoUrl.match(/clip(-?\d+)_(\d+)/);
+            if (clipMatch) {
+                ownerId = clipMatch[1];
+                videoId = clipMatch[2];
+            }
+            
+            const videoMatch = videoUrl.match(/video(-?\d+)_(\d+)/);
+            if (videoMatch) {
+                ownerId = videoMatch[1];
+                videoId = videoMatch[2];
+            }
+            
+            if (ownerId && videoId) {
+                // VK требует отрицательного ownerId для встраивания из групп/общедоступных видео.
+                const finalOwnerId = ownerId.startsWith('-') ? ownerId : `-${ownerId}`;
+                
+                // Добавляем autoplay=1 для попытки автовоспроизведения (может быть заблокировано браузером)
+                return `https://vk.com/video_ext.php?oid=${finalOwnerId}&id=${videoId}&hash=&autoplay=1`;
             }
             return null;
         }
@@ -785,25 +607,20 @@
         // ЗАГРУЗКА ДАННЫХ ИЗ JSON ФАЙЛА
         async function loadVideosData() {
             const loading = document.getElementById('loading');
-            const carousel = document.getElementById('carousel');
             
             try {
                 loading.innerHTML = '<p>🔄 Загрузка данных...</p>';
-                
-                // Загружаем данные из JSON файла
                 const response = await fetch('data.json');
                 
                 if (!response.ok) {
-                    throw new Error('Ошибка загрузки данных');
+                    throw new Error('Ошибка загрузки данных. Проверьте путь к data.json.');
                 }
                 
                 const data = await response.json();
                 videos = data.videos;
                 
-                // Скрываем индикатор загрузки
                 loading.style.display = 'none';
                 
-                // Создаем видео карточки
                 createVideoCards();
                 updateCarousel();
                 updateArticle();
@@ -813,17 +630,19 @@
                 loading.innerHTML = `
                     <div class="error-message">
                         <p>❌ Ошибка загрузки данных</p>
-                        <p style="font-size: 1rem; margin-top: 10px;">Проверьте наличие файла data.json</p>
+                        <p style="font-size: 1rem; margin-top: 10px;">${error.message}</p>
                     </div>
                 `;
             }
         }
 
-        // ФУНКЦИИ ДЛЯ ОСНОВНОГО САЙТА
+        // Создание карточек галереи
         function createVideoCards() {
             const carousel = document.getElementById('carousel');
             carousel.innerHTML = '';
             const fragment = document.createDocumentFragment();
+            
+            ytPlayers = {}; 
             
             videos.forEach((video, index) => {
                 const videoCard = document.createElement('div');
@@ -833,19 +652,22 @@
                 const videoType = getVideoType(video.videoUrl);
                 let videoHTML = '';
                 let sourceName = '';
+                let playOverlayHTML = `
+                    <div class="play-overlay">
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                `;
                 
                 switch(videoType) {
                     case 'direct':
                         videoHTML = `
-                            <video class="video-player" preload="metadata">
+                            <video class="video-player" preload="metadata" playsinline muted>
                                 <source src="${video.videoUrl}" type="video/mp4">
                                 Ваш браузер не поддерживает видео тег.
                             </video>
-                            <div class="play-overlay">
-                                <div class="play-icon">
-                                    <i class="fas fa-play"></i>
-                                </div>
-                            </div>
+                            ${playOverlayHTML}
                             <div class="replay-icon" title="Перезапустить видео">
                                 <i class="fas fa-redo"></i>
                             </div>
@@ -854,38 +676,55 @@
                         break;
                         
                     case 'youtube':
-                        const youtubeId = video.videoUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
+                        const youtubeId = getYouTubeId(video.videoUrl);
                         if (youtubeId) {
                             videoHTML = `
-                                <iframe class="video-iframe" 
-                                    src="https://www.youtube.com/embed/${youtubeId}?enablejsapi=1&controls=1&modestbranding=1&rel=0" 
-                                    frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                    allowfullscreen>
-                                </iframe>
-                                <div class="play-overlay">
-                                    <div class="play-icon">
-                                        <i class="fas fa-play"></i>
-                                    </div>
-                                </div>
+                                <div id="youtube-player-${index}" class="video-iframe"></div>
+                                ${playOverlayHTML}
                             `;
                             sourceName = 'YouTube';
+                            
+                            // Создание объекта YouTube Player
+                            if (typeof YT !== 'undefined' && YT.Player) {
+                                setTimeout(() => initYouTubePlayer(index, youtubeId), 100);
+                            }
                         }
                         break;
                         
                     case 'vk':
-                        // Для VK используем превью и кнопку для открытия в новом окне
+                        const vkEmbedUrl = createVKEmbed(video.videoUrl);
+                        if (vkEmbedUrl) {
+                            videoHTML = `
+                                <iframe class="video-iframe" 
+                                    src="${vkEmbedUrl}" 
+                                    frameborder="0" 
+                                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                                    allowfullscreen
+                                    sandbox="allow-scripts allow-same-origin allow-popups allow-presentation">
+                                </iframe>
+                                ${playOverlayHTML}
+                            `;
+                            sourceName = 'VK';
+                        }
+                        break;
+                    
+                    case 'vimeo':
+                        const vimeoIdMatch = video.videoUrl.match(/vimeo\.com\/(\d+)/);
+                        const vimeoUrl = vimeoIdMatch 
+                            ? `https://player.vimeo.com/video/${vimeoIdMatch[1]}?autoplay=1&title=0&byline=0&portrait=0` 
+                            : video.videoUrl;
+                            
                         videoHTML = `
-                            <div class="video-unsupported" style="background: linear-gradient(135deg, var(--dark), var(--darker));">
-                                <i class="fab fa-vk" style="font-size: 4rem; color: #4A76A8; margin-bottom: 20px;"></i>
-                                <h3 style="margin-bottom: 10px; color: var(--primary-light);">Видео из ВКонтакте</h3>
-                                <p style="margin-bottom: 20px; opacity: 0.8; max-width: 250px;">Это видео доступно для просмотра в ВКонтакте</p>
-                                <button class="external-link-btn" onclick="window.open('${video.videoUrl}', '_blank')">
-                                    <i class="fas fa-external-link-alt"></i> Открыть в ВК
-                                </button>
-                            </div>
+                            <iframe class="video-iframe" 
+                                src="${vimeoUrl}" 
+                                frameborder="0" 
+                                allow="autoplay; fullscreen; picture-in-picture" 
+                                allowfullscreen
+                                sandbox="allow-scripts allow-same-origin allow-popups allow-presentation">
+                            </iframe>
+                            ${playOverlayHTML}
                         `;
-                        sourceName = 'VK';
+                        sourceName = 'Vimeo';
                         break;
                         
                     default:
@@ -893,7 +732,7 @@
                             <div class="video-unsupported">
                                 <i class="fas fa-exclamation-triangle"></i>
                                 <p>Видео недоступно</p>
-                                <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">Ссылка: ${video.videoUrl}</p>
+                                <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">Источник не поддерживается: ${videoType}</p>
                             </div>
                         `;
                         sourceName = 'Не поддерживается';
@@ -909,14 +748,14 @@
                     </div>
                 `;
                 
-                // ОБРАБОТЧИКИ ДЛЯ ПРЯМЫХ MP4 ВИДЕО
+                // Обработчики для прямого MP4 видео
                 if (videoType === 'direct') {
                     const videoElement = videoCard.querySelector('.video-player');
                     const playOverlay = videoCard.querySelector('.play-overlay');
                     const replayIcon = videoCard.querySelector('.replay-icon');
                     
                     videoCard.addEventListener('click', (e) => {
-                        if (!e.target.closest('.replay-icon') && !e.target.closest('.external-link-btn')) {
+                        if (!e.target.closest('.replay-icon') && parseInt(videoCard.dataset.index) === currentIndex) {
                             toggleVideoPlayback(videoElement, playOverlay);
                         }
                     });
@@ -933,15 +772,23 @@
                         });
                     }
                 }
-                // ДЛЯ IFRAME (YouTube) - УПРАВЛЕНИЕ ЧЕРЕЗ КЛИК НА OVERLAY
-                else if (videoType === 'youtube') {
+                // Обработчики для IFRAME видео (YouTube, VK, Vimeo)
+                else if (videoType === 'youtube' || videoType === 'vk' || videoType === 'vimeo') {
                     const playOverlay = videoCard.querySelector('.play-overlay');
-                    const iframe = videoCard.querySelector('.video-iframe');
                     
-                    if (playOverlay && iframe) {
+                    if (playOverlay) {
                         videoCard.addEventListener('click', (e) => {
-                            if (!e.target.closest('.video-source-badge') && !e.target.closest('.external-link-btn')) {
-                                playOverlay.classList.add('hidden');
+                            if (parseInt(videoCard.dataset.index) === currentIndex && !e.target.closest('.video-source-badge')) {
+                                 
+                                 if (videoType === 'youtube' && ytPlayers[index]) {
+                                    toggleYouTubePlayback(ytPlayers[index], playOverlay);
+                                 } else {
+                                    // Для VK/Vimeo: просто скрываем оверлей, чтобы показать плеер
+                                    playOverlay.classList.toggle('hidden');
+                                 }
+                                 
+                                 // Принудительная остановка других активных видео при попытке запуска этого
+                                 stopAllOtherVideos(index, videoType);
                             }
                         });
                     }
@@ -953,7 +800,82 @@
             carousel.appendChild(fragment);
             createProgressDots();
         }
-        
+
+        // Инициализация YouTube Player
+        function initYouTubePlayer(index, videoId) {
+            if (!document.getElementById(`Youtubeer-${index}`)) return;
+
+            ytPlayers[index] = new YT.Player(`Youtubeer-${index}`, {
+                videoId: videoId,
+                playerVars: {
+                    'enablejsapi': 1,
+                    'controls': 1,
+                    'modestbranding': 1,
+                    'rel': 0,
+                    'showinfo': 0,
+                    'playsinline': 1 
+                },
+                events: {
+                    'onStateChange': onPlayerStateChange(index)
+                }
+            });
+        }
+
+        // YT API: Изменение состояния плеера
+        function onPlayerStateChange(index) {
+            return function(event) {
+                const card = document.querySelector(`.video-card[data-index="${index}"]`);
+                const playOverlay = card ? card.querySelector('.play-overlay') : null;
+
+                if (event.data === YT.PlayerState.PLAYING) {
+                    if (playOverlay) playOverlay.classList.add('hidden');
+                    stopAllOtherVideos(index, 'youtube');
+                    currentlyPlayingVideo = null; 
+                    
+                } else if (event.data === YT.PlayerState.ENDED || event.data === YT.PlayerState.PAUSED) {
+                    if (playOverlay) playOverlay.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Остановка всех других видео
+        function stopAllOtherVideos(activeIndex, activeType) {
+            // 1. Остановка MP4 видео
+            if (currentlyPlayingVideo && activeType !== 'direct') {
+                currentlyPlayingVideo.pause();
+                currentlyPlayingVideo.currentTime = 0;
+                const currentPlayOverlay = currentlyPlayingVideo.parentElement.querySelector('.play-overlay');
+                if (currentPlayOverlay) currentPlayOverlay.classList.remove('hidden');
+                currentlyPlayingVideo = null;
+            }
+            
+            // 2. Остановка YouTube плееров
+            for (const i in ytPlayers) {
+                if (parseInt(i) !== activeIndex) {
+                     const player = ytPlayers[i];
+                     if (player && player.pauseVideo && player.getPlayerState && player.getPlayerState() === YT.PlayerState.PLAYING) {
+                        player.pauseVideo();
+                        const otherCard = document.querySelector(`.video-card[data-index="${i}"]`);
+                        const otherOverlay = otherCard ? otherCard.querySelector('.play-overlay') : null;
+                        if (otherOverlay) otherOverlay.classList.remove('hidden');
+                     }
+                }
+            }
+        }
+
+        // Переключение воспроизведения YouTube
+        function toggleYouTubePlayback(player, playOverlay) {
+            const playerState = player.getPlayerState();
+            
+            if (playerState === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+                playOverlay.classList.remove('hidden');
+            } else {
+                player.playVideo();
+                playOverlay.classList.add('hidden');
+            }
+        }
+
         function createProgressDots() {
             const progressDots = document.getElementById('progressDots');
             progressDots.innerHTML = '';
@@ -964,21 +886,17 @@
                 progressDots.appendChild(dot);
             });
         }
-        
+
+        // Переключение воспроизведения MP4
         function toggleVideoPlayback(videoElement, playOverlay) {
-            if (currentlyPlayingVideo && currentlyPlayingVideo !== videoElement) {
-                currentlyPlayingVideo.pause();
-                currentlyPlayingVideo.currentTime = 0;
-                const currentPlayOverlay = currentlyPlayingVideo.parentElement.querySelector('.play-overlay');
-                if (currentPlayOverlay) currentPlayOverlay.classList.remove('hidden');
-            }
+            stopAllOtherVideos(currentIndex, 'direct');
             
             if (videoElement.paused) {
                 videoElement.play().then(() => {
                     playOverlay.classList.add('hidden');
                     currentlyPlayingVideo = videoElement;
                 }).catch(error => {
-                    console.error('Ошибка воспроизведения:', error);
+                    console.error('Ошибка воспроизведения MP4:', error);
                 });
             } else {
                 videoElement.pause();
@@ -986,17 +904,20 @@
                 currentlyPlayingVideo = null;
             }
         }
-        
+
+        // Перезапуск MP4
         function restartVideo(videoElement, playOverlay) {
+            stopAllOtherVideos(currentIndex, 'direct');
+            
             videoElement.currentTime = 0;
             videoElement.play().then(() => {
                 playOverlay.classList.add('hidden');
                 currentlyPlayingVideo = videoElement;
             }).catch(error => {
-                console.error('Ошибка воспроизведения:', error);
+                console.error('Ошибка перезапуска MP4:', error);
             });
         }
-        
+
         function updateCarousel() {
             const carousel = document.getElementById('carousel');
             const progressDots = document.getElementById('progressDots');
@@ -1044,7 +965,7 @@
                 dots[i].className = `dot ${i === currentIndex ? 'active' : ''}`;
             }
         }
-        
+
         function updateArticle() {
             const articleTitle = document.getElementById('articleTitle');
             const articleContent = document.getElementById('articleContent');
@@ -1055,33 +976,22 @@
                 articleContent.innerHTML = currentVideo.article.content;
             }
         }
-        
+
         function goToVideo(index) {
-            // Останавливаем текущее видео если оно MP4
-            if (currentlyPlayingVideo && currentlyPlayingVideo.tagName === 'VIDEO') {
-                currentlyPlayingVideo.pause();
-                currentlyPlayingVideo.currentTime = 0;
-                const playOverlay = currentlyPlayingVideo.parentElement.querySelector('.play-overlay');
-                if (playOverlay) playOverlay.classList.remove('hidden');
-            }
+            const prevIndex = currentIndex;
             
-            // Скрываем overlay для iframe видео
-            const currentCard = document.querySelector(`.video-card[data-index="${currentIndex}"]`);
-            if (currentCard) {
-                const playOverlay = currentCard.querySelector('.play-overlay');
-                if (playOverlay) playOverlay.classList.remove('hidden');
-            }
-            
-            currentlyPlayingVideo = null;
+            // Остановка всех видео на предыдущем слайде
+            stopAllOtherVideos(prevIndex, 'none');
+
             currentIndex = index;
             updateCarousel();
             updateArticle();
         }
-        
+
         function nextVideo() {
             goToVideo((currentIndex + 1) % videos.length);
         }
-        
+
         function prevVideo() {
             goToVideo((currentIndex - 1 + videos.length) % videos.length);
         }
