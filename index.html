@@ -274,15 +274,6 @@
             line-height: 1.2;
         }
         
-        .article-meta {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            opacity: 0.8;
-            font-size: 1rem;
-        }
-        
         .article-content {
             max-width: 900px;
             margin: 0 auto;
@@ -576,11 +567,6 @@
             .article-subtitle {
                 font-size: 1.3rem;
             }
-            
-            .article-meta {
-                flex-direction: column;
-                gap: 10px;
-            }
         }
     </style>
 </head>
@@ -611,11 +597,12 @@
     <!-- УВЕЛИЧЕННЫЙ РАЗДЕЛ ДЛЯ СТАТЬИ -->
     <section class="article-section">
         <div class="article-header">
+            <h2 class="article-title" id="articleTitle"></h2>
         </div>
         
         <div class="article-content" id="articleContent">
             <div class="article-text">
-                <p>Загрузка контента...</p>
+                <p></p>
             </div>
         </div>
     </section>
@@ -637,7 +624,6 @@
             const progressDots = document.getElementById('progressDots');
             const articleTitle = document.getElementById('articleTitle');
             const articleContent = document.getElementById('articleContent');
-            const articleDate = document.getElementById('articleDate');
             const loading = document.getElementById('loading');
             
             // Загрузка данных из JSON файла
@@ -700,9 +686,6 @@
                 createVideoCards();
                 updateCarousel();
                 updateArticle();
-                
-                // Обновляем дату
-                document.getElementById('articleDate').textContent = `Дата: ${new Date().toLocaleDateString('ru-RU')}`;
                 
             } catch (error) {
                 console.error('Ошибка загрузки:', error);
