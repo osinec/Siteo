@@ -92,7 +92,7 @@
         }
         .video-player-container {
             width: 100%;
-            height: 85%;
+            height: 100%; /* Теперь занимает всю высоту карточки */
             position: relative;
             background: #000;
             overflow: hidden;
@@ -169,34 +169,11 @@
             transform: scale(1.1);
             background: rgba(255, 255, 255, 0.25);
         }
-        .replay-icon {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
-            color: white;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 5;
-        }
-        .video-card:hover .replay-icon {
-            opacity: 1;
-        }
+        /* УБРАНО: .replay-icon */
         .video-info {
             padding: 20px;
-            height: 15%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(15, 15, 35, 0.9);
+            height: 0; /* Убрана высота информационной панели */
+            display: none; /* Скрыта информационная панель */
         }
         .video-title {
             font-size: 1.3rem;
@@ -641,7 +618,7 @@
                 return 'unsupported';
             }
         }
-        // ФУНКЦИЯ ДЛЯ СОЗДАНИЯ IFrame ВСТАВКИ VK (ИСПРАВЛЕНАЯ)
+        // ФУНКЦИЯ ДЛЯ СОЗДАНИЯ IFrame ВСТАВКИ VK (ИСПРАВЛЕНА)
         function createVKEmbed(videoUrl) {
             if (!videoUrl) return null;
 
@@ -794,9 +771,7 @@
                                     <i class="fas fa-play"></i>
                                 </div>
                             </div>
-                            <div class="replay-icon" title="Перезапустить видео">
-                                <i class="fas fa-redo"></i>
-                            </div>
+                            <!-- УБРАНО: replay-icon -->
                         `;
                         sourceName = 'MP4';
                         break;
@@ -862,28 +837,22 @@
                         ${videoHTML}
                         ${sourceName ? `<div class="video-source-badge">${sourceName}</div>` : ''}
                     </div>
-                    <div class="video-info">
-                        <div class="video-title">${video.title}</div>
-                    </div>
+                    <!-- УБРАНО: video-info -->
                 `;
                 // ОБРАБОТЧИКИ ДЛЯ ПРЯМЫХ MP4 ВИДЕО
                 if (videoType === 'direct') {
                     const videoElement = videoCard.querySelector('.video-player');
                     const playOverlay = videoCard.querySelector('.play-overlay');
-                    const replayIcon = videoCard.querySelector('.replay-icon');
+                    // Убран replayIcon
                     videoCard.addEventListener('click', (e) => {
-                        if (!e.target.closest('.replay-icon')) {
-                            toggleVideoPlayback(videoElement, playOverlay);
-                        }
+                        // При клике на карточку просто воспроизводим видео
+                        toggleVideoPlayback(videoElement, playOverlay);
                     });
                     videoElement.addEventListener('ended', () => {
                         playOverlay.classList.remove('hidden');
                         currentlyPlayingVideo = null;
                     });
-                    replayIcon.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        restartVideo(videoElement, playOverlay);
-                    });
+                    // Убран обработчик для replayIcon
                 }
                 // ДЛЯ IFRAME (YouTube, VK) - УПРАВЛЕНИЕ ЧЕРЕЗ КЛИК НА OVERLAY
                 else if (videoType === 'youtube' || videoType === 'vk') {
@@ -940,15 +909,7 @@
                 currentlyPlayingVideo = null;
             }
         }
-        function restartVideo(videoElement, playOverlay) {
-            videoElement.currentTime = 0;
-            videoElement.play().then(() => {
-                playOverlay.classList.add('hidden');
-                currentlyPlayingVideo = videoElement;
-            }).catch(error => {
-                console.error('Ошибка воспроизведения:', error);
-            });
-        }
+        // УБРАНО: restartVideo (теперь не используется)
         function updateCarousel() {
             const carousel = document.getElementById('carousel');
             const progressDots = document.getElementById('progressDots');
