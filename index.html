@@ -114,6 +114,43 @@
             object-fit: cover;
         }
         
+        .video-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .video-unsupported {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--dark);
+            color: var(--light);
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .video-unsupported i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+        
+        .video-source-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            z-index: 5;
+        }
+        
         .play-overlay {
             position: absolute;
             top: 0;
@@ -126,6 +163,7 @@
             background: rgba(0, 0, 0, 0.3);
             transition: opacity 0.2s ease;
             cursor: pointer;
+            z-index: 2;
         }
         
         .play-overlay.hidden {
@@ -386,6 +424,24 @@
             border-radius: 4px;
             font-weight: 600;
             border-left: 3px solid var(--error);
+        }
+        
+        .highlight-blue-preview {
+            background: linear-gradient(120deg, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.1) 100%);
+            color: #3B82F6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-left: 3px solid #3B82F6;
+        }
+        
+        .highlight-orange-preview {
+            background: linear-gradient(120deg, rgba(249, 115, 22, 0.3) 0%, rgba(249, 115, 22, 0.1) 100%);
+            color: #F97316;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-left: 3px solid #F97316;
         }
         
         .text-primary {
@@ -650,7 +706,9 @@
                     if (activeCard) {
                         const videoElement = activeCard.querySelector('.video-player');
                         const playOverlay = activeCard.querySelector('.play-overlay');
-                        toggleVideoPlayback(videoElement, playOverlay);
+                        if (videoElement && playOverlay) {
+                            toggleVideoPlayback(videoElement, playOverlay);
+                        }
                     }
                 }
             });
@@ -667,6 +725,35 @@
                 else if (endX - startX > 50) prevVideo();
             }, { passive: true });
         });
+
+        // ФУНКЦИЯ ДЛЯ ОПРЕДЕЛЕНИЯ ТИПА ВИДЕО
+        function getVideoType(videoUrl) {
+            if (!videoUrl) return 'unsupported';
+            
+            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                return 'youtube';
+            } else if (videoUrl.includes('vimeo.com')) {
+                return 'vimeo';
+            } else if (videoUrl.includes('vk.com') || videoUrl.includes('vk.ru')) {
+                return 'vk';
+            } else if (videoUrl.endsWith('.mp4') || videoUrl.includes('mp4')) {
+                return 'direct';
+            } else {
+                return 'unsupported';
+            }
+        }
+
+        // ФУНКЦИЯ ДЛЯ СОЗДАНИЯ IFrame ВСТАВКИ VK
+        function createVKEmbed(videoUrl) {
+            // Извлекаем ID видео из ссылки ВК
+            const match = videoUrl.match(/clip-(\d+)_(\d+)/);
+            if (match) {
+                const ownerId = match[1];
+                const videoId = match[2];
+                return `https://vk.com/video_ext.php?oid=${ownerId}&id=${videoId}&hash=`;
+            }
+            return null;
+        }
 
         // ЗАГРУЗКА ДАННЫХ ИЗ JSON ФАЙЛА
         async function loadVideosData() {
@@ -716,44 +803,125 @@
                 videoCard.className = 'video-card';
                 videoCard.dataset.index = index;
                 
+                const videoType = getVideoType(video.videoUrl);
+                let videoHTML = '';
+                let sourceName = '';
+                
+                switch(videoType) {
+                    case 'direct':
+                        videoHTML = `
+                            <video class="video-player" preload="metadata">
+                                <source src="${video.videoUrl}" type="video/mp4">
+                                Ваш браузер не поддерживает видео тег.
+                            </video>
+                            <div class="play-overlay">
+                                <div class="play-icon">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                            <div class="replay-icon" title="Перезапустить видео">
+                                <i class="fas fa-redo"></i>
+                            </div>
+                        `;
+                        sourceName = 'MP4';
+                        break;
+                        
+                    case 'youtube':
+                        const youtubeId = video.videoUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
+                        if (youtubeId) {
+                            videoHTML = `
+                                <iframe class="video-iframe" 
+                                    src="https://www.youtube.com/embed/${youtubeId}?enablejsapi=1&controls=1&modestbranding=1&rel=0" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                                </iframe>
+                                <div class="play-overlay">
+                                    <div class="play-icon">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                </div>
+                            `;
+                            sourceName = 'YouTube';
+                        }
+                        break;
+                        
+                    case 'vk':
+                        const vkEmbedUrl = createVKEmbed(video.videoUrl);
+                        if (vkEmbedUrl) {
+                            videoHTML = `
+                                <iframe class="video-iframe" 
+                                    src="${vkEmbedUrl}" 
+                                    frameborder="0" 
+                                    allowfullscreen>
+                                </iframe>
+                                <div class="play-overlay">
+                                    <div class="play-icon">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                </div>
+                            `;
+                            sourceName = 'VK';
+                        }
+                        break;
+                        
+                    default:
+                        videoHTML = `
+                            <div class="video-unsupported">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <p>Видео недоступно</p>
+                                <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">Ссылка: ${video.videoUrl}</p>
+                            </div>
+                        `;
+                        sourceName = 'Не поддерживается';
+                }
+                
                 videoCard.innerHTML = `
                     <div class="video-player-container">
-                        <video class="video-player" preload="metadata">
-                            <source src="${video.videoUrl}" type="video/mp4">
-                        </video>
-                        <div class="play-overlay">
-                            <div class="play-icon">
-                                <i class="fas fa-play"></i>
-                            </div>
-                        </div>
-                        <div class="replay-icon" title="Перезапустить видео">
-                            <i class="fas fa-redo"></i>
-                        </div>
+                        ${videoHTML}
+                        ${sourceName ? `<div class="video-source-badge">${sourceName}</div>` : ''}
                     </div>
                     <div class="video-info">
                         <div class="video-title">${video.title}</div>
                     </div>
                 `;
                 
-                const videoElement = videoCard.querySelector('.video-player');
-                const playOverlay = videoCard.querySelector('.play-overlay');
-                const replayIcon = videoCard.querySelector('.replay-icon');
-                
-                videoCard.addEventListener('click', (e) => {
-                    if (!e.target.closest('.replay-icon')) {
-                        toggleVideoPlayback(videoElement, playOverlay);
+                // ОБРАБОТЧИКИ ДЛЯ ПРЯМЫХ MP4 ВИДЕО
+                if (videoType === 'direct') {
+                    const videoElement = videoCard.querySelector('.video-player');
+                    const playOverlay = videoCard.querySelector('.play-overlay');
+                    const replayIcon = videoCard.querySelector('.replay-icon');
+                    
+                    videoCard.addEventListener('click', (e) => {
+                        if (!e.target.closest('.replay-icon')) {
+                            toggleVideoPlayback(videoElement, playOverlay);
+                        }
+                    });
+                    
+                    videoElement.addEventListener('ended', () => {
+                        playOverlay.classList.remove('hidden');
+                        currentlyPlayingVideo = null;
+                    });
+                    
+                    replayIcon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        restartVideo(videoElement, playOverlay);
+                    });
+                }
+                // ДЛЯ IFRAME (YouTube, VK) - УПРАВЛЕНИЕ ЧЕРЕЗ КЛИК НА OVERLAY
+                else if (videoType === 'youtube' || videoType === 'vk') {
+                    const playOverlay = videoCard.querySelector('.play-overlay');
+                    const iframe = videoCard.querySelector('.video-iframe');
+                    
+                    if (playOverlay && iframe) {
+                        videoCard.addEventListener('click', (e) => {
+                            if (!e.target.closest('.video-source-badge')) {
+                                playOverlay.classList.add('hidden');
+                                // Для iframe автоматическое воспроизведение может быть ограничено браузером
+                            }
+                        });
                     }
-                });
-                
-                videoElement.addEventListener('ended', () => {
-                    playOverlay.classList.remove('hidden');
-                    currentlyPlayingVideo = null;
-                });
-                
-                replayIcon.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    restartVideo(videoElement, playOverlay);
-                });
+                }
                 
                 fragment.appendChild(videoCard);
             });
@@ -777,13 +945,16 @@
             if (currentlyPlayingVideo && currentlyPlayingVideo !== videoElement) {
                 currentlyPlayingVideo.pause();
                 currentlyPlayingVideo.currentTime = 0;
-                currentlyPlayingVideo.parentElement.querySelector('.play-overlay').classList.remove('hidden');
+                const currentPlayOverlay = currentlyPlayingVideo.parentElement.querySelector('.play-overlay');
+                if (currentPlayOverlay) currentPlayOverlay.classList.remove('hidden');
             }
             
             if (videoElement.paused) {
                 videoElement.play().then(() => {
                     playOverlay.classList.add('hidden');
                     currentlyPlayingVideo = videoElement;
+                }).catch(error => {
+                    console.error('Ошибка воспроизведения:', error);
                 });
             } else {
                 videoElement.pause();
@@ -797,6 +968,8 @@
             videoElement.play().then(() => {
                 playOverlay.classList.add('hidden');
                 currentlyPlayingVideo = videoElement;
+            }).catch(error => {
+                console.error('Ошибка воспроизведения:', error);
             });
         }
         
@@ -860,13 +1033,22 @@
         }
         
         function goToVideo(index) {
-            if (currentlyPlayingVideo) {
+            // Останавливаем текущее видео если оно MP4
+            if (currentlyPlayingVideo && currentlyPlayingVideo.tagName === 'VIDEO') {
                 currentlyPlayingVideo.pause();
                 currentlyPlayingVideo.currentTime = 0;
-                currentlyPlayingVideo.parentElement.querySelector('.play-overlay').classList.remove('hidden');
-                currentlyPlayingVideo = null;
+                const playOverlay = currentlyPlayingVideo.parentElement.querySelector('.play-overlay');
+                if (playOverlay) playOverlay.classList.remove('hidden');
             }
             
+            // Скрываем overlay для iframe видео
+            const currentCard = document.querySelector(`.video-card[data-index="${currentIndex}"]`);
+            if (currentCard) {
+                const playOverlay = currentCard.querySelector('.play-overlay');
+                if (playOverlay) playOverlay.classList.remove('hidden');
+            }
+            
+            currentlyPlayingVideo = null;
             currentIndex = index;
             updateCarousel();
             updateArticle();
