@@ -497,260 +497,18 @@
             font-size: 0.8rem;
         }
 
-        /* Стили для админ-панели */
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(7, 7, 17, 0.95);
-            z-index: 10000;
-            padding: 20px;
-            overflow-y: auto;
-            backdrop-filter: blur(10px);
-        }
-        
-        .admin-panel.active {
-            display: block;
-        }
-        
-        .admin-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: var(--dark);
-            border-radius: 15px;
-            padding: 30px;
-            border: 1px solid var(--glass-border);
-        }
-        
-        .admin-header {
+        .loading {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-        
-        .admin-title {
-            font-size: 2rem;
-            color: var(--primary-light);
-            margin-bottom: 10px;
-        }
-        
-        .admin-nav {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .admin-nav-btn {
-            padding: 10px 20px;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: var(--light);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .admin-nav-btn.active {
-            background: var(--primary);
-        }
-        
-        .admin-section {
-            display: none;
-            margin-bottom: 30px;
-        }
-        
-        .admin-section.active {
-            display: block;
-        }
-        
-        .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--primary-light);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        .form-input, .form-textarea {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: var(--light);
-            font-size: 1rem;
-        }
-        
-        .admin-btn {
-            padding: 12px 24px;
-            background: var(--primary);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 5px;
-        }
-        
-        .admin-btn:hover {
-            background: var(--primary-light);
-        }
-        
-        .video-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .video-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 15px;
-            border: 1px solid var(--glass-border);
-        }
-        
-        .video-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .video-item-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .video-item-actions {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .action-btn {
-            padding: 5px 8px;
-            background: transparent;
-            border: 1px solid var(--glass-border);
-            border-radius: 6px;
-            color: var(--light);
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-        
-        .close-admin {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--error);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .message {
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            text-align: center;
-        }
-        
-        .message.success {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid #10B981;
-        }
-        
-        .message.error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid #EF4444;
-        }
-
-        /* СТИЛИ ДЛЯ РЕДАКТОРА */
-        .editor-tools {
-            display: flex;
-            gap: 8px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-
-        .tool-btn {
-            padding: 8px 12px;
-            background: rgba(139, 92, 246, 0.2);
-            border: 1px solid var(--primary);
-            border-radius: 6px;
-            color: var(--light);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .tool-btn:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .article-editor {
-            background: white;
-            border-radius: 10px;
-            min-height: 300px;
-            padding: 20px;
-            color: #333;
-            font-size: 16px;
-            line-height: 1.6;
-            border: 2px solid var(--glass-border);
-            margin-bottom: 20px;
-        }
-
-        .article-editor:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .preview-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            border: 1px solid var(--glass-border);
-        }
-        
-        .preview-title {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: var(--primary-light);
-        }
-        
-        .preview-content {
-            background: rgba(15, 15, 35, 0.9);
             padding: 40px;
-            border-radius: 8px;
-            min-height: 300px;
             font-size: 1.2rem;
-            line-height: 1.8;
+            opacity: 0.8;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 40px;
+            color: var(--error);
+            font-size: 1.2rem;
         }
 
         /* Адаптивность */
@@ -784,23 +542,6 @@
             
             .article-subtitle {
                 font-size: 1.5rem;
-            }
-            
-            .admin-container {
-                padding: 20px;
-            }
-            
-            .video-list {
-                grid-template-columns: 1fr;
-            }
-            
-            .editor-tools {
-                flex-direction: column;
-            }
-            
-            .preview-content {
-                padding: 20px;
-                font-size: 1.1rem;
             }
         }
         
@@ -854,7 +595,11 @@
             <i class="fas fa-chevron-left"></i>
         </button>
         
-        <div class="carousel" id="carousel"></div>
+        <div class="carousel" id="carousel">
+            <div class="loading" id="loading">
+                <p>🔄 Загрузка видео...</p>
+            </div>
+        </div>
         
         <button class="nav-btn next-btn" id="nextBtn">
             <i class="fas fa-chevron-right"></i>
@@ -866,11 +611,11 @@
     <!-- УВЕЛИЧЕННЫЙ РАЗДЕЛ ДЛЯ СТАТЬИ -->
     <section class="article-section">
         <div class="article-header">
-            <h2 class="article-title" id="articleTitle">Искусство визуального повествования</h2>
+            <h2 class="article-title" id="articleTitle">Загрузка статьи...</h2>
             <div class="article-meta">
-                <span>Автор: Ваше Имя</span>
-                <span>Дата: 15 декабря 2024</span>
-                <span>Время чтения: 8 минут</span>
+                <span>Автор: VibeShorts</span>
+                <span id="articleDate">Дата: Загрузка...</span>
+                <span>Время чтения: ~5 минут</span>
             </div>
         </div>
         
@@ -885,97 +630,11 @@
         <p>Используйте <span class="key-hint">← →</span> для навигации • <span class="key-hint">ПРОБЕЛ</span> для воспроизведения</p>
     </div>
 
-    <!-- АДМИН-ПАНЕЛЬ (скрыта по умолчанию) -->
-    <div class="admin-panel" id="adminPanel">
-        <button class="close-admin" onclick="hideAdminPanel()">×</button>
-        <div class="admin-container">
-            <div class="admin-header">
-                <h2 class="admin-title">VibeShorts Админ-панель</h2>
-                <p>Управление видео и статьями</p>
-            </div>
-            
-            <nav class="admin-nav">
-                <button class="admin-nav-btn active" onclick="showAdminSection('videosSection')">📹 Управление видео</button>
-                <button class="admin-nav-btn" onclick="showAdminSection('addVideoSection')">➕ Добавить видео</button>
-            </nav>
-            
-            <section id="videosSection" class="admin-section active">
-                <h3 class="section-title">Управление видео</h3>
-                <div id="videosList" class="video-list">
-                    <!-- Видео будут загружены здесь -->
-                </div>
-            </section>
-            
-            <section id="addVideoSection" class="admin-section">
-                <h3 class="section-title">Добавить новое видео</h3>
-                
-                <form id="videoForm">
-                    <div class="form-group">
-                        <label class="form-label">🎬 Название видео</label>
-                        <input type="text" id="videoTitle" class="form-input" required placeholder="Введите название видео">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">🔗 URL видео</label>
-                        <input type="url" id="videoUrl" class="form-input" placeholder="https://example.com/video.mp4" required>
-                        <small style="opacity: 0.7;">Вставьте прямую ссылку на видеофайл (.mp4)</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">📝 Заголовок статьи</label>
-                        <input type="text" id="articleTitle" class="form-input" required placeholder="Введите заголовок статьи">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">🖋️ Содержание статьи</label>
-                        
-                        <!-- ПАНЕЛЬ ИНСТРУМЕНТОВ -->
-                        <div class="editor-tools">
-                            <button type="button" class="tool-btn" onclick="addNormalText()" title="Обычный текст">📝 Абзац</button>
-                            <button type="button" class="tool-btn" onclick="addHighlightText()" title="Выделенный текст">✨ Выделение</button>
-                            <button type="button" class="tool-btn" onclick="addSubtitle()" title="Подзаголовок">🔤 Подзаголовок</button>
-                            <button type="button" class="tool-btn" onclick="addQuote()" title="Цитата">💬 Цитата</button>
-                            <button type="button" class="tool-btn" onclick="addNote('important')" title="Важное примечание">⚠️ Важно</button>
-                            <button type="button" class="tool-btn" onclick="addNote('info')" title="Информация">ℹ️ Инфо</button>
-                            <button type="button" class="tool-btn" onclick="addNote('success')" title="Успех">✅ Успех</button>
-                            <button type="button" class="tool-btn" onclick="addList()" title="Список">📋 Список</button>
-                            <button type="button" class="tool-btn" onclick="clearEditor()" title="Очистить" style="color: #EF4444;">🗑️ Очистить</button>
-                        </div>
-                        
-                        <!-- РЕДАКТОР -->
-                        <div class="article-editor" id="articleEditor" contenteditable="true">
-                            <p>Начните писать вашу статью здесь...</p>
-                        </div>
-                        
-                        <!-- ПРЕДПРОСМОТР -->
-                        <div class="preview-section">
-                            <div class="preview-title">👁️ Предпросмотр:</div>
-                            <div class="preview-content" id="articlePreview">
-                                <div class="article-text">
-                                    <p>Предпросмотр статьи появится здесь...</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="admin-btn">💾 Сохранить видео</button>
-                </form>
-            </section>
-        </div>
-    </div>
-
     <script>
         // Глобальные переменные
         let videos = [];
         let currentIndex = 0;
         let currentlyPlayingVideo = null;
-        let f12Pressed = false;
-        let codeSequence = [];
-        let codeTimeout = null;
-
-        // Настройки безопасности
-        const ADMIN_PASSWORD = "admin123";
-        const SECRET_CODE = ["0", "4", "5", "1"];
 
         document.addEventListener('DOMContentLoaded', function() {
             const carousel = document.getElementById('carousel');
@@ -984,22 +643,15 @@
             const progressDots = document.getElementById('progressDots');
             const articleTitle = document.getElementById('articleTitle');
             const articleContent = document.getElementById('articleContent');
+            const articleDate = document.getElementById('articleDate');
+            const loading = document.getElementById('loading');
             
-            // Загрузка данных
+            // Загрузка данных из JSON файла
             loadVideosData();
             
             // Обработчики событий для карусели
             nextBtn.addEventListener('click', nextVideo);
             prevBtn.addEventListener('click', prevVideo);
-            
-            // Обработчик формы админ-панели
-            document.getElementById('videoForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveVideo(e);
-            });
-            
-            // Инициализация редактора
-            initEditor();
             
             // Обработчики клавиш
             document.addEventListener('keydown', (e) => {
@@ -1014,8 +666,6 @@
                         toggleVideoPlayback(videoElement, playOverlay);
                     }
                 }
-                
-                checkCodeSequence(e.key);
             });
 
             // Swipe для мобильных
@@ -1031,198 +681,47 @@
             }, { passive: true });
         });
 
-        // РЕДАКТОР СТАТЕЙ
-        function initEditor() {
-            const editor = document.getElementById('articleEditor');
+        // ЗАГРУЗКА ДАННЫХ ИЗ JSON ФАЙЛА
+        async function loadVideosData() {
+            const loading = document.getElementById('loading');
+            const carousel = document.getElementById('carousel');
             
-            // Очистка placeholder при фокусе
-            editor.addEventListener('focus', function() {
-                if (this.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
-                    this.innerHTML = '';
-                }
-            });
-            
-            // Обработка Enter
-            editor.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleEnterKey(e);
-                }
-            });
-            
-            // Обновление предпросмотра
-            editor.addEventListener('input', updatePreview);
-        }
-        
-        function handleEnterKey(event) {
-            const editor = document.getElementById('articleEditor');
-            const selection = window.getSelection();
-            
-            if (selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
+            try {
+                loading.innerHTML = '<p>🔄 Загрузка данных...</p>';
                 
-                // Простой перенос строки
-                document.execCommand('insertHTML', false, '<br><br>');
+                // Загружаем данные из JSON файла
+                const response = await fetch('data.json');
                 
-                // Фокусируем курсор после вставки
-                setTimeout(() => {
-                    const newRange = document.createRange();
-                    newRange.setStart(editor, editor.childNodes.length);
-                    newRange.collapse(true);
-                    selection.removeAllRanges();
-                    selection.addRange(newRange);
-                }, 0);
-            }
-            
-            updatePreview();
-        }
-        
-        function updatePreview() {
-            const editor = document.getElementById('articleEditor');
-            const preview = document.getElementById('articlePreview');
-            
-            let content = editor.innerHTML.trim();
-            
-            // Если редактор пустой
-            if (!content || content === '<p><br></p>' || content === '<br>') {
-                preview.innerHTML = '<div class="article-text"><p>Предпросмотр статьи появится здесь...</p></div>';
-                return;
-            }
-            
-            // Оборачиваем в article-text для правильного отображения
-            preview.innerHTML = `<div class="article-text">${content}</div>`;
-        }
-        
-        // ФУНКЦИИ ДЛЯ ПАНЕЛИ СТИЛЕЙ
-        function addNormalText() {
-            const editor = document.getElementById('articleEditor');
-            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
-                editor.innerHTML = '';
-            }
-            
-            const text = '<p>Это обычный текст абзаца. Вы можете редактировать его как хотите.</p>';
-            editor.innerHTML += text;
-            updatePreview();
-        }
-        
-        function addHighlightText() {
-            const editor = document.getElementById('articleEditor');
-            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
-                editor.innerHTML = '';
-            }
-            
-            const text = '<p>Текст с <span class="highlight-primary">выделенными словами</span> для акцента.</p>';
-            editor.innerHTML += text;
-            updatePreview();
-        }
-        
-        function addSubtitle() {
-            const editor = document.getElementById('articleEditor');
-            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
-                editor.innerHTML = '';
-            }
-            
-            const text = '<h3 class="article-subtitle">Заголовок раздела</h3>';
-            editor.innerHTML += text;
-            updatePreview();
-        }
-        
-        function addQuote() {
-            const editor = document.getElementById('articleEditor');
-            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
-                editor.innerHTML = '';
-            }
-            
-            const text = '<div class="article-quote">"Вдохновляющая цитата, которая привлечет внимание читателей."</div>';
-            editor.innerHTML += text;
-            updatePreview();
-        }
-        
-        function addNote(type) {
-            const editor = document.getElementById('articleEditor');
-            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
-                editor.innerHTML = '';
-            }
-            
-            let text = '';
-            switch(type) {
-                case 'important':
-                    text = '<div class="important-note"><strong>Важно:</strong> Это важное сообщение для ваших читателей.</div>';
-                    break;
-                case 'info':
-                    text = '<div class="info-note"><strong>Информация:</strong> Полезная информация по теме.</div>';
-                    break;
-                case 'success':
-                    text = '<div class="success-note"><strong>Успех:</strong> Положительный результат или достижение.</div>';
-                    break;
-            }
-            
-            editor.innerHTML += text;
-            updatePreview();
-        }
-        
-        function addList() {
-            const editor = document.getElementById('articleEditor');
-            if (editor.innerHTML === '<p>Начните писать вашу статью здесь...</p>') {
-                editor.innerHTML = '';
-            }
-            
-            const text = `
-                <ul class="article-list">
-                    <li>Первый пункт списка</li>
-                    <li>Второй пункт списка</li>
-                    <li>Третий пункт списка</li>
-                </ul>
-            `;
-            editor.innerHTML += text;
-            updatePreview();
-        }
-        
-        function clearEditor() {
-            if (confirm('Очистить редактор? Все несохраненные изменения будут потеряны.')) {
-                document.getElementById('articleEditor').innerHTML = '<p>Начните писать вашу статью здесь...</p>';
-                updatePreview();
+                if (!response.ok) {
+                    throw new Error('Ошибка загрузки данных');
+                }
+                
+                const data = await response.json();
+                videos = data.videos;
+                
+                // Скрываем индикатор загрузки
+                loading.style.display = 'none';
+                
+                // Создаем видео карточки
+                createVideoCards();
+                updateCarousel();
+                updateArticle();
+                
+                // Обновляем дату
+                document.getElementById('articleDate').textContent = `Дата: ${new Date().toLocaleDateString('ru-RU')}`;
+                
+            } catch (error) {
+                console.error('Ошибка загрузки:', error);
+                loading.innerHTML = `
+                    <div class="error-message">
+                        <p>❌ Ошибка загрузки данных</p>
+                        <p style="font-size: 1rem; margin-top: 10px;">Проверьте наличие файла data.json</p>
+                    </div>
+                `;
             }
         }
 
         // ФУНКЦИИ ДЛЯ ОСНОВНОГО САЙТА
-        function loadVideosData() {
-            const savedVideos = localStorage.getItem('vibeShortsVideos');
-            if (savedVideos) {
-                videos = JSON.parse(savedVideos);
-            } else {
-                // Видео по умолчанию
-                videos = [
-                    {
-                        id: 1,
-                        title: "Морской закат",
-                        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                        article: {
-                            title: "Искусство визуального повествования",
-                            content: `
-                                <div class="article-text">
-                                    <p>В современном цифровом мире <span class="highlight-primary">короткие видео</span> стали мощным инструментом для передачи эмоций, идей и историй.</p>
-                                    
-                                    <div class="important-note">
-                                        <strong>Важно:</strong> Первые <span class="text-warning">3 секунды</span> видео критически важны.
-                                    </div>
-                                    
-                                    <h3 class="article-subtitle">Сила краткости</h3>
-                                    <p>Короткие видео обладают уникальной способностью захватывать внимание зрителя с первых же кадров.</p>
-                                </div>
-                            `
-                        }
-                    }
-                ];
-                localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
-            }
-            
-            createVideoCards();
-            updateCarousel();
-            updateArticle();
-            loadAdminVideosList();
-        }
-
         function createVideoCards() {
             const carousel = document.getElementById('carousel');
             carousel.innerHTML = '';
@@ -1395,222 +894,6 @@
         
         function prevVideo() {
             goToVideo((currentIndex - 1 + videos.length) % videos.length);
-        }
-
-        // ФУНКЦИИ АДМИН-ПАНЕЛИ
-        function showAdminPanel() {
-            document.getElementById('adminPanel').classList.add('active');
-            loadAdminVideosList();
-        }
-        
-        function hideAdminPanel() {
-            document.getElementById('adminPanel').classList.remove('active');
-        }
-        
-        function showAdminSection(sectionId) {
-            document.querySelectorAll('.admin-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-            
-            document.querySelectorAll('.admin-nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-        
-        function loadAdminVideosList() {
-            const videosList = document.getElementById('videosList');
-            videosList.innerHTML = '';
-            
-            if (videos.length === 0) {
-                videosList.innerHTML = '<p>Нет добавленных видео</p>';
-                return;
-            }
-            
-            videos.forEach(video => {
-                const videoItem = document.createElement('div');
-                videoItem.className = 'video-item';
-                videoItem.innerHTML = `
-                    <div class="video-item-header">
-                        <div class="video-item-title">${video.title}</div>
-                        <div class="video-item-actions">
-                            <button class="action-btn" onclick="editVideo(${video.id})">✏️</button>
-                            <button class="action-btn" onclick="deleteVideo(${video.id})">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="video-item-url" style="font-size: 0.9rem; opacity: 0.8;">${video.videoUrl}</div>
-                    <div class="video-item-article" style="margin-top: 10px; font-size: 0.9rem;">📄 ${video.article.title}</div>
-                `;
-                videosList.appendChild(videoItem);
-            });
-        }
-        
-        function saveVideo(event) {
-            const title = document.getElementById('videoTitle').value;
-            const url = document.getElementById('videoUrl').value;
-            const articleTitle = document.getElementById('articleTitle').value;
-            const editorContent = document.getElementById('articleEditor').innerHTML;
-            
-            // Проверяем, что статья не пустая
-            if (!editorContent || editorContent === '<p>Начните писать вашу статью здесь...</p>') {
-                showAdminMessage('❌ Напишите статью перед сохранением!', 'error');
-                return;
-            }
-            
-            const articleContent = `<div class="article-text">${editorContent}</div>`;
-            
-            const newVideo = {
-                id: videos.length > 0 ? Math.max(...videos.map(v => v.id)) + 1 : 1,
-                title: title,
-                videoUrl: url,
-                article: {
-                    title: articleTitle,
-                    content: articleContent
-                }
-            };
-            
-            videos.push(newVideo);
-            localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
-            
-            document.getElementById('videoForm').reset();
-            document.getElementById('articleEditor').innerHTML = '<p>Начните писать вашу статью здесь...</p>';
-            updatePreview();
-            
-            showAdminMessage('✅ Видео успешно добавлено!', 'success');
-            
-            // ОБНОВЛЯЕМ ОСНОВНОЙ САЙТ
-            createVideoCards();
-            updateCarousel();
-            updateArticle();
-            loadAdminVideosList();
-        }
-        
-        function editVideo(id) {
-            const video = videos.find(v => v.id === id);
-            if (!video) return;
-            
-            document.getElementById('videoTitle').value = video.title;
-            document.getElementById('videoUrl').value = video.videoUrl;
-            document.getElementById('articleTitle').value = video.article.title;
-            
-            // Извлекаем контент из article-text обертки
-            let content = video.article.content.replace('<div class="article-text">', '').replace('</div>', '');
-            document.getElementById('articleEditor').innerHTML = content;
-            updatePreview();
-            
-            showAdminSection('addVideoSection');
-            
-            const form = document.getElementById('videoForm');
-            const submitBtn = form.querySelector('button[type="submit"]');
-            submitBtn.textContent = '💾 Обновить видео';
-            submitBtn.onclick = function(e) {
-                e.preventDefault();
-                updateVideo(id);
-            };
-        }
-        
-        function updateVideo(id) {
-            const title = document.getElementById('videoTitle').value;
-            const url = document.getElementById('videoUrl').value;
-            const articleTitle = document.getElementById('articleTitle').value;
-            const editorContent = document.getElementById('articleEditor').innerHTML;
-            
-            const articleContent = `<div class="article-text">${editorContent}</div>`;
-            
-            const videoIndex = videos.findIndex(v => v.id === id);
-            if (videoIndex !== -1) {
-                videos[videoIndex] = {
-                    id: id,
-                    title: title,
-                    videoUrl: url,
-                    article: {
-                        title: articleTitle,
-                        content: articleContent
-                    }
-                };
-                
-                localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
-                
-                const submitBtn = document.querySelector('#videoForm button[type="submit"]');
-                submitBtn.textContent = '💾 Сохранить видео';
-                submitBtn.onclick = function(e) {
-                    e.preventDefault();
-                    saveVideo(e);
-                };
-                
-                document.getElementById('videoForm').reset();
-                document.getElementById('articleEditor').innerHTML = '<p>Начните писать вашу статью здесь...</p>';
-                updatePreview();
-                
-                showAdminMessage('✅ Видео успешно обновлено!', 'success');
-                
-                // ОБНОВЛЯЕМ ОСНОВНОЙ САЙТ
-                createVideoCards();
-                updateCarousel();
-                updateArticle();
-                loadAdminVideosList();
-            }
-        }
-        
-        function deleteVideo(id) {
-            if (confirm('Вы уверены, что хотите удалить это видео?')) {
-                videos = videos.filter(v => v.id !== id);
-                localStorage.setItem('vibeShortsVideos', JSON.stringify(videos));
-                showAdminMessage('✅ Видео удалено!', 'success');
-                
-                // ОБНОВЛЯЕМ ОСНОВНОЙ САЙТ
-                createVideoCards();
-                updateCarousel();
-                updateArticle();
-                loadAdminVideosList();
-            }
-        }
-        
-        function showAdminMessage(text, type) {
-            const message = document.createElement('div');
-            message.className = `message ${type}`;
-            message.textContent = text;
-            document.querySelector('.admin-container').appendChild(message);
-            setTimeout(() => { message.remove(); }, 3000);
-        }
-
-        // Проверка секретного кода для открытия админки
-        function checkCodeSequence(key) {
-            if (key === 'F12') {
-                f12Pressed = true;
-                codeSequence = [];
-                codeTimeout = setTimeout(() => {
-                    f12Pressed = false;
-                    codeSequence = [];
-                }, 10000);
-                return;
-            }
-            
-            if (!f12Pressed) return;
-            
-            if (key >= '0' && key <= '9') {
-                codeSequence.push(key);
-                
-                if (codeSequence.length === SECRET_CODE.length) {
-                    if (codeSequence.join('') === SECRET_CODE.join('')) {
-                        showAdminPanel();
-                        f12Pressed = false;
-                        codeSequence = [];
-                    } else {
-                        f12Pressed = false;
-                        codeSequence = [];
-                    }
-                }
-                
-                if (codeTimeout) {
-                    clearTimeout(codeTimeout);
-                    codeTimeout = setTimeout(() => {
-                        f12Pressed = false;
-                        codeSequence = [];
-                    }, 10000);
-                }
-            }
         }
     </script>
 </body>
