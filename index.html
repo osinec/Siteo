@@ -120,6 +120,12 @@
             border: none;
         }
         
+        .video-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
         .video-unsupported {
             width: 100%;
             height: 100%;
@@ -158,12 +164,14 @@
             width: 100%;
             height: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.7);
             transition: opacity 0.2s ease;
             cursor: pointer;
             z-index: 2;
+            text-align: center;
         }
         
         .play-overlay.hidden {
@@ -182,11 +190,30 @@
             font-size: 24px;
             color: white;
             transition: transform 0.2s ease;
+            margin-bottom: 15px;
         }
         
         .play-overlay:hover .play-icon {
             transform: scale(1.1);
             background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .external-link-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+        
+        .external-link-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
         }
         
         .replay-icon {
@@ -847,22 +874,18 @@
                         break;
                         
                     case 'vk':
-                        const vkEmbedUrl = createVKEmbed(video.videoUrl);
-                        if (vkEmbedUrl) {
-                            videoHTML = `
-                                <iframe class="video-iframe" 
-                                    src="${vkEmbedUrl}" 
-                                    frameborder="0" 
-                                    allowfullscreen>
-                                </iframe>
-                                <div class="play-overlay">
-                                    <div class="play-icon">
-                                        <i class="fas fa-play"></i>
-                                    </div>
-                                </div>
-                            `;
-                            sourceName = 'VK';
-                        }
+                        // Для VK используем превью и кнопку для открытия в новом окне
+                        videoHTML = `
+                            <div class="video-unsupported" style="background: linear-gradient(135deg, var(--dark), var(--darker));">
+                                <i class="fab fa-vk" style="font-size: 4rem; color: #4A76A8; margin-bottom: 20px;"></i>
+                                <h3 style="margin-bottom: 10px; color: var(--primary-light);">Видео из ВКонтакте</h3>
+                                <p style="margin-bottom: 20px; opacity: 0.8; max-width: 250px;">Это видео доступно для просмотра в ВКонтакте</p>
+                                <button class="external-link-btn" onclick="window.open('${video.videoUrl}', '_blank')">
+                                    <i class="fas fa-external-link-alt"></i> Открыть в ВК
+                                </button>
+                            </div>
+                        `;
+                        sourceName = 'VK';
                         break;
                         
                     default:
@@ -893,7 +916,7 @@
                     const replayIcon = videoCard.querySelector('.replay-icon');
                     
                     videoCard.addEventListener('click', (e) => {
-                        if (!e.target.closest('.replay-icon')) {
+                        if (!e.target.closest('.replay-icon') && !e.target.closest('.external-link-btn')) {
                             toggleVideoPlayback(videoElement, playOverlay);
                         }
                     });
@@ -903,21 +926,22 @@
                         currentlyPlayingVideo = null;
                     });
                     
-                    replayIcon.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        restartVideo(videoElement, playOverlay);
-                    });
+                    if (replayIcon) {
+                        replayIcon.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            restartVideo(videoElement, playOverlay);
+                        });
+                    }
                 }
-                // ДЛЯ IFRAME (YouTube, VK) - УПРАВЛЕНИЕ ЧЕРЕЗ КЛИК НА OVERLAY
-                else if (videoType === 'youtube' || videoType === 'vk') {
+                // ДЛЯ IFRAME (YouTube) - УПРАВЛЕНИЕ ЧЕРЕЗ КЛИК НА OVERLAY
+                else if (videoType === 'youtube') {
                     const playOverlay = videoCard.querySelector('.play-overlay');
                     const iframe = videoCard.querySelector('.video-iframe');
                     
                     if (playOverlay && iframe) {
                         videoCard.addEventListener('click', (e) => {
-                            if (!e.target.closest('.video-source-badge')) {
+                            if (!e.target.closest('.video-source-badge') && !e.target.closest('.external-link-btn')) {
                                 playOverlay.classList.add('hidden');
-                                // Для iframe автоматическое воспроизведение может быть ограничено браузером
                             }
                         });
                     }
