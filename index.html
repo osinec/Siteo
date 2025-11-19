@@ -746,12 +746,27 @@
         // ФУНКЦИЯ ДЛЯ СОЗДАНИЯ IFrame ВСТАВКИ VK
         function createVKEmbed(videoUrl) {
             // Извлекаем ID видео из ссылки ВК
-            const match = videoUrl.match(/clip-(\d+)_(\d+)/);
+            const match = videoUrl.match(/video(-?\d+_\d+)/);
             if (match) {
-                const ownerId = match[1];
-                const videoId = match[2];
+                const videoId = match[1];
+                return `https://vk.com/video_ext.php?oid=-${videoId.split('_')[0]}&id=${videoId.split('_')[1]}&hash=`;
+            }
+            
+            // Альтернативный формат ссылки
+            const match2 = videoUrl.match(/clip-(\d+)_(\d+)/);
+            if (match2) {
+                const ownerId = match2[1];
+                const videoId = match2[2];
                 return `https://vk.com/video_ext.php?oid=${ownerId}&id=${videoId}&hash=`;
             }
+            
+            // Еще один возможный формат
+            const match3 = videoUrl.match(/video(-?\d+_\d+)/);
+            if (match3) {
+                const videoId = match3[1];
+                return `https://vk.com/video_ext.php?oid=-${videoId.split('_')[0]}&id=${videoId.split('_')[1]}&hash=`;
+            }
+            
             return null;
         }
 
@@ -773,6 +788,31 @@
                 const data = await response.json();
                 videos = data.videos;
                 
+                // Если данных нет, создаем демо-данные для тестирования
+                if (!videos || videos.length === 0) {
+                    videos = [
+                        {
+                            title: "Демо видео из VK",
+                            videoUrl: "https://vk.com/video-123456_456789",
+                            article: {
+                                title: "Демо статья для VK видео",
+                                content: `
+                                    <div class="article-text">
+                                        <p>Это демонстрационная статья для видео из ВКонтакте. Здесь вы можете разместить подробное описание, анализ или дополнительную информацию о видео.</p>
+                                        
+                                        <h3 class="article-subtitle">Особенности VK видео</h3>
+                                        <p>Видео из ВКонтакте поддерживают различные форматы и могут быть легко встроены на сайт.</p>
+                                        
+                                        <div class="important-note">
+                                            <p><strong>Примечание:</strong> Для работы VK видео требуется стабильное интернет-соединение и поддержка iframe вашим браузером.</p>
+                                        </div>
+                                    </div>
+                                `
+                            }
+                        }
+                    ];
+                }
+                
                 // Скрываем индикатор загрузки
                 loading.style.display = 'none';
                 
@@ -789,6 +829,36 @@
                         <p style="font-size: 1rem; margin-top: 10px;">Проверьте наличие файла data.json</p>
                     </div>
                 `;
+                
+                // Создаем демо-данные при ошибке загрузки
+                videos = [
+                    {
+                        title: "Демо видео из VK",
+                        videoUrl: "https://vk.com/video-123456_456789",
+                        article: {
+                            title: "Демо статья для VK видео",
+                            content: `
+                                <div class="article-text">
+                                    <p>Это демонстрационная статья для видео из ВКонтакте. Здесь вы можете разместить подробное описание, анализ или дополнительную информацию о видео.</p>
+                                    
+                                    <h3 class="article-subtitle">Особенности VK видео</h3>
+                                    <p>Видео из ВКонтакте поддерживают различные форматы и могут быть легко встроены на сайт.</p>
+                                    
+                                    <div class="important-note">
+                                        <p><strong>Примечание:</strong> Для работы VK видео требуется стабильное интернет-соединение и поддержка iframe вашим браузером.</p>
+                                    </div>
+                                </div>
+                            `
+                        }
+                    }
+                ];
+                
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    createVideoCards();
+                    updateCarousel();
+                    updateArticle();
+                }, 2000);
             }
         }
 
@@ -853,6 +923,7 @@
                                 <iframe class="video-iframe" 
                                     src="${vkEmbedUrl}" 
                                     frameborder="0" 
+                                    allow="autoplay; encrypted-media; fullscreen"
                                     allowfullscreen>
                                 </iframe>
                                 <div class="play-overlay">
@@ -862,6 +933,15 @@
                                 </div>
                             `;
                             sourceName = 'VK';
+                        } else {
+                            videoHTML = `
+                                <div class="video-unsupported">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <p>Неверный формат ссылки VK</p>
+                                    <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">Используйте формат: https://vk.com/video-123456_456789</p>
+                                </div>
+                            `;
+                            sourceName = 'Ошибка VK';
                         }
                         break;
                         
@@ -914,13 +994,21 @@
                     const iframe = videoCard.querySelector('.video-iframe');
                     
                     if (playOverlay && iframe) {
-                        videoCard.addEventListener('click', (e) => {
-                            if (!e.target.closest('.video-source-badge')) {
-                                playOverlay.classList.add('hidden');
-                                // Для iframe автоматическое воспроизведение может быть ограничено браузером
-                            }
+                        playOverlay.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            playOverlay.classList.add('hidden');
+                            // Для iframe автоматическое воспроизведение может быть ограничено браузером
+                            // Пользователь должен будет нажать play внутри iframe
                         });
                     }
+                    
+                    // Обработчик клика на саму карточку (не на overlay)
+                    videoCard.addEventListener('click', (e) => {
+                        if (!e.target.closest('.play-overlay') && !e.target.closest('.video-source-badge')) {
+                            // При клике на карточку переходим к этому видео
+                            goToVideo(index);
+                        }
+                    });
                 }
                 
                 fragment.appendChild(videoCard);
