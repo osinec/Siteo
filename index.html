@@ -27,6 +27,12 @@
             font-family: system-ui, -apple-system, sans-serif;
         }
         
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+        
         body {
             background: var(--darker);
             color: var(--light);
@@ -593,7 +599,32 @@
         let currentIndex = 0;
         let currentlyPlayingVideo = null;
 
+        // Блокировка горизонтального скролла
         document.addEventListener('DOMContentLoaded', function() {
+            // Предотвращаем горизонтальный скролл
+            document.body.style.overflowX = 'hidden';
+            document.documentElement.style.overflowX = 'hidden';
+            
+            // Блокируем горизонтальные свайпы
+            document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 1) return;
+                
+                const touch = e.touches[0];
+                const startX = touch.pageX;
+                
+                // Если движение в основном горизонтальное - блокируем
+                if (Math.abs(e.touches[0].pageX - startX) > Math.abs(e.touches[0].pageY - startX)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Блокируем горизонтальную прокрутку колесиком мыши
+            document.addEventListener('wheel', function(e) {
+                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
             const carousel = document.getElementById('carousel');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
@@ -624,7 +655,7 @@
                 }
             });
 
-            // Swipe для мобильных
+            // Swipe для мобильных - только для карусели
             let startX = 0;
             carousel.addEventListener('touchstart', (e) => {
                 startX = e.touches[0].clientX;
