@@ -48,20 +48,92 @@
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.6rem;
+            font-size: 4rem; /* Увеличенный размер */
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 12px;
             background: linear-gradient(135deg, #0b1220, var(--primary-light));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            text-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
         }
 
         .subtitle {
             font-family: 'Poppins', sans-serif;
             font-weight: 300;
             color: rgba(15,23,36,0.75);
-            font-size: 1rem;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .news-container {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
+
+        .news-frame {
+            background: linear-gradient(135deg, #0D9488, #10B981); /* Изумрудно-зелёный градиент */
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 16px 40px rgba(16, 185, 129, 0.35);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .news-frame::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: glowPulse 4s infinite alternate;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        .news-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .news-content h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            letter-spacing: -0.5px;
+        }
+
+        .news-content p {
+            margin-bottom: 12px;
+            opacity: 0.95;
+        }
+
+        .news-date {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            font-style: italic;
+            margin-bottom: 16px;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
+        }
+
+        @keyframes glowPulse {
+            from { transform: translate(-20%, -20%) rotate(2deg); }
+            to { transform: translate(20%, 20%) rotate(-2deg); }
         }
 
         .gallery-container {
@@ -307,7 +379,10 @@
 
         @media (max-width:768px) {
             .carousel { width:300px; height:533px; }
-            h1 { font-size:2.2rem; }
+            h1 { font-size:3.2rem; }
+            .subtitle { font-size: 1rem; }
+            .news-content { font-size: 1rem; }
+            .news-content h3 { font-size: 1.2rem; }
             .article-section { padding: 28px; margin: 20px; }
             .article-title { font-size: 2rem; }
             .article-content { font-size: 1rem; }
@@ -315,7 +390,10 @@
 
         @media (max-width:480px) {
             .carousel { width: 280px; height:497px; }
-            h1 { font-size:1.9rem; }
+            h1 { font-size:2.6rem; }
+            .subtitle { font-size: 0.9rem; }
+            .news-content { font-size: 0.95rem; }
+            .news-content h3 { font-size: 1.1rem; }
             .article-section { padding: 20px; margin: 15px; }
             .article-title { font-size: 1.7rem; }
             .article-content { font-size: .98rem; }
@@ -325,7 +403,18 @@
 <body>
     <header>
         <h1>VibeShorts</h1>
-        <p class="subtitle">Галерея видео с пространством для статей</p>
+        <p class="subtitle">Платформа для визуального обучения и вдохновения<br>с насыщенным, динамическим контентом и минималистичным интерфейсом</p>
+        
+        <div class="news-container">
+            <div class="news-frame">
+                <div class="news-content">
+                    <h3>🌿 Новости VibeShorts</h3>
+                    <div class="news-date">20 ноября 2025</div>
+                    <p>Мы рады сообщить о запуске новой функции автоматического форматирования номеров договоров при ручном вводе, что делает работу с документами еще более удобной и профессиональной.</p>
+                    <p>Также в этом месяце мы добавили новые категории контента, вдохновленные историями людей, которые справляются с сомнениями, эмоциями и признаниями своих ошибок, чтобы помочь вам в личностном росте.</p>
+                </div>
+            </div>
+        </div>
     </header>
 
     <div class="gallery-container">
