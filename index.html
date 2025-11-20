@@ -69,7 +69,7 @@
         .carousel {
             position: relative;
             width: 320px;
-            height: 560px;
+            height: 568px; /* 16:9 aspect ratio for vertical video */
             transform-style: preserve-3d;
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             margin-bottom: 30px;
@@ -96,11 +96,14 @@
             position: relative;
             background: #000;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .video-player {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Changed from cover to contain to show full video without cropping */
         }
         .play-overlay {
             position: absolute;
@@ -418,7 +421,7 @@
         @media (max-width: 768px) {
             .carousel {
                 width: 300px;
-                height: 520px;
+                height: 533px; /* 16:9 aspect ratio for mobile */
             }
             .nav-btn {
                 width: 45px;
@@ -444,7 +447,7 @@
         @media (max-width: 480px) {
             .carousel {
                 width: 280px;
-                height: 480px;
+                height: 497px; /* 16:9 aspect ratio for small mobile */
             }
             .nav-btn {
                 width: 40px;
@@ -724,7 +727,7 @@
                                     </ul>
                                     
                                     <div class="success-note">
-                                        <p><strong>Совет:</strong> Используйте видео вертикального формата для лучшего отображения в мобильных устройствах.</p>
+                                        <p><strong>Совет:</strong> Используйте видео вертикального формата 16:9 для лучшего отображения.</p>
                                     </div>
                                     
                                     <div class="article-quote">
