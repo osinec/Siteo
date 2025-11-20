@@ -102,17 +102,6 @@
             height: 100%;
             object-fit: cover;
         }
-        .video-source-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            z-index: 5;
-        }
         .play-overlay {
             position: absolute;
             top: 0;
@@ -776,7 +765,6 @@
                             <i class="fas fa-play"></i>
                         </div>
                     </div>
-                    <div class="video-source-badge">Локальное видео</div>
                 `;
 
                 videoCard.innerHTML = `
@@ -789,9 +777,7 @@
                 const playOverlay = videoCard.querySelector('.play-overlay');
                 
                 videoCard.addEventListener('click', (e) => {
-                    if (!e.target.closest('.video-source-badge')) {
-                        toggleVideoPlayback(videoElement, playOverlay);
-                    }
+                    toggleVideoPlayback(videoElement, playOverlay);
                 });
                 
                 videoElement.addEventListener('ended', () => {
