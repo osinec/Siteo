@@ -25,9 +25,7 @@
       }
     },
 {
-  "videos": [
-    {
-      "title": "Основы программирования",
+       "title": "Основы программирования",
       "videoUrl": "https://example.com/video1.mp4",
       "article": {
         "title": "Введение в программирование",
@@ -35,9 +33,7 @@
       }
     },
     {
-  "videos": [
-    {
-      "title": "Основы программирования",
+     "title": "Основы программирования",
       "videoUrl": "https://example.com/video1.mp4",
       "article": {
         "title": "Введение в программирование",
