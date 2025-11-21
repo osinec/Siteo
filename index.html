@@ -283,14 +283,14 @@
             align-items: center;
             position: relative;
             perspective: 1400px;
-            padding: 20px 0 40px;
-            min-height: 500px; /* Уменьшена высота */
+            padding: 60px 0 40px; /* Увеличено верхнее поле для заголовков */
+            min-height: 600px; /* Увеличена высота для размещения заголовков */
             flex-direction: column;
         }
         .carousel {
             position: relative;
             width: 320px;
-            height: 500px; /* Уменьшена высота */
+            height: 500px; /* Высота видео */
             transform-style: preserve-3d;
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             margin-bottom: 30px;
@@ -300,16 +300,35 @@
             width: 100%;
             height: 100%;
             border-radius: 20px;
-            overflow: hidden;
+            overflow: visible; /* Изменено на visible чтобы заголовок был виден */
             box-shadow: 0 20px 40px rgba(10, 20, 30, 0.08);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            background: #ffffff;
-            border: 1px solid rgba(10,20,30,0.05);
+            background: transparent; /* Прозрачный фон для карточки */
+            border: none;
             cursor: pointer;
             top: 0;
             left: 0;
+        }
+        .video-title {
+            position: absolute;
+            top: -45px; /* Размещаем над видео */
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main); /* Черный цвет */
+            padding: 0 15px;
+            z-index: 20; /* Высокий z-index чтобы быть поверх всего */
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .video-player-container {
             width: 100%;
@@ -320,12 +339,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(10, 20, 30, 0.08);
+            border: 1px solid rgba(10,20,30,0.05);
         }
         .video-player {
             width: 100%;
             height: 100%;
             object-fit: contain;
             background: #000;
+            border-radius: 20px;
         }
         .play-overlay {
             position: absolute;
@@ -339,7 +362,8 @@
             background: rgba(0, 0, 0, 0.28);
             transition: opacity 0.2s ease;
             cursor: pointer;
-            z-index: 2;
+            z-index: 10;
+            border-radius: 20px;
         }
         .play-overlay.hidden {
             opacity: 0;
@@ -615,6 +639,7 @@
             .article-title { font-size: 2.2rem; }
             .article-content { font-size: 1.05rem; }
             .article-subtitle { font-size: 1.5rem; }
+            .video-title { font-size: 1.2rem; top: -40px; }
         }
         @media (max-width:480px) {
             .carousel { width: 280px; height:440px; } /* Адаптивная высота */
@@ -628,6 +653,7 @@
             .article-title { font-size: 1.9rem; }
             .article-content { font-size: 1rem; }
             .article-subtitle { font-size: 1.3rem; }
+            .video-title { font-size: 1.1rem; top: -35px; }
         }
     </style>
 </head>
@@ -801,7 +827,7 @@
             // Этот список используется только при ошибке загрузки
             return [
                 {
-                    title: "Демо видео",
+                    title: "Демо видео 1",
                     videoUrl: "demo.mp4",
                     article: {
                         title: "Демонстрационная статья",
@@ -827,6 +853,40 @@
                             </div>
                         `
                     }
+                },
+                {
+                    title: "Второе демо видео",
+                    videoUrl: "demo2.mp4", 
+                    article: {
+                        title: "Вторая демо статья",
+                        content: `
+                            <div class="article-text">
+                                <p>Это вторая демонстрационная статья.</p>
+                                <div class="article-image">
+                                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Демо изображение">
+                                </div>
+                                <h3 class="article-subtitle">Дополнительная информация</h3>
+                                <p>Здесь может быть любой контент для второй статьи.</p>
+                            </div>
+                        `
+                    }
+                },
+                {
+                    title: "Третье видео с длинным названием",
+                    videoUrl: "demo3.mp4",
+                    article: {
+                        title: "Третья демо статья",
+                        content: `
+                            <div class="article-text">
+                                <p>Это третья демонстрационная статья.</p>
+                                <div class="article-image">
+                                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Демо изображение">
+                                </div>
+                                <h3 class="article-subtitle">Еще больше информации</h3>
+                                <p>Контент для третьей статьи.</p>
+                            </div>
+                        `
+                    }
                 }
             ];
         }
@@ -838,31 +898,36 @@
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
                 videoCard.dataset.index = index;
+                
                 const videoHTML = `
-                    <video class="video-player" preload="metadata" playsinline>
-                        <source src="${video.videoUrl}" type="video/mp4">
-                        Ваш браузер не поддерживает видео тег.
-                    </video>
-                    <div class="play-overlay">
-                        <div class="play-icon">
-                            <i class="fas fa-play"></i>
+                    <div class="video-title">${video.title}</div>
+                    <div class="video-player-container">
+                        <video class="video-player" preload="metadata" playsinline>
+                            <source src="${video.videoUrl}" type="video/mp4">
+                            Ваш браузер не поддерживает видео тег.
+                        </video>
+                        <div class="play-overlay">
+                            <div class="play-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
                         </div>
                     </div>
                 `;
-                videoCard.innerHTML = `
-                    <div class="video-player-container">
-                        ${videoHTML}
-                    </div>
-                `;
+                
+                videoCard.innerHTML = videoHTML;
+
                 const videoElement = videoCard.querySelector('.video-player');
                 const playOverlay = videoCard.querySelector('.play-overlay');
+                
                 videoCard.addEventListener('click', (e) => {
                     toggleVideoPlayback(videoElement, playOverlay);
                 });
+                
                 videoElement.addEventListener('ended', () => {
                     playOverlay.classList.remove('hidden');
                     currentlyPlayingVideo = null;
                 });
+                
                 fragment.appendChild(videoCard);
             });
             carousel.appendChild(fragment);
@@ -904,13 +969,32 @@
             const cards = carousel.children;
             const dots = progressDots.children;
             const totalCards = cards.length;
+            
             for (let i = 0; i < totalCards; i++) {
                 const card = cards[i];
                 const position = (i - currentIndex + totalCards) % totalCards;
+                const videoTitle = card.querySelector('.video-title');
+                
+                // Устанавливаем прозрачность заголовка в зависимости от позиции
+                if (position === 0) {
+                    // Центральное видео - полная непрозрачность
+                    videoTitle.style.opacity = '1';
+                } else if (position === 1 || position === totalCards - 1) {
+                    // Ближайшие соседи - средняя прозрачность
+                    videoTitle.style.opacity = '0.7';
+                } else if (position === 2 || position === totalCards - 2) {
+                    // Следующие соседи - низкая прозрачность
+                    videoTitle.style.opacity = '0.4';
+                } else {
+                    // Остальные - почти невидимые
+                    videoTitle.style.opacity = '0.1';
+                }
+                
                 card.style.transform = '';
                 card.style.opacity = '1';
                 card.style.zIndex = '1';
                 card.style.pointerEvents = 'auto';
+                
                 if (position === 0) {
                     card.style.transform = 'translateZ(0)';
                     card.style.zIndex = '10';
@@ -937,6 +1021,7 @@
                     card.style.pointerEvents = 'none';
                 }
             }
+            
             for (let i = 0; i < dots.length; i++) {
                 dots[i].className = `dot ${i === currentIndex ? 'active' : ''}`;
             }
