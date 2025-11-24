@@ -62,21 +62,21 @@
             letter-spacing: 0.2px;
         }
         .news-container {
-            max-width: 600px;
-            margin: 0 auto 20px;
+            max-width: 650px;
+            margin: 0 auto 40px;
             padding: 0 20px;
+            position: relative;
         }
         .news-frame {
             background: linear-gradient(135deg, #0D9488, #10B981);
-            border-radius: 14px;
-            padding: 18px;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.3);
             border: 1px solid rgba(255,255,255,0.2);
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(8px);
             color: white;
-            min-height: auto;
             transition: all 0.3s ease-out;
         }
         .news-frame::before {
@@ -96,51 +96,45 @@
             position: relative;
             z-index: 2;
             font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             line-height: 1.5;
         }
         .news-content h3 {
             font-family: 'Poppins', sans-serif;
             font-weight: 300;
-            font-size: 1.1rem;
-            margin-bottom: 6px;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
             color: #fff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
             letter-spacing: -0.5px;
         }
         .news-content p {
-            margin-bottom: 6px;
+            margin-bottom: 15px;
             opacity: 0.95;
             word-wrap: break-word;
             hyphens: auto;
             letter-spacing: 0.1px;
         }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0 30px;
-            position: relative;
-        }
         .news-button {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #0D9488, #10B981, #059669, #0D9488, #10B981);
+            gap: 10px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FF6B6B, #FF8E53);
             background-size: 400% 400%;
             color: white;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 50px;
             font-weight: 700;
             font-family: 'Poppins', sans-serif;
             text-decoration: none;
             box-shadow: 
-                0 4px 15px rgba(16, 185, 129, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.1),
-                0 0 15px rgba(16, 185, 129, 0.15);
+                0 6px 25px rgba(255, 107, 107, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                0 0 25px rgba(255, 107, 107, 0.3);
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border: none;
-            letter-spacing: 0.6px;
-            font-size: 0.95rem;
+            letter-spacing: 0.7px;
+            font-size: 1rem;
             position: relative;
             overflow: hidden;
             animation: 
@@ -157,28 +151,15 @@
             background: linear-gradient(
                 90deg,
                 transparent,
-                rgba(255, 255, 255, 0.4),
+                rgba(255, 255, 255, 0.5),
                 transparent
             );
             animation: shine 3s ease-in-out infinite;
         }
-        .button-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 120%;
-            height: 120%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: glowPulseButton 3s ease-in-out infinite;
-            z-index: -1;
-            pointer-events: none;
-        }
         .news-button .icon {
             transition: all 0.3s ease;
-            font-size: 0.9em;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            font-size: 1em;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
             animation: iconPulse 2s ease-in-out infinite;
         }
         @keyframes shimmer {
@@ -193,16 +174,16 @@
             0%, 100% {
                 transform: translateY(0) scale(1);
                 box-shadow: 
-                    0 4px 15px rgba(16, 185, 129, 0.25),
-                    0 0 0 1px rgba(255, 255, 255, 0.1),
-                    0 0 15px rgba(16, 185, 129, 0.15);
+                    0 6px 25px rgba(255, 107, 107, 0.4),
+                    0 0 0 1px rgba(255, 255, 255, 0.2),
+                    0 0 25px rgba(255, 107, 107, 0.3);
             }
             50% {
-                transform: translateY(-2px) scale(1.02);
+                transform: translateY(-3px) scale(1.05);
                 box-shadow: 
-                    0 6px 20px rgba(16, 185, 129, 0.35),
-                    0 0 0 1px rgba(255, 255, 255, 0.2),
-                    0 0 20px rgba(16, 185, 129, 0.25);
+                    0 10px 35px rgba(255, 107, 107, 0.6),
+                    0 0 0 1px rgba(255, 255, 255, 0.3),
+                    0 0 35px rgba(255, 107, 107, 0.5);
             }
         }
         @keyframes shine {
@@ -216,33 +197,23 @@
                 left: 100%;
             }
         }
-        @keyframes glowPulseButton {
-            0%, 100% {
-                opacity: 0.2;
-                transform: translate(-50%, -50%) scale(1);
-            }
-            50% {
-                opacity: 0.4;
-                transform: translate(-50%, -50%) scale(1.1);
-            }
-        }
         @keyframes iconPulse {
             0%, 100% {
                 transform: translateX(0) scale(1);
             }
             50% {
-                transform: translateX(2px) scale(1.1);
+                transform: translateX(3px) scale(1.2);
             }
         }
         .news-button:hover {
             animation: 
                 shimmer 1s ease-in-out infinite,
                 gentlePulse 1.5s ease-in-out infinite;
-            transform: translateY(-2px) scale(1.03);
+            transform: translateY(-4px) scale(1.08);
             box-shadow: 
-                0 8px 25px rgba(16, 185, 129, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.3),
-                0 0 30px rgba(16, 185, 129, 0.3);
+                0 15px 45px rgba(255, 107, 107, 0.7),
+                0 0 0 1px rgba(255, 255, 255, 0.4),
+                0 0 50px rgba(255, 107, 107, 0.6);
         }
         .gallery-container {
             display: flex;
@@ -250,8 +221,8 @@
             align-items: center;
             position: relative;
             perspective: 800px;
-            padding: 30px 0 15px;
-            min-height: 380px;
+            padding: 60px 0 25px;
+            min-height: 420px;
             flex-direction: column;
         }
         .carousel {
@@ -260,7 +231,7 @@
             height: 480px; /* 9:16 соотношение */
             transform-style: preserve-3d;
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             will-change: transform;
         }
         .video-card {
@@ -268,7 +239,7 @@
             width: 100%;
             height: 100%;
             border-radius: 12px;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 10px 20px rgba(10, 20, 30, 0.08);
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
             display: flex;
@@ -284,15 +255,15 @@
         }
         .video-title {
             position: absolute;
-            top: -45px;
+            top: -70px;
             left: 0;
             right: 0;
             text-align: center;
             font-family: 'Inter', sans-serif;
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: var(--text-main);
-            padding: 0 10px;
+            padding: 0 15px;
             z-index: 20;
             transition: opacity 0.4s ease;
             pointer-events: none;
@@ -301,7 +272,7 @@
             overflow: visible;
             text-overflow: unset;
             line-height: 1.3;
-            max-height: 40px;
+            max-height: 50px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -326,12 +297,14 @@
             object-fit: cover;
             background: #000;
             border-radius: 12px;
+            display: none;
         }
         .yandex-player-container {
             width: 100%;
             height: 100%;
             border-radius: 12px;
             overflow: hidden;
+            display: none;
         }
         .yandex-player-iframe {
             width: 100%;
@@ -378,42 +351,6 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
             font-weight: 500;
         }
-        .play-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.6);
-            transition: opacity 0.3s ease, background 0.3s ease;
-            cursor: pointer;
-            z-index: 10;
-            border-radius: 12px;
-        }
-        .play-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .play-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            color: white;
-            transition: transform 0.2s ease, background 0.2s ease;
-            border: 2px solid rgba(255,255,255,0.3);
-        }
-        .play-overlay:hover .play-icon {
-            transform: scale(1.1);
-            background: rgba(255,255,255,0.3);
-        }
         .video-error {
             position: absolute;
             top: 0;
@@ -430,6 +367,7 @@
             padding: 15px;
             border-radius: 12px;
             z-index: 15;
+            display: none;
         }
         .video-error i {
             font-size: 1.5rem;
@@ -468,7 +406,7 @@
             gap: 8px;
             position: relative;
             z-index: 10;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         .dot {
             width: 8px;
@@ -487,7 +425,7 @@
         .article-section {
             flex: 1;
             max-width: 750px;
-            margin: 20px auto;
+            margin: 30px auto;
             padding: 25px 20px;
             background: linear-gradient(135deg, #E9EEF8, #ffffff, #F8FAFC);
             backdrop-filter: blur(20px) saturate(180%);
@@ -622,12 +560,12 @@
         @media (max-width:768px) {
             .carousel { width:240px; height:426px; } /* Сохраняем 9:16 */
             h1 { font-size:2.2rem; }
-            .news-frame { padding: 16px; }
-            .news-button { padding: 10px 20px; font-size: 0.9rem; }
-            .article-section { padding: 20px 16px; margin: 16px; }
+            .news-frame { padding: 18px; }
+            .news-button { padding: 12px 24px; font-size: 0.95rem; }
+            .article-section { padding: 20px 16px; margin: 25px; }
             .article-title { font-size: 1.5rem; }
-            .video-title { font-size: 0.9rem; top: -40px; }
-            .gallery-container { padding: 25px 0 12px; min-height: 350px; }
+            .video-title { font-size: 1.1rem; top: -65px; }
+            .gallery-container { padding: 50px 0 20px; min-height: 400px; }
             .preview-play-icon { font-size: 1.8rem; }
             .nav-btn { width: 35px; height: 35px; }
             .nav-btn i { font-size: 1rem; }
@@ -635,14 +573,13 @@
         @media (max-width:480px) {
             .carousel { width: 210px; height:373px; } /* Сохраняем 9:16 */
             h1 { font-size:1.8rem; }
-            .news-frame { padding: 14px; }
-            .news-button { padding: 8px 16px; font-size: 0.85rem; }
-            .article-section { padding: 16px 12px; margin: 12px; }
+            .news-frame { padding: 16px; }
+            .news-button { padding: 10px 20px; font-size: 0.9rem; }
+            .article-section { padding: 16px 12px; margin: 20px; }
             .article-title { font-size: 1.3rem; }
-            .video-title { font-size: 0.85rem; top: -35px; }
-            .gallery-container { padding: 20px 0 10px; min-height: 320px; }
+            .video-title { font-size: 1rem; top: -60px; }
+            .gallery-container { padding: 45px 0 15px; min-height: 380px; }
             .preview-play-icon { font-size: 1.6rem; }
-            .play-icon { width: 45px; height: 45px; font-size: 16px; }
             .nav-btn { width: 30px; height: 30px; }
             .nav-btn i { font-size: 0.9rem; }
         }
@@ -656,6 +593,10 @@
                 <div class="news-content">
                     <h3>🌿 Новости</h3>
                     <p>Фундаментальные истории о стойкости, которые делают тебя увереннее и устойчивее в фоновом режиме. Истории с пошаговым алгоритмом действий</p>
+                    <a href="https://vibeshorts.example.com/special-issue" class="news-button">
+                        <span>Читать спецвыпуск</span>
+                        <i class="fas fa-arrow-right icon"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -673,13 +614,6 @@
             <i class="fas fa-chevron-right"></i>
         </button>
         <div class="progress-dots" id="progressDots" role="tablist" aria-label="Navigation dots"></div>
-    </div>
-    <div class="button-container">
-        <div class="button-glow" aria-hidden="true"></div>
-        <a href="https://vibeshorts.example.com/special-issue" class="news-button">
-            <span>Читать спецвыпуск</span>
-            <i class="fas fa-arrow-right icon"></i>
-        </a>
     </div>
     <section class="article-section">
         <div class="article-header">
@@ -783,55 +717,64 @@
                 const videoType = getVideoType(video.videoUrl);
                 let videoHTML = '';
                 
-                const previewImage = video.previewImage || 'default-preview.jpg';
+                const previewImage = video.previewImage || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+                
+                videoHTML = `
+                    <div class="video-title">${escapeHtml(video.title)}</div>
+                    <div class="video-player-container">
+                `;
                 
                 if (videoType === 'yandex' || videoType === 'youtube') {
-                    videoHTML = `
-                        <div class="video-title">${escapeHtml(video.title)}</div>
-                        <div class="video-player-container">
-                            <div class="yandex-player-container" style="display: none;">
-                                <iframe 
-                                    class="yandex-player-iframe" 
-                                    allow="encrypted-media" 
-                                    allowfullscreen
-                                    loading="lazy">
-                                </iframe>
-                            </div>
-                            <div class="video-preview" style="background-image: url('${previewImage}')">
-                                <div class="preview-content">
-                                    <div class="preview-play-icon">▶</div>
-                                    <div class="preview-text">Нажмите для воспроизведения</div>
-                                </div>
-                            </div>
+                    videoHTML += `
+                        <div class="yandex-player-container">
+                            <iframe 
+                                class="yandex-player-iframe" 
+                                allow="encrypted-media" 
+                                allowfullscreen
+                                loading="lazy">
+                            </iframe>
                         </div>
                     `;
                 } else {
-                    videoHTML = `
-                        <div class="video-title">${escapeHtml(video.title)}</div>
-                        <div class="video-player-container">
-                            <video class="video-player" preload="none" playsinline muted tabindex="-1" poster="${previewImage}"></video>
-                            <div class="video-preview" style="background-image: url('${previewImage}')">
-                                <div class="preview-content">
-                                    <div class="preview-play-icon">▶</div>
-                                    <div class="preview-text">Нажмите для воспроизведения</div>
-                                </div>
-                            </div>
-                        </div>
+                    videoHTML += `
+                        <video class="video-player" preload="none" playsinline muted tabindex="-1" poster="${previewImage}"></video>
                     `;
                 }
+                
+                videoHTML += `
+                        <div class="video-preview" style="background-image: url('${previewImage}')">
+                            <div class="preview-content">
+                                <div class="preview-play-icon">▶</div>
+                                <div class="preview-text">Нажмите для воспроизведения</div>
+                            </div>
+                        </div>
+                        <div class="video-error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Ошибка загрузки видео</p>
+                        </div>
+                    </div>
+                `;
+                
                 videoCard.innerHTML = videoHTML;
                 
                 if (videoType === 'yandex' || videoType === 'youtube') {
                     const iframeContainer = videoCard.querySelector('.yandex-player-container');
                     const iframe = videoCard.querySelector('.yandex-player-iframe');
                     const preview = videoCard.querySelector('.video-preview');
+                    const errorDiv = videoCard.querySelector('.video-error');
+                    
+                    // Сначала скрываем iframe и показываем превью
+                    iframeContainer.style.display = 'none';
+                    preview.style.display = 'flex';
+                    errorDiv.style.display = 'none';
                     
                     const playHandler = (e) => {
                         e.stopPropagation();
                         stopAllVideos();
                         
-                        iframeContainer.style.display = 'block';
                         preview.style.display = 'none';
+                        iframeContainer.style.display = 'block';
+                        errorDiv.style.display = 'none';
                         
                         if (!iframe.src) {
                             let videoUrl = video.videoUrl;
@@ -855,17 +798,24 @@
                 } else {
                     const videoElement = videoCard.querySelector('.video-player');
                     const preview = videoCard.querySelector('.video-preview');
+                    const errorDiv = videoCard.querySelector('.video-error');
                     videoElement.dataset.src = video.videoUrl || '';
+                    
+                    // Сначала скрываем видео и показываем превью
+                    videoElement.style.display = 'none';
+                    preview.style.display = 'flex';
+                    errorDiv.style.display = 'none';
                     
                     const playHandler = (e) => {
                         e.stopPropagation();
-                        toggleVideoPlayback(videoElement, preview);
+                        toggleVideoPlayback(videoElement, preview, errorDiv);
                     };
                     
                     preview.addEventListener('click', playHandler, { passive: true });
                     
                     videoElement.addEventListener('ended', () => {
-                        preview.style.display = 'block';
+                        videoElement.style.display = 'none';
+                        preview.style.display = 'flex';
                         currentlyPlayingVideo = null;
                     }, { passive: true });
                 }
@@ -880,8 +830,12 @@
                 try {
                     currentlyPlayingVideo.pause();
                     currentlyPlayingVideo.currentTime = 0;
-                    const preview = currentlyPlayingVideo.parentElement.querySelector('.video-preview');
-                    if (preview) preview.style.display = 'block';
+                    const container = currentlyPlayingVideo.parentElement;
+                    const preview = container.querySelector('.video-preview');
+                    const errorDiv = container.querySelector('.video-error');
+                    currentlyPlayingVideo.style.display = 'none';
+                    if (preview) preview.style.display = 'flex';
+                    if (errorDiv) errorDiv.style.display = 'none';
                 } catch (e) {}
             }
             
@@ -893,8 +847,10 @@
                         iframe.src = src;
                         const container = iframe.closest('.yandex-player-container');
                         const preview = container.parentElement.querySelector('.video-preview');
+                        const errorDiv = container.parentElement.querySelector('.video-error');
                         if (container) container.style.display = 'none';
-                        if (preview) preview.style.display = 'block';
+                        if (preview) preview.style.display = 'flex';
+                        if (errorDiv) errorDiv.style.display = 'none';
                     } catch (e) {}
                 }
             });
@@ -902,11 +858,8 @@
             currentlyPlayingVideo = null;
         }
 
-        function toggleVideoPlayback(videoElement, preview) {
+        function toggleVideoPlayback(videoElement, preview, errorDiv) {
             if (!videoElement) return;
-            const container = videoElement.parentElement;
-            const errorDiv = container.querySelector('.video-error');
-            if (errorDiv) return;
 
             stopAllVideos();
 
@@ -921,20 +874,20 @@
             if (videoElement.paused) {
                 videoElement.play().then(() => {
                     preview.style.display = 'none';
+                    videoElement.style.display = 'block';
+                    errorDiv.style.display = 'none';
                     currentlyPlayingVideo = videoElement;
                 }).catch(err => {
                     console.error('Ошибка воспроизведения:', err);
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'video-error';
-                    errorDiv.innerHTML = `
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <p>Ошибка загрузки видео</p>
-                    `;
-                    container.appendChild(errorDiv);
+                    preview.style.display = 'none';
+                    videoElement.style.display = 'none';
+                    errorDiv.style.display = 'flex';
                 });
             } else {
                 videoElement.pause();
-                preview.style.display = 'block';
+                videoElement.style.display = 'none';
+                preview.style.display = 'flex';
+                errorDiv.style.display = 'none';
                 currentlyPlayingVideo = null;
             }
         }
@@ -1086,30 +1039,53 @@
         function getDefaultVideos() {
             return [
                 {
-                    title: "Пример видео с Яндекс Облаком",
+                    title: "Как развить стойкость в сложные времена",
                     videoUrl: "https://runtime.video.cloud.yandex.net/player/video/vplvscsviln3pecevi4w",
-                    previewImage: "preview1.jpg",
+                    previewImage: "https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                     article: {
-                        title: "Демонстрационная статья",
+                        title: "Как развить стойкость в сложные времена",
                         content: `
                             <div class="article-text">
-                                <p>Это демонстрационная статья для видео с Яндекс Облака.</p>
+                                <p>Стойкость - это не просто умение выживать, а способность процветать в условиях неопределенности. В этой статье мы рассмотрим практические шаги для развития внутренней устойчивости.</p>
                                 <div class="article-image">
-                                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Демо изображение">
+                                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Развитие стойкости">
                                 </div>
-                                <h3 class="article-subtitle">Особенности Яндекс Видео</h3>
-                                <p>Видео воспроизводится через встроенный плеер.</p>
+                                <h3 class="article-subtitle">Ключевые принципы стойкости</h3>
+                                <p>Осознанность, принятие и адаптивность - три кита, на которых строится настоящая психологическая устойчивость.</p>
                             </div>
                         `
                     }
                 },
                 {
-                    title: "Второе демо видео",
+                    title: "Практики осознанности для повседневной жизни",
                     videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-                    previewImage: "preview2.jpg",
+                    previewImage: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                     article: {
-                        title: "Вторая демо статья",
-                        content: `<div class="article-text"><p>Это вторая демонстрационная статья с MP4 видео.</p></div>`
+                        title: "Практики осознанности для повседневной жизни",
+                        content: `<div class="article-text">
+                            <p>Осознанность - это искусство присутствовать здесь и сейчас. Простые практики, которые можно внедрить в свою жизнь уже сегодня.</p>
+                            <div class="article-image">
+                                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Практики осознанности">
+                            </div>
+                            <h3 class="article-subtitle">Ежедневные ритуалы</h3>
+                            <p>Утренняя медитация, осознанное дыхание и ведение дневника - простые, но эффективные инструменты для развития осознанности.</p>
+                        </div>`
+                    }
+                },
+                {
+                    title: "Эмоциональный интеллект: ключ к успеху",
+                    videoUrl: "https://example.com/video3.mp4",
+                    previewImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    article: {
+                        title: "Эмоциональный интеллект: ключ к успеху",
+                        content: `<div class="article-text">
+                            <p>Эмоциональный интеллект - это способность понимать и управлять своими эмоциями, а также распознавать эмоции других людей.</p>
+                            <div class="article-image">
+                                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Эмоциональный интеллект">
+                            </div>
+                            <h3 class="article-subtitle">Развитие EQ</h3>
+                            <p>Упражнения для развития самосознания, эмпатии и навыков социального взаимодействия.</p>
+                        </div>`
                     }
                 }
             ];
