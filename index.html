@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>VibeShorts | Галерея со статьями</title>
-    <!-- Шрифты: Inter, Poppins, Playfair Display -->
+    <title>OSINEC | Галерея со статьями</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -39,13 +38,13 @@
         }
         header {
             text-align: center;
-            padding: 28px 20px 8px;
+            padding: 20px 20px 5px;
         }
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 4rem;
+            font-size: 3rem;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             background: linear-gradient(135deg, #0b1220, var(--primary-light));
             -webkit-background-clip: text;
             background-clip: text;
@@ -57,21 +56,21 @@
             font-family: 'Poppins', sans-serif;
             font-weight: 300;
             color: rgba(15,23,36,0.75);
-            font-size: 1.1rem;
-            margin-bottom: 16px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
             line-height: 1.6;
             letter-spacing: 0.2px;
         }
         .news-container {
-            max-width: 800px;
-            margin: 0 auto 40px;
+            max-width: 600px;
+            margin: 0 auto 20px;
             padding: 0 20px;
         }
         .news-frame {
             background: linear-gradient(135deg, #0D9488, #10B981);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 16px 40px rgba(16, 185, 129, 0.35);
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
             border: 1px solid rgba(255,255,255,0.2);
             position: relative;
             overflow: hidden;
@@ -97,68 +96,56 @@
             position: relative;
             z-index: 2;
             font-family: 'Inter', sans-serif;
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
         .news-content h3 {
             font-family: 'Poppins', sans-serif;
-            font-weight: 300; /* Сделан тоньше */
-            font-size: 1.4rem;
-            margin-bottom: 12px;
+            font-weight: 300;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
             color: #fff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
             letter-spacing: -0.5px;
         }
         .news-content p {
-            margin-bottom: 12px;
+            margin-bottom: 6px;
             opacity: 0.95;
             word-wrap: break-word;
             hyphens: auto;
             letter-spacing: 0.1px;
         }
-        .news-date {
-            font-size: 0.9rem;
-            opacity: 0.85;
-            font-style: italic;
-            margin-bottom: 16px;
-            color: rgba(255,255,255,0.8);
-            font-weight: 400; /* Сделан тоньше */
-            letter-spacing: 0.3px;
-        }
-        /* Кнопка под видео - постоянно переливающаяся */
         .button-container {
             display: flex;
             justify-content: center;
-            margin: 40px 0 50px;
+            margin: 20px 0 30px;
             position: relative;
         }
         .news-button {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             background: linear-gradient(135deg, #0D9488, #10B981, #059669, #0D9488, #10B981);
             background-size: 400% 400%;
             color: white;
-            padding: 18px 36px;
+            padding: 12px 24px;
             border-radius: 50px;
             font-weight: 700;
             font-family: 'Poppins', sans-serif;
             text-decoration: none;
             box-shadow: 
-                0 8px 32px rgba(16, 185, 129, 0.4),
+                0 4px 15px rgba(16, 185, 129, 0.25),
                 0 0 0 1px rgba(255, 255, 255, 0.1),
-                0 0 30px rgba(16, 185, 129, 0.3);
+                0 0 15px rgba(16, 185, 129, 0.15);
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border: none;
-            letter-spacing: 0.8px;
-            font-size: 1.15rem;
+            letter-spacing: 0.6px;
+            font-size: 0.95rem;
             position: relative;
             overflow: hidden;
             animation: 
                 shimmer 2.5s ease-in-out infinite,
                 gentlePulse 3s ease-in-out infinite;
-            transform-style: preserve-3d;
-            perspective: 1000px;
         }
         .news-button::before {
             content: '';
@@ -175,18 +162,6 @@
             );
             animation: shine 3s ease-in-out infinite;
         }
-        .news-button::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            background: linear-gradient(135deg, #0D9488, #10B981, #059669, #0D9488, #10B981);
-            background-size: 400% 400%;
-            border-radius: 52px;
-            z-index: -1;
-            animation: shimmer 3s ease-in-out infinite;
-            filter: blur(8px);
-            opacity: 0.7;
-        }
         .button-glow {
             position: absolute;
             top: 50%;
@@ -194,7 +169,7 @@
             transform: translate(-50%, -50%);
             width: 120%;
             height: 120%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
             border-radius: 50%;
             animation: glowPulseButton 3s ease-in-out infinite;
             z-index: -1;
@@ -202,7 +177,7 @@
         }
         .news-button .icon {
             transition: all 0.3s ease;
-            font-size: 1.2em;
+            font-size: 0.9em;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
             animation: iconPulse 2s ease-in-out infinite;
         }
@@ -218,16 +193,16 @@
             0%, 100% {
                 transform: translateY(0) scale(1);
                 box-shadow: 
-                    0 8px 32px rgba(16, 185, 129, 0.4),
+                    0 4px 15px rgba(16, 185, 129, 0.25),
                     0 0 0 1px rgba(255, 255, 255, 0.1),
-                    0 0 30px rgba(16, 185, 129, 0.3);
+                    0 0 15px rgba(16, 185, 129, 0.15);
             }
             50% {
                 transform: translateY(-2px) scale(1.02);
                 box-shadow: 
-                    0 12px 40px rgba(16, 185, 129, 0.6),
+                    0 6px 20px rgba(16, 185, 129, 0.35),
                     0 0 0 1px rgba(255, 255, 255, 0.2),
-                    0 0 40px rgba(16, 185, 129, 0.5);
+                    0 0 20px rgba(16, 185, 129, 0.25);
             }
         }
         @keyframes shine {
@@ -243,11 +218,11 @@
         }
         @keyframes glowPulseButton {
             0%, 100% {
-                opacity: 0.4;
+                opacity: 0.2;
                 transform: translate(-50%, -50%) scale(1);
             }
             50% {
-                opacity: 0.7;
+                opacity: 0.4;
                 transform: translate(-50%, -50%) scale(1.1);
             }
         }
@@ -263,50 +238,42 @@
             animation: 
                 shimmer 1s ease-in-out infinite,
                 gentlePulse 1.5s ease-in-out infinite;
-            transform: translateY(-3px) scale(1.03);
+            transform: translateY(-2px) scale(1.03);
             box-shadow: 
-                0 15px 45px rgba(16, 185, 129, 0.7),
+                0 8px 25px rgba(16, 185, 129, 0.4),
                 0 0 0 1px rgba(255, 255, 255, 0.3),
-                0 0 60px rgba(16, 185, 129, 0.6);
-        }
-        .news-button:hover .icon {
-            animation: iconPulse 0.8s ease-in-out infinite;
-            color: #A7F3D0;
-        }
-        .news-button:active {
-            transform: translateY(-1px) scale(1.01);
-            transition: all 0.1s ease;
+                0 0 30px rgba(16, 185, 129, 0.3);
         }
         .gallery-container {
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            perspective: 1400px;
-            padding: 80px 0 40px; /* Увеличено верхнее поле для заголовков */
-            min-height: 650px; /* Увеличена высота для размещения заголовков */
+            perspective: 800px;
+            padding: 30px 0 15px;
+            min-height: 380px;
             flex-direction: column;
         }
         .carousel {
             position: relative;
-            width: 320px;
-            height: 500px; /* Высота видео */
+            width: 270px;
+            height: 480px; /* 9:16 соотношение */
             transform-style: preserve-3d;
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             will-change: transform;
         }
         .video-card {
             position: absolute;
             width: 100%;
             height: 100%;
-            border-radius: 20px;
-            overflow: visible; /* Изменено на visible чтобы заголовок был виден */
-            box-shadow: 0 20px 40px rgba(10, 20, 30, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(10, 20, 30, 0.08);
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
             display: flex;
             flex-direction: column;
-            background: transparent; /* Прозрачный фон для карточки */
+            background: transparent;
             border: none;
             cursor: pointer;
             top: 0;
@@ -317,28 +284,28 @@
         }
         .video-title {
             position: absolute;
-            top: -70px; /* Размещаем над видео с запасом для двух строк */
+            top: -45px;
             left: 0;
             right: 0;
             text-align: center;
-            font-family: 'Inter', sans-serif; /* Шрифт без засечек */
-            font-size: 1.3rem;
-            font-weight: 600; /* Полужирный */
-            color: var(--text-main); /* Черный цвет */
-            padding: 0 15px;
-            z-index: 20; /* Высокий z-index чтобы быть поверх всего */
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            padding: 0 10px;
+            z-index: 20;
             transition: opacity 0.4s ease;
             pointer-events: none;
             text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9);
-            white-space: normal; /* Разрешаем перенос строк */
-            overflow: visible; /* Показываем весь текст */
-            text-overflow: unset; /* Убираем многоточие */
-            line-height: 1.3; /* Межстрочный интервал */
-            max-height: 60px; /* Максимальная высота для 2 строк */
+            white-space: normal;
+            overflow: visible;
+            text-overflow: unset;
+            line-height: 1.3;
+            max-height: 40px;
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* Ограничиваем 2 строками */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            word-wrap: break-word; /* Перенос длинных слов */
+            word-wrap: break-word;
         }
         .video-player-container {
             width: 100%;
@@ -349,16 +316,66 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(10, 20, 30, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(10, 20, 30, 0.08);
             border: 1px solid rgba(10,20,30,0.05);
         }
         .video-player {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             background: #000;
-            border-radius: 20px;
+            border-radius: 12px;
+        }
+        .yandex-player-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .yandex-player-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+        .video-preview {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .video-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+        .preview-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+        .preview-play-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        .preview-text {
+            font-size: 0.9rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            font-weight: 500;
         }
         .play-overlay {
             position: absolute;
@@ -369,39 +386,66 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.28);
-            transition: opacity 0.2s ease;
+            background: rgba(0, 0, 0, 0.6);
+            transition: opacity 0.3s ease, background 0.3s ease;
             cursor: pointer;
             z-index: 10;
-            border-radius: 20px;
+            border-radius: 12px;
         }
         .play-overlay.hidden {
             opacity: 0;
             pointer-events: none;
         }
         .play-icon {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.2);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 18px;
             color: white;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease, background 0.2s ease;
+            border: 2px solid rgba(255,255,255,0.3);
         }
         .play-overlay:hover .play-icon {
-            transform: scale(1.08);
-            background: rgba(255,255,255,0.18);
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.3);
+        }
+        .video-error {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            z-index: 15;
+        }
+        .video-error i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--error);
+        }
+        .video-error p {
+            font-size: 0.85rem;
+            opacity: 0.9;
         }
         .nav-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             background: rgba(0,0,0,0.05);
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -414,20 +458,20 @@
             background: rgba(139,92,246,0.12);
             transform: translateY(-50%) scale(1.05);
         }
-        .prev-btn { left: 15px; }
-        .next-btn { right: 15px; }
-        .nav-btn i { font-size: 1.4rem; color: var(--text-main); }
+        .prev-btn { left: 5px; }
+        .next-btn { right: 5px; }
+        .nav-btn i { font-size: 1.1rem; color: var(--text-main); }
         .progress-dots {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 8px;
             position: relative;
             z-index: 10;
-            margin-top: 18px;
+            margin-top: 10px;
         }
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: rgba(10,20,30,0.06);
             transition: all 0.18s ease;
@@ -436,22 +480,21 @@
         }
         .dot.active {
             background: var(--primary);
-            transform: scale(1.25);
+            transform: scale(1.2);
         }
         .dot:hover { transform: scale(1.1); }
-        /* ОБЛАСТЬ С ТЕКСТОМ В СТИЛЕ ЗАГОЛОВКА */
         .article-section {
             flex: 1;
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 50px 40px;
+            max-width: 750px;
+            margin: 20px auto;
+            padding: 25px 20px;
             background: linear-gradient(135deg, #E9EEF8, #ffffff, #F8FAFC);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-radius: 24px;
+            border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 
-                0 20px 60px rgba(10, 20, 30, 0.1),
+                0 10px 25px rgba(10, 20, 30, 0.05),
                 0 0 0 1px rgba(255, 255, 255, 0.8),
                 inset 0 1px 0 rgba(255, 255, 255, 0.8);
             position: relative;
@@ -467,73 +510,72 @@
             background: 
                 radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.06) 0%, transparent 50%);
-            border-radius: 24px;
+            border-radius: 16px;
             pointer-events: none;
         }
         .article-header { 
             text-align: center; 
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             position: relative;
             z-index: 2;
         }
         .article-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-main);
-            margin-bottom: 12px;
+            margin-bottom: 6px;
             line-height: 1.1;
-            letter-spacing: -0.8px;
-            text-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 6px rgba(139, 92, 246, 0.15);
             background: linear-gradient(135deg, #0b1220, var(--primary-light));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
         .article-content {
-            max-width: 920px;
+            max-width: 650px;
             margin: 0 auto;
             font-family: 'Inter', sans-serif;
-            font-size: 1.15rem;
-            line-height: 1.8;
+            font-size: 0.95rem;
+            line-height: 1.6;
             color: var(--text-main);
             position: relative;
             z-index: 2;
         }
         .article-text p { 
-            margin-bottom: 24px; 
+            margin-bottom: 16px; 
             letter-spacing: 0.1px;
             color: var(--text-main);
         }
         .article-subtitle {
-            font-size: 1.8rem;
+            font-size: 1.2rem;
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
             color: var(--text-main);
-            margin: 36px 0 20px 0;
-            border-left: 4px solid var(--primary);
-            padding-left: 20px;
+            margin: 18px 0 12px 0;
+            border-left: 3px solid var(--primary);
+            padding-left: 12px;
             letter-spacing: -0.3px;
-            text-shadow: 0 1px 4px rgba(139, 92, 246, 0.1);
         }
         .article-list { 
-            margin: 24px 0; 
-            padding-left: 30px; 
+            margin: 16px 0; 
+            padding-left: 18px; 
         }
         .article-list li { 
-            margin-bottom: 16px; 
-            font-size: 1.08rem;
+            margin-bottom: 10px; 
+            font-size: 0.9rem;
             letter-spacing: 0.05px;
             color: var(--text-main);
-            line-height: 1.6;
+            line-height: 1.5;
         }
         .article-image { 
             width: 100%; 
-            max-width: 800px; 
-            margin: 28px auto; 
-            border-radius: 16px; 
+            max-width: 550px; 
+            margin: 16px auto; 
+            border-radius: 10px; 
             overflow: hidden; 
-            box-shadow: 0 15px 40px rgba(10, 20, 30, 0.1);
+            box-shadow: 0 8px 20px rgba(10, 20, 30, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.8);
         }
         .article-image img { 
@@ -543,74 +585,25 @@
         }
         .article-quote {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(6, 182, 212, 0.05));
-            border-left: 4px solid var(--primary);
-            padding: 28px;
-            margin: 32px 0;
-            border-radius: 0 16px 16px 0;
+            border-left: 3px solid var(--primary);
+            padding: 16px;
+            margin: 18px 0;
+            border-radius: 0 10px 10px 0;
             font-style: italic;
-            font-size: 1.2rem;
-            line-height: 1.7;
+            font-size: 0.95rem;
+            line-height: 1.5;
             color: var(--text-main);
             letter-spacing: 0.2px;
-            box-shadow: 0 8px 32px rgba(10, 20, 30, 0.05);
+            box-shadow: 0 4px 15px rgba(10, 20, 30, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.6);
-        }
-        /* Стили для текста с акцентами */
-        .text-primary { color: var(--primary); font-weight: 600; }
-        .text-accent { color: var(--accent); font-weight: 600; }
-        .text-success { color: var(--success); font-weight: 600; }
-        .text-warning { color: var(--warning); font-weight: 600; }
-        .text-error { color: var(--error); font-weight: 600; }
-        /* badges & highlights */
-        .badge { 
-            display: inline-block; 
-            padding: 6px 14px; 
-            border-radius: 20px; 
-            font-size: .9rem; 
-            font-weight: 600; 
-            margin: 0 6px 8px 0; 
-            letter-spacing: 0.3px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            background: rgba(255, 255, 255, 0.6);
-        }
-        .badge-primary { background: rgba(139, 92, 246, 0.1); color: var(--primary); }
-        .badge-accent { background: rgba(6, 182, 212, 0.1); color: var(--accent); }
-        .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-        .badge-error { background: rgba(239, 68, 68, 0.1); color: var(--error); }
-        .important-note, .success-note, .info-note {
-            padding: 24px;
-            margin: 24px 0;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            line-height: 1.7;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            background: rgba(255, 255, 255, 0.5);
-        }
-        .important-note { 
-            background: rgba(245,158,11,0.08); 
-            border-left: 4px solid var(--warning); 
-            color: var(--text-main);
-        }
-        .success-note { 
-            background: rgba(16,185,129,0.08); 
-            border-left: 4px solid var(--success); 
-            color: var(--text-main);
-        }
-        .info-note { 
-            background: rgba(6,182,212,0.08); 
-            border-left: 4px solid var(--accent); 
-            color: var(--text-main);
         }
         .loading { 
             text-align:center; 
-            padding: 40px; 
-            font-size:1.1rem; 
+            padding: 20px; 
+            font-size:0.9rem; 
             opacity: 0.9; 
             font-family: 'Inter', sans-serif;
         }
-
-        /* particles: заменил DOM-частицы на canvas (визуал оставлен) */
         .particles-canvas {
             position: fixed;
             top: 0;
@@ -621,57 +614,47 @@
             z-index: -1;
             display: block;
         }
-
         @keyframes glowPulse {
             from { transform: translate(-20%, -20%) rotate(2deg); }
             to { transform: translate(20%, 20%) rotate(-2deg); }
         }
-        @keyframes float {
-            0% { transform: translateY(100vh) scale(0.8); opacity:0; }
-            20% { opacity:0.45; }
-            80% { opacity:0.45; }
-            100% { transform: translateY(-100vh) scale(1.2); opacity:0; }
-        }
         @media (max-width:768px) {
-            .carousel { width:300px; height:470px; } /* Адаптивная высота */
-            h1 { font-size:3.2rem; }
-            .subtitle { font-size: 1rem; }
-            .news-content { font-size: 1rem; }
-            .news-content h3 { font-size: 1.2rem; }
-            .news-frame { padding: 20px; }
-            .news-button { padding: 16px 32px; font-size: 1.1rem; }
-            .article-section { padding: 35px 25px; margin: 20px; }
-            .article-title { font-size: 2.2rem; }
-            .article-content { font-size: 1.05rem; }
-            .article-subtitle { font-size: 1.5rem; }
-            .video-title { font-size: 1.2rem; top: -60px; max-height: 50px; }
-            .gallery-container { padding: 70px 0 40px; min-height: 620px; }
+            .carousel { width:240px; height:426px; } /* Сохраняем 9:16 */
+            h1 { font-size:2.2rem; }
+            .news-frame { padding: 16px; }
+            .news-button { padding: 10px 20px; font-size: 0.9rem; }
+            .article-section { padding: 20px 16px; margin: 16px; }
+            .article-title { font-size: 1.5rem; }
+            .video-title { font-size: 0.9rem; top: -40px; }
+            .gallery-container { padding: 25px 0 12px; min-height: 350px; }
+            .preview-play-icon { font-size: 1.8rem; }
+            .nav-btn { width: 35px; height: 35px; }
+            .nav-btn i { font-size: 1rem; }
         }
         @media (max-width:480px) {
-            .carousel { width: 280px; height:440px; } /* Адаптивная высота */
-            h1 { font-size:2.6rem; }
-            .subtitle { font-size: 0.9rem; }
-            .news-content { font-size: 0.95rem; line-height: 1.5; }
-            .news-content h3 { font-size: 1.1rem; }
-            .news-frame { padding: 18px; }
-            .news-button { padding: 14px 28px; font-size: 1.05rem; gap: 8px; }
-            .article-section { padding: 25px 20px; margin: 15px; }
-            .article-title { font-size: 1.9rem; }
-            .article-content { font-size: 1rem; }
-            .article-subtitle { font-size: 1.3rem; }
-            .video-title { font-size: 1.1rem; top: -55px; max-height: 45px; }
-            .gallery-container { padding: 65px 0 40px; min-height: 600px; }
+            .carousel { width: 210px; height:373px; } /* Сохраняем 9:16 */
+            h1 { font-size:1.8rem; }
+            .news-frame { padding: 14px; }
+            .news-button { padding: 8px 16px; font-size: 0.85rem; }
+            .article-section { padding: 16px 12px; margin: 12px; }
+            .article-title { font-size: 1.3rem; }
+            .video-title { font-size: 0.85rem; top: -35px; }
+            .gallery-container { padding: 20px 0 10px; min-height: 320px; }
+            .preview-play-icon { font-size: 1.6rem; }
+            .play-icon { width: 45px; height: 45px; font-size: 16px; }
+            .nav-btn { width: 30px; height: 30px; }
+            .nav-btn i { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>OSINEC</h1>
-               <div class="news-container">
+        <div class="news-container">
             <div class="news-frame">
                 <div class="news-content">
-                    <h3>  🌿Новости  </h3>
-                    <p> Фундаментальные истории о стойкости, которые делают тебя увереннее и устойчивее в фоновом режиме. Истории с пошаговым алгоритмом действий </p>
+                    <h3>🌿 Новости</h3>
+                    <p>Фундаментальные истории о стойкости, которые делают тебя увереннее и устойчивее в фоновом режиме. Истории с пошаговым алгоритмом действий</p>
                 </div>
             </div>
         </div>
@@ -690,15 +673,8 @@
         </button>
         <div class="progress-dots" id="progressDots" role="tablist" aria-label="Navigation dots"></div>
     </div>
-    <!-- Кнопка под видео -->
     <div class="button-container">
         <div class="button-glow" aria-hidden="true"></div>
-        <!-- УБРАТЬ КНОПКУ: ЗАКОММЕНТИРУЙ ЭТУ СТРОКУ -->
-        <!-- <a href="https://vkontakte.ru/clip" class="news-button">
-            <span>Смотреть клип ВК</span>
-            <i class="fas fa-music icon"></i>
-        </a> -->
-        <!-- /КОНЕЦ МЕТКИ -->
         <a href="https://vibeshorts.example.com/special-issue" class="news-button">
             <span>Читать спецвыпуск</span>
             <i class="fas fa-arrow-right icon"></i>
@@ -712,17 +688,12 @@
             <div class="article-text"><p></p></div>
         </div>
     </section>
-
-    <!-- canvas для частиц (вместо множества DOM-элементов) -->
     <canvas class="particles-canvas" id="particlesCanvas" aria-hidden="true"></canvas>
-
     <script>
-        /* ========== Оптимизированный скрипт (бережная оптимизация) ========== */
         let videos = [];
         let currentIndex = 0;
         let currentlyPlayingVideo = null;
 
-        // Кеш DOM
         const carousel = document.getElementById('carousel');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
@@ -732,24 +703,15 @@
         const loading = document.getElementById('loading');
         const particlesCanvas = document.getElementById('particlesCanvas');
 
-        // Настройка: сколько видеосердцевин держать в памяти (current + neighbors)
-        const BUFFER_RANGE = 1; // keep current and 1 neighbor on each side
-
         document.addEventListener('DOMContentLoaded', () => {
-            // Защитные установки overflow
             document.body.style.overflowX = 'hidden';
             document.documentElement.style.overflowX = 'hidden';
-
-            // легкий throttle для wheel/touchmove предотвращения лишних preventDefault
             document.addEventListener('wheel', onWheel, { passive: false });
             document.addEventListener('touchmove', onTouchMove, { passive: false });
-
-            // Навигация
             nextBtn.addEventListener('click', nextVideo);
             prevBtn.addEventListener('click', prevVideo);
             document.addEventListener('keydown', onKeyDown, { passive: true });
 
-            // Свайп
             let startX = 0;
             carousel.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
             carousel.addEventListener('touchend', (e) => {
@@ -759,40 +721,21 @@
                 }
             }, { passive: true });
 
-            // Инициализация
             initParticlesCanvas();
             loadVideosData();
         });
 
-        /* ---------- События ---------- */
         function onWheel(e) {
-            // Блокируем горизонтальную прокрутку только если явно горизонтальная дельта
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                e.preventDefault();
-            }
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) e.preventDefault();
         }
         function onTouchMove(e) {
             if (e.touches.length > 1) return;
-            // Нам нужно предотвратить горизонтальный "параллакс" тул-скролл
-            // Но делаем это аккуратно — только если жест явно горизонтальный
-            // Используем passive:false (установлено при добавлении слушателя)
-            // Ничего менять здесь — поведение остается прежним
         }
         function onKeyDown(e) {
             if (e.key === 'ArrowRight') nextVideo();
             else if (e.key === 'ArrowLeft') prevVideo();
-            else if (e.key === ' ') {
-                e.preventDefault();
-                const activeCard = carousel.children[currentIndex];
-                if (activeCard) {
-                    const videoElement = activeCard.querySelector('.video-player');
-                    const playOverlay = activeCard.querySelector('.play-overlay');
-                    if (videoElement && playOverlay) toggleVideoPlayback(videoElement, playOverlay);
-                }
-            }
         }
 
-        /* ---------- Загрузка данных ---------- */
         async function loadVideosData() {
             loading.innerHTML = '<p>🔄 Загрузка данных...</p>';
             try {
@@ -803,26 +746,16 @@
                 if (!videos || videos.length === 0) videos = getDefaultVideos();
                 loading.style.display = 'none';
                 createVideoCards();
-                // Загружаем источники для начального буфера
-                warmBuffer(currentIndex);
                 requestAnimationFrame(() => {
                     updateCarousel();
                     updateArticle();
                 });
             } catch (err) {
                 console.error('Ошибка загрузки:', err);
-                loading.innerHTML = `
-                    <div class="error-message">
-                        <p>❌ Ошибка загрузки данных</p>
-                        <p style="font-size: 1rem; margin-top: 10px;">Проверьте наличие файла data.json</p>
-                    </div>
-                `;
-                // fallback
                 videos = getDefaultVideos();
                 setTimeout(() => {
                     loading.style.display = 'none';
                     createVideoCards();
-                    warmBuffer(currentIndex);
                     requestAnimationFrame(() => {
                         updateCarousel();
                         updateArticle();
@@ -831,124 +764,181 @@
             }
         }
 
-        /* ---------- Ленивый загрузчик видео + буфер ---------- */
-        function setVideoSource(videoElement, src) {
-            // Устанавливаем источник очень бережно (без лишних reload)
-            if (!videoElement) return;
-            const currentSrc = videoElement.dataset.currentSrc || '';
-            if (currentSrc === src) return;
-            // remove existing sources to free memory
-            while (videoElement.firstChild) videoElement.removeChild(videoElement.firstChild);
-            if (src) {
-                const sourceEl = document.createElement('source');
-                sourceEl.src = src;
-                sourceEl.type = 'video/mp4';
-                videoElement.appendChild(sourceEl);
-                videoElement.load();
-                videoElement.dataset.currentSrc = src;
-            } else {
-                delete videoElement.dataset.currentSrc;
-            }
-        }
-        function warmBuffer(centerIndex) {
-            // Устанавливаем src для текущего и соседей (BUFFER_RANGE)
-            for (let i = 0; i < videos.length; i++) {
-                const card = carousel.children[i];
-                if (!card) continue;
-                const videoEl = card.querySelector('.video-player');
-                const shouldKeep = Math.abs(i - centerIndex) <= BUFFER_RANGE || Math.abs(i - centerIndex + videos.length) <= BUFFER_RANGE || Math.abs(i - centerIndex - videos.length) <= BUFFER_RANGE;
-                if (shouldKeep) {
-                    setVideoSource(videoEl, videos[i].videoUrl);
-                } else {
-                    // удаляем src у отдалённых карточек, чтобы освободить память
-                    setVideoSource(videoEl, '');
-                }
-            }
+        function getVideoType(videoUrl) {
+            if (!videoUrl) return 'unknown';
+            if (videoUrl.includes('yandex')) return 'yandex';
+            if (videoUrl.includes('youtube')) return 'youtube';
+            if (videoUrl.includes('.mp4') || videoUrl.includes('.webm') || videoUrl.includes('.ogg')) return 'direct';
+            return 'unknown';
         }
 
-        /* ---------- Создание карточек (ленивая и оптимизированная) ---------- */
         function createVideoCards() {
             carousel.innerHTML = '';
             const frag = document.createDocumentFragment();
-            // создаём элементы без установки src (data-src хранится)
             videos.forEach((video, index) => {
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
                 videoCard.dataset.index = index;
-                videoCard.setAttribute('role', 'group');
-                videoCard.setAttribute('aria-roledescription', 'video card');
-
-                const videoHTML = `
-                    <div class="video-title">${escapeHtml(video.title)}</div>
-                    <div class="video-player-container">
-                        <video class="video-player" preload="none" playsinline muted tabindex="-1" aria-hidden="false"></video>
-                        <div class="play-overlay" data-overlay>
-                            <div class="play-icon">
-                                <i class="fas fa-play"></i>
+                const videoType = getVideoType(video.videoUrl);
+                let videoHTML = '';
+                
+                const previewImage = video.previewImage || 'default-preview.jpg';
+                
+                if (videoType === 'yandex' || videoType === 'youtube') {
+                    videoHTML = `
+                        <div class="video-title">${escapeHtml(video.title)}</div>
+                        <div class="video-player-container">
+                            <div class="yandex-player-container" style="display: none;">
+                                <iframe 
+                                    class="yandex-player-iframe" 
+                                    allow="encrypted-media" 
+                                    allowfullscreen
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                            <div class="video-preview" style="background-image: url('${previewImage}')">
+                                <div class="preview-content">
+                                    <div class="preview-play-icon">▶</div>
+                                    <div class="preview-text">Нажмите для воспроизведения</div>
+                                </div>
+                            </div>
+                            <div class="play-overlay">
+                                <div class="play-icon">
+                                    <i class="fas fa-play"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    videoHTML = `
+                        <div class="video-title">${escapeHtml(video.title)}</div>
+                        <div class="video-player-container">
+                            <video class="video-player" preload="none" playsinline muted tabindex="-1" poster="${previewImage}"></video>
+                            <div class="play-overlay">
+                                <div class="play-icon">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
                 videoCard.innerHTML = videoHTML;
-
-                // event delegation-like: attach minimal handlers
-                const videoElement = videoCard.querySelector('.video-player');
-                const playOverlay = videoCard.querySelector('.play-overlay');
-
-                // click on card toggles playback — keep it lightweight
-                videoCard.addEventListener('click', () => toggleVideoPlayback(videoElement, playOverlay), { passive: true });
-
-                // когда видео кончается — показываем overlay
-                videoElement.addEventListener('ended', () => {
-                    playOverlay.classList.remove('hidden');
-                    currentlyPlayingVideo = null;
-                }, { passive: true });
-
-                // пометим data-src (не добавляем <source> сразу)
-                videoElement.dataset.src = video.videoUrl || '';
-
+                
+                if (videoType === 'yandex' || videoType === 'youtube') {
+                    const iframeContainer = videoCard.querySelector('.yandex-player-container');
+                    const iframe = videoCard.querySelector('.yandex-player-iframe');
+                    const preview = videoCard.querySelector('.video-preview');
+                    const playOverlay = videoCard.querySelector('.play-overlay');
+                    
+                    const playHandler = (e) => {
+                        e.stopPropagation();
+                        stopAllVideos();
+                        
+                        iframeContainer.style.display = 'block';
+                        preview.style.display = 'none';
+                        playOverlay.classList.add('hidden');
+                        
+                        if (!iframe.src) {
+                            let videoUrl = video.videoUrl;
+                            if (videoType === 'youtube') {
+                                videoUrl = videoUrl.includes('?') 
+                                    ? `${videoUrl}&autoplay=1` 
+                                    : `${videoUrl}?autoplay=1`;
+                            } else if (videoType === 'yandex') {
+                                videoUrl = videoUrl.includes('?') 
+                                    ? `${videoUrl}&autoplay=1` 
+                                    : `${videoUrl}?autoplay=1`;
+                            }
+                            iframe.src = videoUrl;
+                        }
+                        
+                        currentlyPlayingVideo = iframe;
+                    };
+                    
+                    playOverlay.addEventListener('click', playHandler, { passive: true });
+                    preview.addEventListener('click', playHandler, { passive: true });
+                    
+                } else {
+                    const videoElement = videoCard.querySelector('.video-player');
+                    const playOverlay = videoCard.querySelector('.play-overlay');
+                    videoElement.dataset.src = video.videoUrl || '';
+                    
+                    const playHandler = (e) => {
+                        e.stopPropagation();
+                        toggleVideoPlayback(videoElement, playOverlay);
+                    };
+                    
+                    playOverlay.addEventListener('click', playHandler, { passive: true });
+                    
+                    videoElement.addEventListener('ended', () => {
+                        playOverlay.classList.remove('hidden');
+                        currentlyPlayingVideo = null;
+                    }, { passive: true });
+                }
                 frag.appendChild(videoCard);
             });
             carousel.appendChild(frag);
             createProgressDots();
         }
 
-        /* ---------- Прогресс-доты (простой и быстрый) ---------- */
-        function createProgressDots() {
-            progressDots.innerHTML = '';
-            const frag = document.createDocumentFragment();
-            videos.forEach((_, idx) => {
-                const dot = document.createElement('div');
-                dot.className = `dot ${idx === currentIndex ? 'active' : ''}`;
-                dot.setAttribute('role', 'tab');
-                dot.addEventListener('click', () => goToVideo(idx), { passive: true });
-                frag.appendChild(dot);
-            });
-            progressDots.appendChild(frag);
-        }
-
-        /* ---------- Воспроизведение видео (с освобождением ресурсов) ---------- */
-        function toggleVideoPlayback(videoElement, playOverlay) {
-            if (!videoElement) return;
-            // Убедимся, что у videoElement установлен src
-            if (!videoElement.dataset.currentSrc) {
-                // если ещё нет, установим
-                setVideoSource(videoElement, videoElement.dataset.src);
-            }
-            if (currentlyPlayingVideo && currentlyPlayingVideo !== videoElement) {
+        function stopAllVideos() {
+            if (currentlyPlayingVideo && currentlyPlayingVideo.tagName === 'VIDEO') {
                 try {
                     currentlyPlayingVideo.pause();
                     currentlyPlayingVideo.currentTime = 0;
-                    const currentPlayOverlay = currentlyPlayingVideo.parentElement.querySelector('.play-overlay');
-                    if (currentPlayOverlay) currentPlayOverlay.classList.remove('hidden');
-                } catch (e) { /* ignore */ }
+                    const playOverlay = currentlyPlayingVideo.parentElement.querySelector('.play-overlay');
+                    if (playOverlay) playOverlay.classList.remove('hidden');
+                } catch (e) {}
             }
+            
+            const iframes = document.querySelectorAll('.yandex-player-iframe');
+            iframes.forEach(iframe => {
+                if (iframe.src && iframe !== currentlyPlayingVideo) {
+                    try {
+                        const src = iframe.src.replace('&autoplay=1', '').replace('?autoplay=1', '');
+                        iframe.src = src;
+                        const container = iframe.closest('.yandex-player-container');
+                        const preview = container.parentElement.querySelector('.video-preview');
+                        const playOverlay = container.parentElement.querySelector('.play-overlay');
+                        if (container) container.style.display = 'none';
+                        if (preview) preview.style.display = 'block';
+                        if (playOverlay) playOverlay.classList.remove('hidden');
+                    } catch (e) {}
+                }
+            });
+            
+            currentlyPlayingVideo = null;
+        }
+
+        function toggleVideoPlayback(videoElement, playOverlay) {
+            if (!videoElement) return;
+            const container = videoElement.parentElement;
+            const errorDiv = container.querySelector('.video-error');
+            if (errorDiv) return;
+
+            stopAllVideos();
+
+            if (!videoElement.src && videoElement.dataset.src) {
+                const source = document.createElement('source');
+                source.src = videoElement.dataset.src;
+                source.type = 'video/mp4';
+                videoElement.appendChild(source);
+                videoElement.load();
+            }
+
             if (videoElement.paused) {
                 videoElement.play().then(() => {
                     playOverlay.classList.add('hidden');
                     currentlyPlayingVideo = videoElement;
                 }).catch(err => {
                     console.error('Ошибка воспроизведения:', err);
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'video-error';
+                    errorDiv.innerHTML = `
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Ошибка загрузки видео</p>
+                    `;
+                    container.appendChild(errorDiv);
                 });
             } else {
                 videoElement.pause();
@@ -957,7 +947,18 @@
             }
         }
 
-        /* ---------- Обновление карусели (requestAnimationFrame) ---------- */
+        function createProgressDots() {
+            progressDots.innerHTML = '';
+            const frag = document.createDocumentFragment();
+            videos.forEach((_, idx) => {
+                const dot = document.createElement('div');
+                dot.className = `dot ${idx === currentIndex ? 'active' : ''}`;
+                dot.addEventListener('click', () => goToVideo(idx), { passive: true });
+                frag.appendChild(dot);
+            });
+            progressDots.appendChild(frag);
+        }
+
         let rafId = null;
         function updateCarousel() {
             if (rafId) cancelAnimationFrame(rafId);
@@ -968,47 +969,43 @@
                     const card = cards[i];
                     const position = (i - currentIndex + total) % total;
                     const title = card.querySelector('.video-title');
-
-                    // настройка opacity заголовка — как было
                     if (position === 0) title.style.opacity = '1';
                     else if (position === 1 || position === total - 1) title.style.opacity = '0.7';
                     else if (position === 2 || position === total - 2) title.style.opacity = '0.4';
                     else title.style.opacity = '0.1';
 
-                    // минимизируем style writes
                     if (position === 0) {
                         card.style.transform = 'translate3d(0,0,0)';
                         card.style.zIndex = '10';
                         card.style.opacity = '1';
                         card.style.pointerEvents = 'auto';
                     } else if (position === 1) {
-                        card.style.transform = 'translate3d(340px,0,-120px) rotateY(-12deg)';
+                        card.style.transform = 'translate3d(240px,0,-60px) rotateY(-12deg)';
                         card.style.opacity = '0.85';
                         card.style.zIndex = '9';
                         card.style.pointerEvents = 'auto';
                     } else if (position === total - 1) {
-                        card.style.transform = 'translate3d(-340px,0,-120px) rotateY(12deg)';
+                        card.style.transform = 'translate3d(-240px,0,-60px) rotateY(12deg)';
                         card.style.opacity = '0.85';
                         card.style.zIndex = '9';
                         card.style.pointerEvents = 'auto';
                     } else if (position === 2) {
-                        card.style.transform = 'translate3d(680px,0,-240px) rotateY(-24deg)';
+                        card.style.transform = 'translate3d(480px,0,-120px) rotateY(-24deg)';
                         card.style.opacity = '0.45';
                         card.style.zIndex = '8';
                         card.style.pointerEvents = 'none';
                     } else if (position === total - 2) {
-                        card.style.transform = 'translate3d(-680px,0,-240px) rotateY(24deg)';
+                        card.style.transform = 'translate3d(-480px,0,-120px) rotateY(24deg)';
                         card.style.opacity = '0.45';
                         card.style.zIndex = '8';
                         card.style.pointerEvents = 'none';
                     } else {
-                        card.style.transform = 'translate3d(0,0,-360px)';
+                        card.style.transform = 'translate3d(0,0,-180px)';
                         card.style.opacity = '0';
                         card.style.zIndex = '1';
                         card.style.pointerEvents = 'none';
                     }
                 }
-                // обновляем доты
                 const dots = progressDots.children;
                 for (let i = 0; i < dots.length; i++) {
                     dots[i].className = `dot ${i === currentIndex ? 'active' : ''}`;
@@ -1017,43 +1014,24 @@
             });
         }
 
-        /* ---------- Статья ---------- */
         function updateArticle() {
             if (videos.length > 0 && currentIndex < videos.length) {
                 const currentVideo = videos[currentIndex];
                 articleTitle.textContent = currentVideo.article.title;
-                // безопасно вставляем HTML статьи (мы не меняли структуру)
                 articleContent.innerHTML = currentVideo.article.content;
             }
         }
 
-        /* ---------- Навигация ---------- */
         function goToVideo(index) {
-            if (currentlyPlayingVideo) {
-                try {
-                    currentlyPlayingVideo.pause();
-                    currentlyPlayingVideo.currentTime = 0;
-                    const playOverlay = currentlyPlayingVideo.parentElement.querySelector('.play-overlay');
-                    if (playOverlay) playOverlay.classList.remove('hidden');
-                } catch (e) {}
-            }
-            currentlyPlayingVideo = null;
+            stopAllVideos();
             currentIndex = index % videos.length;
-            // обновляем источник для буфера
-            warmBuffer(currentIndex);
             updateCarousel();
             updateArticle();
         }
-        function nextVideo() {
-            goToVideo((currentIndex + 1) % videos.length);
-        }
-        function prevVideo() {
-            goToVideo((currentIndex - 1 + videos.length) % videos.length);
-        }
+        function nextVideo() { goToVideo((currentIndex + 1) % videos.length); }
+        function prevVideo() { goToVideo((currentIndex - 1 + videos.length) % videos.length); }
 
-        /* ---------- Частицы: canvas-реализация (легкая и быстрая) ---------- */
         function initParticlesCanvas() {
-            // Canvas-based particles гораздо легче, чем 40 DOM-элементов с CSS-анимацией
             const ctx = particlesCanvas.getContext('2d');
             let dpr = Math.max(1, window.devicePixelRatio || 1);
             function resize() {
@@ -1066,59 +1044,41 @@
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             }
             resize();
-            window.addEventListener('resize', () => {
-                dpr = Math.max(1, window.devicePixelRatio || 1);
-                resize();
-            });
-
-            // создаём лёгкий набор частиц
-            const PARTICLE_COUNT = 12; // меньше = легче, визуал похож
+            window.addEventListener('resize', resize);
+            
+            const PARTICLE_COUNT = 6;
             const particles = [];
             for (let i = 0; i < PARTICLE_COUNT; i++) {
                 particles.push({
                     x: Math.random() * window.innerWidth,
                     y: Math.random() * window.innerHeight,
-                    r: Math.random() * 6 + 2,
-                    vx: (Math.random() - 0.5) * 0.3,
-                    vy: - (Math.random() * 0.15 + 0.02) - 0.05,
-                    alpha: Math.random() * 0.4 + 0.15,
+                    r: Math.random() * 2 + 1,
+                    vx: (Math.random() - 0.5) * 0.2,
+                    vy: - (Math.random() * 0.1 + 0.02),
+                    alpha: Math.random() * 0.3 + 0.1,
                     phase: Math.random() * Math.PI * 2,
-                    speedFactor: Math.random() * 0.6 + 0.6
+                    speedFactor: Math.random() * 0.5 + 0.5
                 });
             }
-
-            let last = performance.now();
-            function draw(now) {
-                const dt = Math.min(60, now - last) / 1000;
-                last = now;
+            
+            function draw() {
                 const w = particlesCanvas.width / dpr;
                 const h = particlesCanvas.height / dpr;
-
                 ctx.clearRect(0, 0, w, h);
                 for (let p of particles) {
-                    p.phase += dt * 0.6 * p.speedFactor;
-                    p.x += p.vx * p.speedFactor * 60 * dt;
-                    p.y += p.vy * p.speedFactor * 60 * dt;
-
-                    // циклически переносим
+                    p.phase += 0.01 * p.speedFactor;
+                    p.x += p.vx * p.speedFactor;
+                    p.y += p.vy * p.speedFactor;
                     if (p.y + p.r < -50) p.y = h + 50;
                     if (p.x - p.r > w + 50) p.x = -50;
                     if (p.x + p.r < -50) p.x = w + 50;
-
-                    const glow = Math.sin(p.phase) * 0.4 + 0.6;
+                    const glow = Math.sin(p.phase) * 0.3 + 0.7;
                     ctx.beginPath();
-                    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
-                    grad.addColorStop(0, `rgba(139,92,246,${(p.alpha * 0.45 * glow).toFixed(3)})`);
-                    grad.addColorStop(0.6, `rgba(139,92,246,${(p.alpha * 0.18 * glow).toFixed(3)})`);
+                    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+                    grad.addColorStop(0, `rgba(139,92,246,${(p.alpha * 0.4 * glow).toFixed(3)})`);
                     grad.addColorStop(1, 'rgba(0,0,0,0)');
                     ctx.fillStyle = grad;
-                    ctx.arc(p.x, p.y, p.r * 6, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    // центральный мягкий круг
-                    ctx.beginPath();
-                    ctx.fillStyle = `rgba(139,92,246,${(p.alpha * 0.8 * glow).toFixed(3)})`;
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
                     ctx.fill();
                 }
                 requestAnimationFrame(draw);
@@ -1126,77 +1086,38 @@
             requestAnimationFrame(draw);
         }
 
-        /* ---------- Утилиты ---------- */
         function escapeHtml(text) {
             if (!text) return '';
-            return text.replace(/[&<>"']/g, function (m) {
-                return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
-            });
+            return text.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'<','>':'>','"':'&quot;',"'":'&#39;'}[m]));
         }
 
-        /* ---------- Fallback контент ---------- */
         function getDefaultVideos() {
             return [
                 {
-                    title: "Демо видео 1",
-                    videoUrl: "demo.mp4",
+                    title: "Пример видео с Яндекс Облаком",
+                    videoUrl: "https://runtime.video.cloud.yandex.net/player/video/vplvscsviln3pecevi4w",
+                    previewImage: "preview1.jpg",
                     article: {
                         title: "Демонстрационная статья",
                         content: `
                             <div class="article-text">
-                                <p>Это демонстрационная статья для локального видео. Все видео загружаются из той же папки, где находится HTML файл.</p>
+                                <p>Это демонстрационная статья для видео с Яндекс Облака.</p>
                                 <div class="article-image">
-                                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Демо изображение">
+                                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Демо изображение">
                                 </div>
-                                <h3 class="article-subtitle">Как использовать галерею</h3>
-                                <p>Для добавления собственных видео и статей:</p>
-                                <ul class="article-list">
-                                    <li>Поместите видеофайлы в формате MP4 в папку с HTML файлом</li>
-                                    <li>Создайте файл data.json с описанием видео и статей</li>
-                                    <li>Обновите страницу — ваши видео появятся в галерее!</li>
-                                </ul>
-                                <div class="success-note">
-                                    <p><strong>Совет:</strong> Используйте видео вертикального формата 16:9 для лучшего отображения.</p>
-                                </div>
-                                <div class="article-quote">
-                                    "Красота в простоте. Самые сложные идеи часто требуют самых простых решений."
-                                </div>
+                                <h3 class="article-subtitle">Особенности Яндекс Видео</h3>
+                                <p>Видео воспроизводится через встроенный плеер.</p>
                             </div>
                         `
                     }
                 },
                 {
                     title: "Второе демо видео",
-                    videoUrl: "demo2.mp4",
+                    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                    previewImage: "preview2.jpg",
                     article: {
                         title: "Вторая демо статья",
-                        content: `
-                            <div class="article-text">
-                                <p>Это вторая демонстрационная статья.</p>
-                                <div class="article-image">
-                                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Демо изображение">
-                                </div>
-                                <h3 class="article-subtitle">Дополнительная информация</h3>
-                                <p>Здесь может быть любой контент для второй статьи.</p>
-                            </div>
-                        `
-                    }
-                },
-                {
-                    title: "Третье видео с длинным названием",
-                    videoUrl: "demo3.mp4",
-                    article: {
-                        title: "Третья демо статья",
-                        content: `
-                            <div class="article-text">
-                                <p>Это третья демонстрационная статья.</p>
-                                <div class="article-image">
-                                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Демо изображение">
-                                </div>
-                                <h3 class="article-subtitle">Еще больше информации</h3>
-                                <p>Контент для третьей статьи.</p>
-                            </div>
-                        `
+                        content: `<div class="article-text"><p>Это вторая демонстрационная статья с MP4 видео.</p></div>`
                     }
                 }
             ];
