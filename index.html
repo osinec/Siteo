@@ -65,7 +65,7 @@ h2 {
     height: 220px;
     object-fit: cover;
     border-radius: 16px;
-    display: none;
+    background: #eee;
 }
 
 .info {
@@ -102,7 +102,6 @@ h2 {
     width: 300px;
 }
 
-/* ✕ CLOSE BUTTON */
 .close-btn {
     position: absolute;
     top: 12px;
@@ -110,10 +109,6 @@ h2 {
     font-size: 20px;
     cursor: pointer;
     color: #999;
-}
-
-.close-btn:hover {
-    color: #000;
 }
 
 .choice-btn {
@@ -149,7 +144,6 @@ h2 {
 <div class="modal" id="modal" onclick="closeModal(event)">
     <div class="modal-box">
         <div class="close-btn" onclick="closeModal()">✕</div>
-
         <h3>Выберите приём пищи</h3>
 
         <button class="choice-btn" onclick="selectCategory('breakfast')">🍳 Завтрак</button>
@@ -162,56 +156,64 @@ h2 {
 <script>
 let currentCategory = null;
 
+// 🔥 Image cache
+const imageCache = {};
+
+const img = (id) => `https://images.unsplash.com/${id}?w=600&h=400&fit=crop&auto=format`;
+
 const data = {
     breakfast: [
-        { title:"Омлет", photo:"https://images.unsplash.com/photo-1601050690462-6f105289b9c4", ingredients:["Яйца","Сыр"], steps:["Взбить","Обжарить"], time:"10 мин", calories:250 },
-        { title:"Овсянка", photo:"https://images.unsplash.com/photo-1506084868230-bb9d95c24759", ingredients:["Овсянка","Фрукты"], steps:["Сварить","Добавить фрукты"], time:"8 мин", calories:300 },
-        { title:"Тост с авокадо", photo:"https://images.unsplash.com/photo-1551183053-bf91a1d81141", ingredients:["Хлеб","Авокадо"], steps:["Поджарить","Намазать"], time:"5 мин", calories:280 }
+        { title:"Омлет", photo:img("photo-1601050690462-6f105289b9c4"), ingredients:["Яйца","Сыр"], steps:["Взбить","Обжарить"], time:"10 мин", calories:250 },
+        { title:"Овсянка", photo:img("photo-1506084868230-bb9d95c24759"), ingredients:["Овсянка","Фрукты"], steps:["Сварить","Добавить"], time:"8 мин", calories:300 },
+        { title:"Тост с авокадо", photo:img("photo-1551183053-bf91a1d81141"), ingredients:["Хлеб","Авокадо"], steps:["Поджарить","Намазать"], time:"5 мин", calories:280 }
     ],
     lunch: [
-        { title:"Паста", photo:"https://images.unsplash.com/photo-1603074171968-8f0a2a8b7221", ingredients:["Паста","Соус"], steps:["Сварить","Смешать"], time:"15 мин", calories:420 },
-        { title:"Суп", photo:"https://images.unsplash.com/photo-1547592166-23ac45744acd", ingredients:["Овощи","Бульон"], steps:["Нарезать","Сварить"], time:"30 мин", calories:350 },
-        { title:"Цезарь", photo:"https://images.unsplash.com/photo-1550304943-4f24f54ddde9", ingredients:["Курица","Салат"], steps:["Обжарить","Смешать"], time:"20 мин", calories:390 }
+        { title:"Паста", photo:img("photo-1603074171968-8f0a2a8b7221"), ingredients:["Паста"], steps:["Сварить","Смешать"], time:"15 мин", calories:420 },
+        { title:"Суп", photo:img("photo-1547592166-23ac45744acd"), ingredients:["Овощи"], steps:["Нарезать","Сварить"], time:"30 мин", calories:350 },
+        { title:"Цезарь", photo:img("photo-1550304943-4f24f54ddde9"), ingredients:["Курица"], steps:["Обжарить","Смешать"], time:"20 мин", calories:390 }
     ],
     dinner: [
-        { title:"Лосось", photo:"https://images.unsplash.com/photo-1604908177520-9ff9c4aeb1d0", ingredients:["Лосось","Лимон"], steps:["Приправить","Запечь"], time:"20 мин", calories:360 },
-        { title:"Курица", photo:"https://images.unsplash.com/photo-1512058564366-18510be2db19", ingredients:["Курица","Овощи"], steps:["Обжарить","Потушить"], time:"25 мин", calories:400 },
-        { title:"Рис", photo:"https://images.unsplash.com/photo-1516684732162-798a0062be99", ingredients:["Рис","Овощи"], steps:["Сварить","Добавить"], time:"18 мин", calories:330 }
+        { title:"Лосось", photo:img("photo-1604908177520-9ff9c4aeb1d0"), ingredients:["Лосось"], steps:["Приправить","Запечь"], time:"20 мин", calories:360 },
+        { title:"Курица", photo:img("photo-1512058564366-18510be2db19"), ingredients:["Курица"], steps:["Обжарить","Потушить"], time:"25 мин", calories:400 },
+        { title:"Рис", photo:img("photo-1516684732162-798a0062be99"), ingredients:["Рис"], steps:["Сварить","Добавить"], time:"18 мин", calories:330 }
     ],
     dessert: [
-        { title:"Мусс", photo:"https://images.unsplash.com/photo-1615475277807-b89ecb00e3a4", ingredients:["Шоколад","Сливки"], steps:["Растопить","Смешать"], time:"15 мин", calories:300 },
-        { title:"Панкейки", photo:"https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b", ingredients:["Мука","Яйца"], steps:["Смешать","Жарить"], time:"12 мин", calories:340 },
-        { title:"Йогурт", photo:"https://images.unsplash.com/photo-1505253716362-afaea1a1d8f0", ingredients:["Фрукты","Йогурт"], steps:["Нарезать","Смешать"], time:"5 мин", calories:220 }
+        { title:"Мусс", photo:img("photo-1615475277807-b89ecb00e3a4"), ingredients:["Шоколад"], steps:["Растопить","Смешать"], time:"15 мин", calories:300 },
+        { title:"Панкейки", photo:img("photo-1588195538326-c5b1e9f80a1b"), ingredients:["Мука"], steps:["Смешать","Жарить"], time:"12 мин", calories:340 },
+        { title:"Йогурт", photo:img("photo-1505253716362-afaea1a1d8f0"), ingredients:["Фрукты"], steps:["Нарезать","Смешать"], time:"5 мин", calories:220 }
     ]
 };
 
+// 🔥 PRELOAD ALL IMAGES
+Object.values(data).flat().forEach(r => {
+    const i = new Image();
+    i.src = r.photo;
+    imageCache[r.photo] = i;
+});
+
 function openModal() {
-    document.getElementById("modal").style.display = "flex";
+    modal.style.display = "flex";
 }
 
 function closeModal(e) {
-    if (!e || e.target.id === "modal") {
-        document.getElementById("modal").style.display = "none";
-    }
+    if (!e || e.target.id === "modal") modal.style.display = "none";
 }
 
 function selectCategory(cat) {
     currentCategory = cat;
-    document.getElementById("category").innerText = cat.toUpperCase();
-    document.getElementById("modal").style.display = "none";
-    document.getElementById("refresh").style.display = "inline-block";
+    category.innerText = cat.toUpperCase();
+    refresh.style.display = "inline-block";
+    modal.style.display = "none";
     generateRecipe();
 }
 
-function random(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-}
-
 function generateRecipe() {
-    const r = random(data[currentCategory]);
+    const list = data[currentCategory];
+    const r = list[Math.floor(Math.random() * list.length)];
+
     title.innerText = r.title;
-    photo.src = r.photo;
-    photo.style.display = "block";
+    photo.src = imageCache[r.photo].src;
+
     ingredients.innerHTML = `<span>Ингредиенты:</span> ${r.ingredients.join(", ")}`;
     steps.innerHTML = r.steps.map(s => `<li>${s}</li>`).join("");
     time.innerHTML = `<span>Время:</span> ${r.time}`;
