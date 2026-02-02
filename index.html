@@ -4,28 +4,31 @@
 <meta charset="UTF-8">
 <title>Генератор рецептов</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-        margin: 0;
-        font-family: 'Segoe UI', sans-serif;
-        height: 100vh;
+        font-family: 'Roboto', sans-serif;
         background: linear-gradient(135deg, #ffecd2, #fcb69f);
         display: flex;
         justify-content: center;
         align-items: center;
+        min-height: 100vh;
     }
 
     .card {
         width: 440px;
-        padding: 38px;
-        border-radius: 26px;
+        padding: 32px 28px;
+        border-radius: 24px;
         background: rgba(255,255,255,0.95);
-        backdrop-filter: blur(16px);
-        box-shadow: 0 30px 70px rgba(0,0,0,0.35);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         text-align: center;
         animation: fadeIn 0.6s ease;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
     }
 
     @keyframes fadeIn {
@@ -34,46 +37,26 @@
     }
 
     .main-btn {
+        font-family: 'Montserrat', sans-serif;
         background: linear-gradient(135deg, #c7903d, #f0c27b);
         border: none;
-        border-radius: 60px;
-        padding: 15px 38px;
-        font-size: 17px;
+        border-radius: 50px;
+        padding: 14px 34px;
+        font-size: 16px;
         font-weight: 600;
         color: #1f1f1f;
         cursor: pointer;
-        box-shadow: 0 12px 30px rgba(199,144,61,0.45);
+        box-shadow: 0 10px 25px rgba(199,144,61,0.4);
         transition: 0.3s;
     }
 
     .main-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 16px 40px rgba(199,144,61,0.6);
-    }
-
-    .category {
-        margin-top: 20px;
-        font-weight: 700;
-        letter-spacing: 2px;
-        color: #c7903d;
-    }
-
-    h2 {
-        margin: 14px 0;
-        font-size: 26px;
-        color: #222;
-    }
-
-    .recipe-photo {
-        width: 100%;
-        height: 200px;
-        border-radius: 16px;
-        object-fit: cover;
-        margin: 15px 0;
+        box-shadow: 0 14px 30px rgba(199,144,61,0.6);
     }
 
     .refresh {
-        margin-top: 12px;
+        margin-top: 14px;
         border: none;
         padding: 8px 20px;
         font-size: 14px;
@@ -93,26 +76,49 @@
         background: linear-gradient(45deg, #ee0979, #ff6a00);
     }
 
-    .refresh:active {
-        transform: scale(0.97);
-        box-shadow: 0 4px 10px rgba(238,9,121,0.4);
+    .category {
+        margin-top: 20px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        color: #c7903d;
+        letter-spacing: 2px;
+        text-transform: uppercase;
     }
 
-    /* Информация о рецепте */
+    h2 {
+        margin: 10px 0 20px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 24px;
+        color: #222;
+    }
+
+    .recipe-photo {
+        width: 100%;
+        height: 220px;
+        border-radius: 16px;
+        object-fit: cover;
+        margin: 18px 0;
+    }
+
     .info {
         text-align: left;
-        margin: 10px 0;
-        font-size: 14px;
-        color: #333;
+        margin-bottom: 12px;
+        font-size: 15px;
+        color: #555;
     }
 
     .info span {
         font-weight: 600;
+        color: #333;
     }
 
     .steps {
-        margin: 10px 0;
-        padding-left: 20px;
+        list-style: decimal inside;
+        text-align: left;
+        margin: 12px 0;
+        padding-left: 12px;
     }
 
     .steps li {
@@ -141,16 +147,18 @@
 
     .modal-box h3 {
         margin-bottom: 22px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
         color: #222;
     }
 
     .choice-btn {
         width: 100%;
-        padding: 13px;
+        padding: 12px;
         margin-bottom: 14px;
         border-radius: 16px;
         border: none;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 500;
         cursor: pointer;
         background: linear-gradient(135deg, #e6b980, #eacda3);
@@ -205,18 +213,6 @@
                 ],
                 time: "10 минут",
                 calories: 250
-            },
-            {
-                title: "Овсянка с ягодами",
-                photo: "https://images.unsplash.com/photo-1617196037403-83a8a61ff2b5",
-                ingredients: ["50 г овсянки", "200 мл молока", "ягоды", "мёд"],
-                steps: [
-                    { step: "Налейте молоко в кастрюлю и доведите до кипения.", time: "3 мин" },
-                    { step: "Добавьте овсянку и варите на медленном огне.", time: "5 мин" },
-                    { step: "Добавьте ягоды и мёд.", time: "2 мин" }
-                ],
-                time: "10 минут",
-                calories: 200
             }
         ],
         lunch: [
@@ -300,7 +296,7 @@
         stepsEl.innerHTML = "";
         c.steps.forEach((s, i) => {
             const li = document.createElement("li");
-            li.innerText = `${i+1}. ${s.step} (${s.time})`;
+            li.innerText = `${s.step} (${s.time})`;
             stepsEl.appendChild(li);
         });
 
