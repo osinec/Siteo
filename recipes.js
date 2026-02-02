@@ -13,7 +13,7 @@ const RECIPES = {
             calories: "250 ккал"
         }
        {
-         title: "Омлет с сыром",
+         title: "Омлет с сВКААКыром",
             photo: "https://images.unsplash.com/photo-1601050690462-6f105289b9c4",
             ingredients: "2 яйца, 50 г сыра, соль, масло",
             steps: [
