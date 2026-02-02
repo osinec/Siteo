@@ -72,9 +72,9 @@ function closeModal() {
 function selectCategory(category) {
     currentCategory = category;
     document.getElementById("category").innerText = category.toUpperCase();
-    generateRecipe();
     closeModal();
     document.getElementById("refresh").style.display = "inline-block";
+    generateRecipe();
 }
 
 function random(arr) {
@@ -83,35 +83,24 @@ function random(arr) {
 
 function generateRecipe() {
     if (!currentCategory) return;
-    const c = random(data[currentCategory]);
+    const recipe = random(data[currentCategory]);
 
-    document.getElementById("title").innerText = c.title;
+    document.getElementById("title").innerText = recipe.title;
 
     const photoEl = document.getElementById("photo");
-    photoEl.src = c.photo;
+    photoEl.src = recipe.photo;
     photoEl.style.display = "block";
 
-    document.getElementById("ingredients").innerHTML = `<span>Ингредиенты:</span> ${c.ingredients.join(", ")}`;
+    document.getElementById("ingredients").innerHTML = `<span>Ингредиенты:</span> ${recipe.ingredients.join(", ")}`;
 
     const stepsEl = document.getElementById("steps");
     stepsEl.innerHTML = "";
-    c.steps.forEach(s => {
+    recipe.steps.forEach(s => {
         const li = document.createElement("li");
         li.innerText = `${s.step} (${s.time})`;
         stepsEl.appendChild(li);
     });
 
-    document.getElementById("time").innerHTML = `<span>Общее время:</span> ${c.time}`;
-    document.getElementById("calories").innerHTML = `<span>Калории:</span> ${c.calories} ккал`;
-}
-
-// Новая функция: кнопка "Случайный рецепт"
-function randomRecipe() {
-    if (!currentCategory) {
-        const categories = Object.keys(data);
-        currentCategory = random(categories);
-        document.getElementById("category").innerText = currentCategory.toUpperCase();
-        document.getElementById("refresh").style.display = "inline-block";
-    }
-    generateRecipe();
+    document.getElementById("time").innerHTML = `<span>Общее время:</span> ${recipe.time}`;
+    document.getElementById("calories").innerHTML = `<span>Калории:</span> ${recipe.calories} ккал`;
 }
