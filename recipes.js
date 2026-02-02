@@ -4,7 +4,7 @@ const data = {
     breakfast: [
         {
             title: "Омлет с сыром",
-            photo: "https://images.unsplash.com/photo-1601050690462-6f105289b9c4",
+            photo: "sup.png",
             ingredients: ["2 яйца", "50 г сыра", "щепотка соли", "масло для жарки"],
             steps: [
                 { step: "Взбейте яйца с щепоткой соли.", time: "2 мин" },
@@ -17,7 +17,7 @@ const data = {
         },
         {
             title: "Йогурт с фруктами",
-            photo: "https://images.unsplash.com/photo-1617196038645-c352b4e5e5a3",
+            photo: "sup.png",
             ingredients: ["150 г йогурта", "50 г мюсли", "фрукты по вкусу"],
             steps: [
                 { step: "Выложите йогурт в миску.", time: "1 мин" },
@@ -29,7 +29,7 @@ const data = {
         },
         {
             title: "Блинчики с медом",
-            photo: "https://images.unsplash.com/photo-1587731453868-9a88d7b2c391",
+            photo: "sup.png",
             ingredients: ["100 г муки", "1 яйцо", "100 мл молока", "мед"],
             steps: [
                 { step: "Смешайте муку, яйцо и молоко до однородности.", time: "3 мин" },
@@ -43,7 +43,7 @@ const data = {
     lunch: [
         {
             title: "Паста с томатным соусом",
-            photo: "https://images.unsplash.com/photo-1603074171968-8f0a2a8b7221",
+            photo: "sup.png",
             ingredients: ["100 г пасты", "100 мл томатного соуса", "сыр", "базилик"],
             steps: [
                 { step: "Отварите пасту согласно инструкции.", time: "10 мин" },
@@ -55,7 +55,7 @@ const data = {
         },
         {
             title: "Салат Цезарь",
-            photo: "https://images.unsplash.com/photo-1603133872879-1fcaec8c19fa",
+            photo: "sup.png",
             ingredients: ["Листья салата", "Курица", "Сыр Пармезан", "Сухарики", "Соус Цезарь"],
             steps: [
                 { step: "Нарежьте курицу и обжарьте.", time: "10 мин" },
@@ -67,7 +67,7 @@ const data = {
         },
         {
             title: "Рис с овощами",
-            photo: "https://images.unsplash.com/photo-1617196038604-9b5e0f0e7c3d",
+            photo: "sup.png",
             ingredients: ["100 г риса", "100 г овощей", "масло", "соевый соус"],
             steps: [
                 { step: "Отварите рис.", time: "10 мин" },
@@ -93,7 +93,7 @@ const data = {
         },
         {
             title: "Курица с овощами",
-            photo: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
+            photo: "sup.png",
             ingredients: ["200 г курицы", "овощи", "масло", "специи"],
             steps: [
                 { step: "Обжарьте курицу до золотистой корочки.", time: "10 мин" },
@@ -105,7 +105,7 @@ const data = {
         },
         {
             title: "Спагетти с овощами",
-            photo: "https://images.unsplash.com/photo-1594007652897-f7c0ad4d9c02",
+            photo: "sup.png",
             ingredients: ["100 г спагетти", "овощи", "соус", "сыр"],
             steps: [
                 { step: "Отварите спагетти.", time: "10 мин" },
@@ -119,7 +119,7 @@ const data = {
     dessert: [
         {
             title: "Шоколадный мусс",
-            photo: "https://images.unsplash.com/photo-1615475277807-b89ecb00e3a4",
+            photo: "sup.png",
             ingredients: ["100 г шоколада", "2 яйца", "50 мл сливок", "сахар по вкусу"],
             steps: [
                 { step: "Растопите шоколад на водяной бане.", time: "5 мин" },
@@ -132,7 +132,7 @@ const data = {
         },
         {
             title: "Фруктовый салат",
-            photo: "https://images.unsplash.com/photo-1600891964763-2b2deaa27184",
+            photo: "sup.png",
             ingredients: ["Фрукты по вкусу", "мед", "йогурт"],
             steps: [
                 { step: "Нарежьте фрукты.", time: "3 мин" },
@@ -143,7 +143,7 @@ const data = {
         },
         {
             title: "Печенье овсяное",
-            photo: "https://images.unsplash.com/photo-1601050690462-3f105289b9c4",
+            photo: "sup.png",
             ingredients: ["100 г овсяных хлопьев", "50 г сахара", "1 яйцо", "масло"],
             steps: [
                 { step: "Смешайте все ингредиенты.", time: "5 мин" },
