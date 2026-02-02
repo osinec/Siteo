@@ -4,80 +4,96 @@
 <meta charset="UTF-8">
 <title>Генератор рецептов</title>
 
+<!-- КРАСИВЫЙ ШРИФТ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background: linear-gradient(135deg, #ffecd2, #fcb69f);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #222;
 }
 
 .card {
     width: 420px;
-    background: #fff;
-    border-radius: 22px;
-    padding: 26px;
+    background: rgba(255,255,255,.96);
+    border-radius: 26px;
+    padding: 28px;
     text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,.15);
+    box-shadow: 0 30px 70px rgba(0,0,0,.18);
+}
+
+button {
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    border: none;
+    border-radius: 40px;
+    font-weight: 600;
 }
 
 .main-btn {
-    background: #f0c27b;
-    border: none;
-    border-radius: 40px;
-    padding: 14px 28px;
+    padding: 14px 30px;
+    background: linear-gradient(135deg,#f6d365,#fda085);
     font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
 }
 
 .refresh {
     display: none;
-    margin-top: 10px;
-    background: #ff6a00;
+    margin-top: 12px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg,#ff6a00,#ee0979);
     color: #fff;
-    border: none;
-    border-radius: 40px;
-    padding: 10px 22px;
-    cursor: pointer;
+    font-size: 14px;
 }
 
 .category {
-    margin-top: 20px;
-    font-weight: bold;
-    color: #c7903d;
+    margin-top: 22px;
+    font-size: 13px;
     letter-spacing: 2px;
+    font-weight: 600;
+    color: #c7903d;
 }
 
 h2 {
     margin: 12px 0;
+    font-size: 22px;
+    font-weight: 700;
 }
 
 img {
     width: 100%;
     height: 220px;
     object-fit: cover;
-    border-radius: 16px;
+    border-radius: 18px;
     display: none;
 }
 
 .info {
     text-align: left;
-    margin-top: 10px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #555;
 }
 
 .info span {
-    font-weight: bold;
+    font-weight: 600;
+    color: #333;
 }
 
 ul {
     text-align: left;
     margin-top: 10px;
     padding-left: 18px;
+    font-size: 14px;
+    color: #444;
 }
 
 /* MODAL */
@@ -85,7 +101,8 @@ ul {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.6);
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(6px);
     justify-content: center;
     align-items: center;
 }
@@ -93,28 +110,31 @@ ul {
 .modal-box {
     background: #fff;
     padding: 26px;
-    border-radius: 20px;
+    border-radius: 22px;
     width: 280px;
     position: relative;
 }
 
 .close {
     position: absolute;
-    top: 10px;
+    top: 12px;
     right: 14px;
     font-size: 20px;
     cursor: pointer;
+    opacity: .6;
 }
 
 .choice {
     width: 100%;
-    margin-top: 12px;
+    margin-top: 14px;
     padding: 12px;
-    border-radius: 14px;
-    border: none;
-    background: #f0c27b;
-    font-weight: bold;
-    cursor: pointer;
+    background: #f5f5f5;
+    font-size: 14px;
+    border-radius: 16px;
+}
+
+.choice:hover {
+    background: #eee;
 }
 </style>
 </head>
@@ -123,12 +143,11 @@ ul {
 
 <div class="card">
     <button class="main-btn" onclick="openModal()">Случайный рецепт</button>
-    <button class="refresh" id="refresh" onclick="generateRecipe()">Обновить рецепт 🔄</button>
+    <button class="refresh" id="refresh">Обновить рецепт 🔄</button>
 
     <div class="category" id="category"></div>
     <h2 id="title">Выберите категорию</h2>
 
-    <!-- ЛОКАЛЬНАЯ КАРТИНКА -->
     <img id="photo" src="sup.png" alt="recipe">
 
     <div id="ingredients" class="info"></div>
@@ -137,11 +156,9 @@ ul {
     <div id="calories" class="info"></div>
 </div>
 
-<!-- MODAL -->
 <div class="modal" id="modal">
     <div class="modal-box">
         <div class="close" onclick="closeModal()">✕</div>
-        <h3>Выберите категорию</h3>
         <button class="choice" onclick="selectCategory('breakfast')">🍳 Завтрак</button>
         <button class="choice" onclick="selectCategory('lunch')">🍝 Обед</button>
         <button class="choice" onclick="selectCategory('dinner')">🍽 Ужин</button>
@@ -151,27 +168,28 @@ ul {
 
 <script>
 let currentCategory = null;
+let lock = false;
 
 const data = {
     breakfast: [
-        { title:"Омлет", ingredients:["Яйца","Сыр"], steps:["Взбить яйца","Обжарить"], time:"10 мин", calories:250 },
-        { title:"Овсянка", ingredients:["Овсянка","Фрукты"], steps:["Сварить","Добавить фрукты"], time:"8 мин", calories:300 },
-        { title:"Тост с авокадо", ingredients:["Хлеб","Авокадо"], steps:["Поджарить хлеб","Намазать"], time:"5 мин", calories:280 }
+        { t:"Омлет с сыром", i:["Яйца","Сыр"], s:["Взбить яйца","Обжарить"], time:"10 мин", cal:250 },
+        { t:"Овсянка с фруктами", i:["Овсянка","Фрукты"], s:["Сварить","Добавить фрукты"], time:"8 мин", cal:300 },
+        { t:"Тост с авокадо", i:["Хлеб","Авокадо"], s:["Поджарить","Намазать"], time:"5 мин", cal:280 }
     ],
     lunch: [
-        { title:"Паста", ingredients:["Паста","Соус"], steps:["Сварить","Смешать"], time:"15 мин", calories:420 },
-        { title:"Суп", ingredients:["Овощи","Бульон"], steps:["Нарезать","Сварить"], time:"30 мин", calories:350 },
-        { title:"Салат", ingredients:["Овощи"], steps:["Нарезать","Смешать"], time:"10 мин", calories:200 }
+        { t:"Паста с соусом", i:["Паста","Соус"], s:["Сварить","Смешать"], time:"15 мин", cal:420 },
+        { t:"Овощной суп", i:["Овощи"], s:["Нарезать","Варить"], time:"30 мин", cal:350 },
+        { t:"Лёгкий салат", i:["Овощи"], s:["Нарезать","Смешать"], time:"10 мин", cal:200 }
     ],
     dinner: [
-        { title:"Курица", ingredients:["Курица","Специи"], steps:["Обжарить","Потушить"], time:"25 мин", calories:400 },
-        { title:"Рис с овощами", ingredients:["Рис","Овощи"], steps:["Сварить","Смешать"], time:"20 мин", calories:330 },
-        { title:"Рыба", ingredients:["Рыба","Лимон"], steps:["Запечь","Подать"], time:"20 мин", calories:360 }
+        { t:"Курица с овощами", i:["Курица","Овощи"], s:["Обжарить","Потушить"], time:"25 мин", cal:400 },
+        { t:"Рис с овощами", i:["Рис","Овощи"], s:["Сварить","Смешать"], time:"20 мин", cal:330 },
+        { t:"Запечённая рыба", i:["Рыба"], s:["Запечь"], time:"20 мин", cal:360 }
     ],
     dessert: [
-        { title:"Панкейки", ingredients:["Мука","Яйца"], steps:["Замесить тесто","Жарить"], time:"12 мин", calories:340 },
-        { title:"Йогурт", ingredients:["Йогурт","Фрукты"], steps:["Нарезать","Смешать"], time:"5 мин", calories:220 },
-        { title:"Шоколад", ingredients:["Какао","Молоко"], steps:["Растопить","Охладить"], time:"10 мин", calories:300 }
+        { t:"Панкейки", i:["Мука","Яйца"], s:["Замесить тесто","Жарить"], time:"12 мин", cal:340 },
+        { t:"Йогурт с фруктами", i:["Йогурт","Фрукты"], s:["Смешать"], time:"5 мин", cal:220 },
+        { t:"Шоколадный десерт", i:["Какао"], s:["Растопить"], time:"10 мин", cal:300 }
     ]
 };
 
@@ -187,20 +205,27 @@ function selectCategory(cat) {
     currentCategory = cat;
     category.innerText = cat.toUpperCase();
     refresh.style.display = "inline-block";
+    photo.style.display = "block";
     closeModal();
     generateRecipe();
 }
 
 function generateRecipe() {
-    const r = data[currentCategory][Math.floor(Math.random() * 3)];
+    if (lock) return;
+    lock = true;
 
-    title.innerText = r.title;
-    photo.style.display = "block"; // картинка уже загружена
-    ingredients.innerHTML = `<span>Ингредиенты:</span> ${r.ingredients.join(", ")}`;
-    steps.innerHTML = r.steps.map(s => `<li>${s}</li>`).join("");
-    time.innerHTML = `<span>Время:</span> ${r.time}`;
-    calories.innerHTML = `<span>Калории:</span> ${r.calories} ккал`;
+    requestAnimationFrame(() => {
+        const r = data[currentCategory][Math.floor(Math.random()*3)];
+        title.innerText = r.t;
+        ingredients.innerHTML = `<span>Ингредиенты:</span> ${r.i.join(", ")}`;
+        steps.innerHTML = r.s.map(x => `<li>${x}</li>`).join("");
+        time.innerHTML = `<span>Время:</span> ${r.time}`;
+        calories.innerHTML = `<span>Калории:</span> ${r.cal} ккал`;
+        lock = false;
+    });
 }
+
+refresh.onclick = generateRecipe;
 </script>
 
 </body>
