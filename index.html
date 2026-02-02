@@ -2,12 +2,10 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Случайный рецепт</title>
+<title>Генератор рецептов</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
         margin: 0;
@@ -20,14 +18,14 @@
     }
 
     .card {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(12px);
+        width: 430px;
         padding: 35px;
-        width: 420px;
         border-radius: 24px;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 25px 60px rgba(0,0,0,0.25);
         text-align: center;
-        animation: fadeIn 0.8s ease;
+        animation: fadeIn 0.6s ease;
     }
 
     @keyframes fadeIn {
@@ -39,24 +37,23 @@
         background: linear-gradient(135deg, #ff7a18, #ffb347);
         border: none;
         border-radius: 50px;
-        padding: 14px 32px;
+        padding: 14px 34px;
         font-size: 17px;
         color: white;
         cursor: pointer;
-        box-shadow: 0 10px 25px rgba(255,122,24,0.4);
+        box-shadow: 0 10px 25px rgba(255,122,24,0.45);
         transition: 0.3s;
     }
 
     .main-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 15px 35px rgba(255,122,24,0.5);
     }
 
     .category {
         margin-top: 18px;
-        font-weight: 600;
-        color: #ff7a18;
+        font-weight: 700;
         letter-spacing: 1px;
+        color: #ff7a18;
     }
 
     h2 {
@@ -67,7 +64,22 @@
 
     p {
         color: #555;
-        line-height: 1.5;
+        line-height: 1.55;
+        min-height: 60px;
+    }
+
+    .refresh {
+        margin-top: 20px;
+        background: none;
+        border: none;
+        font-size: 26px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: none;
+    }
+
+    .refresh:hover {
+        transform: rotate(180deg);
     }
 
     /* Modal */
@@ -75,25 +87,19 @@
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.4);
-        backdrop-filter: blur(5px);
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(6px);
         justify-content: center;
         align-items: center;
-        animation: fadeIn 0.4s ease;
     }
 
     .modal-box {
         background: white;
         padding: 30px;
         width: 320px;
-        border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        border-radius: 22px;
         text-align: center;
-    }
-
-    .modal-box h3 {
-        margin-bottom: 20px;
-        color: #333;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     }
 
     .choice-btn {
@@ -105,8 +111,6 @@
         font-size: 16px;
         cursor: pointer;
         background: linear-gradient(135deg, #ffd194, #ff9a9e);
-        color: #333;
-        transition: 0.25s;
     }
 
     .choice-btn:hover {
@@ -118,9 +122,12 @@
 
 <div class="card">
     <button class="main-btn" onclick="openModal()">Случайный рецепт</button>
+
     <div class="category" id="category"></div>
     <h2 id="title">Выберите категорию 🍽️</h2>
     <p id="recipe"></p>
+
+    <button class="refresh" id="refresh" onclick="generateRecipe()">🔄</button>
 </div>
 
 <div class="modal" id="modal">
@@ -134,30 +141,33 @@
 </div>
 
 <script>
-    const recipes = {
-        breakfast: [
-            { title: "Омлет с пармезаном", text: "Взбей яйца, добавь пармезан и приготовь на сливочном масле." },
-            { title: "Греческий йогурт с мёдом", text: "Йогурт, мёд и орехи — идеально для утра." }
-        ],
-        lunch: [
-            { title: "Паста карбонара", text: "Паста, бекон, сливки и пармезан — классика." },
-            { title: "Крем-суп из тыквы", text: "Запечённая тыква, сливки и специи." }
-        ],
-        dinner: [
-            { title: "Лосось в духовке", text: "Запечь лосось с лимоном и травами." },
-            { title: "Ризотто с грибами", text: "Рис арборио, грибы и пармезан." }
-        ],
-        dessert: [
-            { title: "Шоколадный фондан", text: "Тёплый шоколадный десерт с жидкой серединой." },
-            { title: "Тирамису", text: "Савоярди, кофе, маскарпоне и какао." }
-        ]
-    };
+    let currentCategory = null;
 
-    const categoryNames = {
-        breakfast: "ЗАВТРАК",
-        lunch: "ОБЕД",
-        dinner: "УЖИН",
-        dessert: "ДЕСЕРТ"
+    const data = {
+        breakfast: {
+            titles: ["Омлет", "Овсянка", "Тосты", "Йогурт боул"],
+            bases: ["яйца", "овсяные хлопья", "хлеб", "греческий йогурт"],
+            extras: ["сыр", "ягоды", "авокадо", "мёд"],
+            actions: ["обжарить", "сварить", "подрумянить", "смешать"]
+        },
+        lunch: {
+            titles: ["Паста", "Суп", "Боул", "Ризотто"],
+            bases: ["макароны", "куриный бульон", "рис", "чечевицу"],
+            extras: ["овощи", "сливки", "томатный соус", "грибы"],
+            actions: ["отварить", "потушить", "смешать", "прогреть"]
+        },
+        dinner: {
+            titles: ["Лосось", "Курица", "Овощи", "Рис"],
+            bases: ["рыбу", "куриное филе", "овощи", "рис"],
+            extras: ["специи", "соус", "травы", "чеснок"],
+            actions: ["запечь", "обжарить", "потушить", "приготовить"]
+        },
+        dessert: {
+            titles: ["Десерт", "Крем", "Мусс", "Сладкий боул"],
+            bases: ["шоколад", "банан", "ягоды", "сливки"],
+            extras: ["какао", "мёд", "орехи", "ваниль"],
+            actions: ["взбить", "охладить", "смешать", "подать"]
+        }
     };
 
     function openModal() {
@@ -169,14 +179,29 @@
     }
 
     function selectCategory(category) {
-        const list = recipes[category];
-        const recipe = list[Math.floor(Math.random() * list.length)];
-
-        document.getElementById("category").innerText = categoryNames[category];
-        document.getElementById("title").innerText = recipe.title;
-        document.getElementById("recipe").innerText = recipe.text;
-
+        currentCategory = category;
+        document.getElementById("category").innerText = category.toUpperCase();
+        generateRecipe();
         closeModal();
+        document.getElementById("refresh").style.display = "inline";
+    }
+
+    function random(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function generateRecipe() {
+        if (!currentCategory) return;
+
+        const c = data[currentCategory];
+
+        const title = random(c.titles);
+        const recipe =
+            `Возьмите ${random(c.bases)}, добавьте ${random(c.extras)} и аккуратно ${random(c.actions)}.
+             Подавайте горячим и наслаждайтесь ✨`;
+
+        document.getElementById("title").innerText = title;
+        document.getElementById("recipe").innerText = recipe;
     }
 </script>
 
