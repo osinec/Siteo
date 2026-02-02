@@ -67,7 +67,16 @@
     p {
         color: #444;
         line-height: 1.6;
-        min-height: 70px;
+        min-height: 50px;
+    }
+
+    /* Фото рецепта */
+    .recipe-photo {
+        width: 100%;
+        height: 200px;
+        border-radius: 16px;
+        object-fit: cover;
+        margin: 15px 0;
     }
 
     /* Кнопка обновления рецепта - меньшая и под основной кнопкой */
@@ -139,6 +148,17 @@
     .choice-btn:hover {
         transform: scale(1.03);
     }
+
+    .info {
+        text-align: left;
+        margin: 10px 0;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .info span {
+        font-weight: 600;
+    }
 </style>
 </head>
 <body>
@@ -149,7 +169,11 @@
 
     <div class="category" id="category"></div>
     <h2 id="title">Выберите категорию 🍽️</h2>
+    <img id="photo" class="recipe-photo" src="" alt="Фото рецепта" style="display:none;">
+    <div id="ingredients" class="info"></div>
     <p id="recipe"></p>
+    <div id="time" class="info"></div>
+    <div id="calories" class="info"></div>
 </div>
 
 <div class="modal" id="modal">
@@ -166,30 +190,54 @@
     let currentCategory = null;
 
     const data = {
-        breakfast: {
-            titles: ["Омлет", "Овсянка", "Тосты", "Йогурт боул"],
-            bases: ["яйца", "овсяные хлопья", "хлеб", "греческий йогурт"],
-            extras: ["сыр", "ягоды", "авокадо", "мёд"],
-            actions: ["обжарить", "сварить", "подрумянить", "смешать"]
-        },
-        lunch: {
-            titles: ["Паста", "Суп", "Боул", "Ризотто"],
-            bases: ["макароны", "куриный бульон", "рис", "чечевицу"],
-            extras: ["овощи", "сливки", "томатный соус", "грибы"],
-            actions: ["отварить", "потушить", "смешать", "прогреть"]
-        },
-        dinner: {
-            titles: ["Лосось", "Курица", "Овощи", "Рис"],
-            bases: ["рыбу", "куриное филе", "овощи", "рис"],
-            extras: ["специи", "соус", "травы", "чеснок"],
-            actions: ["запечь", "обжарить", "потушить", "приготовить"]
-        },
-        dessert: {
-            titles: ["Десерт", "Крем", "Мусс", "Сладкий боул"],
-            bases: ["шоколад", "банан", "ягоды", "сливки"],
-            extras: ["какао", "мёд", "орехи", "ваниль"],
-            actions: ["взбить", "охладить", "смешать", "подать"]
-        }
+        breakfast: [
+            {
+                title: "Омлет с сыром",
+                photo: "https://images.unsplash.com/photo-1601050690462-6f105289b9c4",
+                ingredients: ["2 яйца", "50 г сыра", "щепотка соли", "масло для жарки"],
+                recipe: "Взбейте яйца, добавьте сыр, обжарьте на сковороде до готовности.",
+                time: "10 минут",
+                calories: 250
+            },
+            {
+                title: "Овсянка с ягодами",
+                photo: "https://images.unsplash.com/photo-1617196037403-83a8a61ff2b5",
+                ingredients: ["50 г овсянки", "200 мл молока", "ягоды", "мёд"],
+                recipe: "Сварите овсянку на молоке, добавьте ягоды и мёд.",
+                time: "8 минут",
+                calories: 200
+            }
+        ],
+        lunch: [
+            {
+                title: "Паста с томатным соусом",
+                photo: "https://images.unsplash.com/photo-1603074171968-8f0a2a8b7221",
+                ingredients: ["100 г пасты", "100 мл томатного соуса", "сыр", "базилик"],
+                recipe: "Отварите пасту, добавьте соус, посыпьте сыром и базиликом.",
+                time: "20 минут",
+                calories: 400
+            }
+        ],
+        dinner: [
+            {
+                title: "Запечённый лосось",
+                photo: "https://images.unsplash.com/photo-1604908177520-9ff9c4aeb1d0",
+                ingredients: ["200 г лосося", "специи", "лимон"],
+                recipe: "Запеките лосось с лимоном и специями при 180°C 15-20 минут.",
+                time: "25 минут",
+                calories: 350
+            }
+        ],
+        dessert: [
+            {
+                title: "Шоколадный мусс",
+                photo: "https://images.unsplash.com/photo-1615475277807-b89ecb00e3a4",
+                ingredients: ["100 г шоколада", "2 яйца", "50 мл сливок", "сахар по вкусу"],
+                recipe: "Растопите шоколад, взбейте яйца со сливками, смешайте и охладите.",
+                time: "15 минут",
+                calories: 300
+            }
+        ]
     };
 
     function openModal() {
@@ -214,12 +262,18 @@
 
     function generateRecipe() {
         if (!currentCategory) return;
-        const c = data[currentCategory];
+        const c = random(data[currentCategory]);
 
-        document.getElementById("title").innerText = random(c.titles);
-        document.getElementById("recipe").innerText =
-            `Возьмите ${random(c.bases)}, добавьте ${random(c.extras)} и аккуратно ${random(c.actions)}.
-            Подавайте свежим и наслаждайтесь ✨`;
+        document.getElementById("title").innerText = c.title;
+
+        const photoEl = document.getElementById("photo");
+        photoEl.src = c.photo;
+        photoEl.style.display = "block";
+
+        document.getElementById("ingredients").innerHTML = `<span>Ингредиенты:</span> ${c.ingredients.join(", ")}`;
+        document.getElementById("recipe").innerText = c.recipe;
+        document.getElementById("time").innerHTML = `<span>Время приготовления:</span> ${c.time}`;
+        document.getElementById("calories").innerHTML = `<span>Калории:</span> ${c.calories} ккал`;
     }
 </script>
 
