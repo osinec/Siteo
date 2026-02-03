@@ -142,7 +142,7 @@ ul {
 <body>
 
 <div class="card">
-    <button class="main-btn" onclick="openModal()">Случайный рецепт</button>
+    <button class="main-btn" id="open-modal">Случайный рецепт</button>
     <button class="refresh" id="refresh">Обновить рецепт 🔄</button>
 
     <div class="category" id="category"></div>
@@ -158,11 +158,11 @@ ul {
 
 <div class="modal" id="modal">
     <div class="modal-box">
-        <div class="close" onclick="closeModal()">✕</div>
-        <button class="choice" onclick="selectCategory('breakfast')">🍳 Завтрак</button>
-        <button class="choice" onclick="selectCategory('lunch')">🍝 Обед</button>
-        <button class="choice" onclick="selectCategory('dinner')">🍽 Ужин</button>
-        <button class="choice" onclick="selectCategory('dessert')">🍰 Десерт</button>
+        <div class="close" id="close-modal">✕</div>
+        <button class="choice" data-category="breakfast">🍳 Завтрак</button>
+        <button class="choice" data-category="lunch">🍝 Обед</button>
+        <button class="choice" data-category="dinner">🍽 Ужин</button>
+        <button class="choice" data-category="dessert">🍰 Десерт</button>
     </div>
 </div>
 
