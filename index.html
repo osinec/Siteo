@@ -1,283 +1,399 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Генератор рецептов</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор рецептов</title>
 
-<!-- КРАСИВЫЙ ШРИФТ -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- КРАСИВЫЙ ШРИФТ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
 
-body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: linear-gradient(135deg, #ffecd2, #fcb69f);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #222;
-}
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Изменено для мобильных */
+            color: #222;
+            padding: 20px; /* Добавлено для мобильных */
+        }
 
-.card {
-    width: 420px;
-    background: rgba(255,255,255,.96);
-    border-radius: 26px;
-    padding: 28px;
-    text-align: center;
-    box-shadow: 0 30px 70px rgba(0,0,0,.18);
-}
+        .card {
+            width: 100%;
+            max-width: 420px; /* Максимальная ширина для десктопа */
+            background: rgba(255,255,255,.96);
+            border-radius: 26px;
+            padding: 24px 20px; /* Уменьшен padding для мобильных */
+            text-align: center;
+            box-shadow: 0 30px 70px rgba(0,0,0,.18);
+            margin: 0 auto; /* Центрирование */
+        }
 
-button {
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    border: none;
-    border-radius: 40px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
+        button {
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent; /* Убирает подсветку при касании на мобильных */
+        }
 
-.main-btn {
-    padding: 14px 30px;
-    background: linear-gradient(135deg,#f6d365,#fda085);
-    font-size: 16px;
-    color: #222;
-}
+        .main-btn {
+            padding: 16px 28px; /* Немного увеличил для удобства касания */
+            background: linear-gradient(135deg,#f6d365,#fda085);
+            font-size: 16px;
+            color: #222;
+            width: 100%; /* Кнопка на всю ширину */
+            margin-bottom: 10px;
+        }
 
-.main-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,.15);
-}
+        .main-btn:hover, .main-btn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,.15);
+        }
 
-.refresh {
-    display: none;
-    margin-top: 12px;
-    padding: 10px 24px;
-    background: linear-gradient(135deg,#ff6a00,#ee0979);
-    color: #fff;
-    font-size: 14px;
-}
+        .refresh {
+            display: none;
+            margin-top: 12px;
+            padding: 14px 24px; /* Увеличил для мобильных */
+            background: linear-gradient(135deg,#ff6a00,#ee0979);
+            color: #fff;
+            font-size: 15px;
+            width: 100%; /* Кнопка на всю ширину */
+        }
 
-.refresh:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(238, 9, 121, 0.3);
-}
+        .refresh:hover, .refresh:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(238, 9, 121, 0.3);
+        }
 
-.category {
-    margin-top: 22px;
-    font-size: 13px;
-    letter-spacing: 2px;
-    font-weight: 600;
-    color: #c7903d;
-}
+        .category {
+            margin-top: 20px;
+            font-size: 13px;
+            letter-spacing: 2px;
+            font-weight: 600;
+            color: #c7903d;
+            text-transform: uppercase;
+        }
 
-h2 {
-    margin: 12px 0;
-    font-size: 22px;
-    font-weight: 700;
-}
+        h2 {
+            margin: 12px 0;
+            font-size: 20px; /* Немного уменьшил для мобильных */
+            font-weight: 700;
+            line-height: 1.3;
+        }
 
-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 18px;
-    display: none;
-    margin-top: 10px;
-}
+        img {
+            width: 100%;
+            height: 200px; /* Немного уменьшил высоту для мобильных */
+            object-fit: cover;
+            border-radius: 16px;
+            display: none;
+            margin-top: 10px;
+            max-height: 40vh; /* Ограничение по высоте для мобильных */
+        }
 
-.info {
-    text-align: left;
-    margin-top: 12px;
-    font-size: 14px;
-    color: #555;
-}
+        .info {
+            text-align: left;
+            margin-top: 12px;
+            font-size: 15px; /* Немного увеличил для читаемости */
+            color: #555;
+            line-height: 1.5;
+        }
 
-.info span {
-    font-weight: 600;
-    color: #333;
-}
+        .info span {
+            font-weight: 600;
+            color: #333;
+        }
 
-ul {
-    text-align: left;
-    margin-top: 10px;
-    padding-left: 18px;
-    font-size: 14px;
-    color: #444;
-    line-height: 1.5;
-}
+        ul {
+            text-align: left;
+            margin-top: 12px;
+            padding-left: 20px;
+            font-size: 15px; /* Немного увеличил для читаемости */
+            color: #444;
+            line-height: 1.6;
+        }
 
-/* MODAL */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.55);
-    backdrop-filter: blur(6px);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+        li {
+            margin-bottom: 8px;
+        }
 
-.modal-box {
-    background: #fff;
-    padding: 26px;
-    border-radius: 22px;
-    width: 300px;
-    position: relative;
-    animation: modalAppear 0.3s ease;
-}
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px; /* Добавил padding для мобильных */
+        }
 
-@keyframes modalAppear {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        .modal-box {
+            background: #fff;
+            padding: 24px 20px;
+            border-radius: 22px;
+            width: 100%;
+            max-width: 320px; /* Ограничил максимальную ширину */
+            position: relative;
+            animation: modalAppear 0.3s ease;
+        }
 
-.close {
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    font-size: 20px;
-    cursor: pointer;
-    opacity: .6;
-    transition: opacity 0.2s;
-}
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.close:hover {
-    opacity: 1;
-}
+        .close {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            font-size: 22px; /* Увеличил для удобства касания */
+            cursor: pointer;
+            opacity: .6;
+            transition: opacity 0.2s;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.choice {
-    width: 100%;
-    margin-top: 14px;
-    padding: 12px;
-    background: #f5f5f5;
-    font-size: 14px;
-    border-radius: 16px;
-    transition: all 0.3s ease;
-}
+        .close:hover, .close:active {
+            opacity: 1;
+        }
 
-.choice:hover {
-    background: #eee;
-    transform: translateY(-2px);
-}
-</style>
+        .choice {
+            width: 100%;
+            margin-top: 14px;
+            padding: 16px 12px; /* Увеличил padding для мобильных */
+            background: #f5f5f5;
+            font-size: 15px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .choice:hover, .choice:active {
+            background: #eee;
+            transform: translateY(-2px);
+        }
+
+        /* Адаптация для очень маленьких экранов */
+        @media (max-width: 360px) {
+            .card {
+                padding: 20px 16px;
+                border-radius: 20px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+            
+            img {
+                height: 180px;
+            }
+            
+            .modal-box {
+                padding: 20px 16px;
+            }
+        }
+
+        /* Адаптация для планшетов и больших экранов */
+        @media (min-width: 768px) {
+            body {
+                align-items: center; /* Вернул центрирование для больших экранов */
+                padding: 40px 20px;
+            }
+            
+            .card {
+                padding: 28px;
+            }
+            
+            .main-btn, .refresh {
+                width: auto;
+                display: inline-block;
+            }
+            
+            .main-btn {
+                margin-bottom: 0;
+                margin-right: 10px;
+            }
+        }
+
+        /* Предотвращение масштабирования текста на iOS */
+        @media screen and (max-device-width: 480px) {
+            body {
+                -webkit-text-size-adjust: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div class="card">
+        <button class="main-btn" onclick="openModal()">Случайный рецепт</button>
+        <button class="refresh" id="refresh" onclick="generateRecipe()">Обновить рецепт 🔄</button>
 
-<div class="card">
-    <button class="main-btn" onclick="openModal()">Случайный рецепт</button>
-    <button class="refresh" id="refresh" onclick="generateRecipe()">Обновить рецепт 🔄</button>
+        <div class="category" id="category"></div>
+        <h2 id="title">Выберите категорию</h2>
 
-    <div class="category" id="category"></div>
-    <h2 id="title">Выберите категорию</h2>
+        <img id="photo" alt="Фото рецепта">
 
-    <img id="photo" alt="Фото рецепта">
-
-    <div id="ingredients" class="info"></div>
-    <ul id="steps"></ul>
-    <div id="time" class="info"></div>
-    <div id="calories" class="info"></div>
-</div>
-
-<div class="modal" id="modal">
-    <div class="modal-box">
-        <div class="close" onclick="closeModal()">✕</div>
-        <h3 style="margin-bottom: 15px;">Выберите категорию</h3>
-        <button class="choice" onclick="selectCategory('breakfast')">🍳 Завтрак</button>
-        <button class="choice" onclick="selectCategory('lunch')">🍝 Обед</button>
-        <button class="choice" onclick="selectCategory('dinner')">🍽 Ужин</button>
-        <button class="choice" onclick="selectCategory('dessert')">🍰 Десерт</button>
+        <div id="ingredients" class="info"></div>
+        <ul id="steps"></ul>
+        <div id="time" class="info"></div>
+        <div id="calories" class="info"></div>
     </div>
-</div>
 
-<script src="recipes.js"></script>
-<script>
-// Функции для работы с модальным окном
-function openModal() {
-    document.getElementById('modal').style.display = 'flex';
-}
+    <div class="modal" id="modal">
+        <div class="modal-box">
+            <div class="close" onclick="closeModal()">✕</div>
+            <h3 style="margin-bottom: 18px; font-size: 18px;">Выберите категорию</h3>
+            <button class="choice" onclick="selectCategory('breakfast')">🍳 Завтрак</button>
+            <button class="choice" onclick="selectCategory('lunch')">🍝 Обед</button>
+            <button class="choice" onclick="selectCategory('dinner')">🍽 Ужин</button>
+            <button class="choice" onclick="selectCategory('dessert')">🍰 Десерт</button>
+        </div>
+    </div>
 
-function closeModal() {
-    document.getElementById('modal').style.display = 'none';
-}
+    <script src="recipes.js"></script>
+    <script>
+        // Функции для работы с модальным окном
+        function openModal() {
+            document.getElementById('modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Предотвращаем прокрутку фона
+        }
 
-// Выбор категории
-function selectCategory(category) {
-    currentCategory = category;
-    closeModal();
-    generateRecipe();
-}
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Возвращаем прокрутку
+        }
 
-// Генерация случайного рецепта
-function generateRecipe() {
-    if (!currentCategory) {
-        alert('Сначала выберите категорию!');
-        openModal();
-        return;
-    }
+        // Выбор категории
+        function selectCategory(category) {
+            currentCategory = category;
+            closeModal();
+            generateRecipe();
+        }
 
-    if (!recipes[currentCategory]) {
-        alert('Рецепты для этой категории не найдены!');
-        return;
-    }
+        // Генерация случайного рецепта
+        function generateRecipe() {
+            if (!currentCategory) {
+                alert('Сначала выберите категорию!');
+                openModal();
+                return;
+            }
 
-    const categoryRecipes = recipes[currentCategory];
-    const randomRecipe = categoryRecipes[Math.floor(Math.random() * categoryRecipes.length)];
+            if (!data || !data[currentCategory]) {
+                alert('Рецепты для этой категории не найдены!');
+                return;
+            }
 
-    // Обновляем данные на странице
-    document.getElementById('category').textContent = randomRecipe.category;
-    document.getElementById('title').textContent = randomRecipe.title;
-    document.getElementById('photo').src = randomRecipe.photo;
-    document.getElementById('photo').style.display = 'block';
-    document.getElementById('ingredients').innerHTML = `<span>Ингредиенты:</span> ${randomRecipe.ingredients}`;
-    document.getElementById('time').innerHTML = `<span>Время приготовления:</span> ${randomRecipe.time}`;
-    document.getElementById('calories').innerHTML = `<span>Калорийность:</span> ${randomRecipe.calories}`;
+            const categoryRecipes = data[currentCategory];
+            const randomRecipe = categoryRecipes[Math.floor(Math.random() * categoryRecipes.length)];
 
-    // Формируем список шагов
-    const stepsList = document.getElementById('steps');
-    stepsList.innerHTML = '';
-    randomRecipe.steps.forEach((step, index) => {
-        const li = document.createElement('li');
-        li.textContent = step;
-        stepsList.appendChild(li);
-    });
+            // Обновляем данные на странице
+            document.getElementById('category').textContent = currentCategory.toUpperCase();
+            document.getElementById('title').textContent = randomRecipe.title;
+            
+            const photoEl = document.getElementById('photo');
+            photoEl.src = randomRecipe.photo;
+            photoEl.style.display = 'block';
+            photoEl.alt = randomRecipe.title;
+            
+            // Проверяем тип ingredients (массив или строка)
+            let ingredientsText;
+            if (Array.isArray(randomRecipe.ingredients)) {
+                ingredientsText = randomRecipe.ingredients.join(", ");
+            } else {
+                ingredientsText = randomRecipe.ingredients;
+            }
+            document.getElementById('ingredients').innerHTML = `<span>Ингредиенты:</span> ${ingredientsText}`;
+            
+            document.getElementById('time').innerHTML = `<span>Время приготовления:</span> ${randomRecipe.time}`;
+            document.getElementById('calories').innerHTML = `<span>Калорийность:</span> ${randomRecipe.calories} ккал`;
 
-    // Показываем кнопку обновления
-    document.getElementById('refresh').style.display = 'inline-block';
-}
+            // Формируем список шагов
+            const stepsList = document.getElementById('steps');
+            stepsList.innerHTML = '';
+            randomRecipe.steps.forEach((stepObj, index) => {
+                const li = document.createElement('li');
+                // Проверяем структуру шага (объект с полем step или просто строка)
+                if (typeof stepObj === 'object' && stepObj.step) {
+                    li.textContent = stepObj.step;
+                } else {
+                    li.textContent = stepObj;
+                }
+                stepsList.appendChild(li);
+            });
 
-// Глобальная переменная для текущей категории
-let currentCategory = null;
+            // Показываем кнопку обновления
+            document.getElementById('refresh').style.display = 'inline-block';
+            
+            // Прокручиваем к началу карточки для удобства
+            document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
 
-// Закрытие модального окна при клике вне его
-document.getElementById('modal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
-});
+        // Глобальная переменная для текущей категории
+        let currentCategory = null;
 
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Генератор рецептов загружен!');
-    // Проверяем, загружены ли рецепты
-    if (typeof recipes !== 'undefined') {
-        console.log('База рецептов загружена успешно!');
-    } else {
-        console.error('База рецептов не загружена!');
-    }
-});
-</script>
+        // Закрытие модального окна при клике вне его
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
 
+        // Закрытие модального окна по клавише Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('modal').style.display === 'flex') {
+                closeModal();
+            }
+        });
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Генератор рецептов загружен!');
+            
+            // Проверяем, загружены ли рецепты
+            if (typeof data !== 'undefined') {
+                console.log('База рецептов загружена успешно!');
+            } else {
+                console.error('База рецептов не загружена! Проверьте файл recipes.js');
+            }
+            
+            // Добавляем touch события для лучшей реакции на мобильных
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('touchstart', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+                button.addEventListener('touchend', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
