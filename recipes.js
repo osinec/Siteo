@@ -191,10 +191,17 @@ function generateRecipe() {
     stepsEl.innerHTML = "";
     recipe.steps.forEach(s => {
         const li = document.createElement("li");
-        li.innerText = `${s.step} (${s.time})`;
+        li.innerText = s.time ? `${s.step} (${s.time})` : s.step;
         stepsEl.appendChild(li);
     });
 
     document.getElementById("time").innerHTML = `<span>Общее время:</span> ${recipe.time}`;
     document.getElementById("calories").innerHTML = `<span>Калории:</span> ${recipe.calories} ккал`;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const refreshBtn = document.getElementById("refresh");
+    if (refreshBtn) {
+        refreshBtn.addEventListener("click", generateRecipe);
+    }
+});
