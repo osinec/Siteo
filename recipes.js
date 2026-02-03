@@ -198,3 +198,13 @@ function generateRecipe() {
     document.getElementById("time").innerHTML = `<span>Общее время:</span> ${recipe.time}`;
     document.getElementById("calories").innerHTML = `<span>Калории:</span> ${recipe.calories} ккал`;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("open-modal").addEventListener("click", openModal);
+    document.getElementById("close-modal").addEventListener("click", closeModal);
+    document.getElementById("refresh").addEventListener("click", generateRecipe);
+
+    document.querySelectorAll("[data-category]").forEach(button => {
+        button.addEventListener("click", () => selectCategory(button.dataset.category));
+    });
+});

@@ -142,7 +142,7 @@ ul {
 <body>
 
 <div class="card">
-    <button class="main-btn" onclick="openModal()">Случайный рецепт</button>
+    <button class="main-btn" id="open-modal">Случайный рецепт</button>
     <button class="refresh" id="refresh">Обновить рецепт 🔄</button>
 
     <div class="category" id="category"></div>
@@ -158,75 +158,15 @@ ul {
 
 <div class="modal" id="modal">
     <div class="modal-box">
-        <div class="close" onclick="closeModal()">✕</div>
-        <button class="choice" onclick="selectCategory('breakfast')">🍳 Завтрак</button>
-        <button class="choice" onclick="selectCategory('lunch')">🍝 Обед</button>
-        <button class="choice" onclick="selectCategory('dinner')">🍽 Ужин</button>
-        <button class="choice" onclick="selectCategory('dessert')">🍰 Десерт</button>
+        <div class="close" id="close-modal">✕</div>
+        <button class="choice" data-category="breakfast">🍳 Завтрак</button>
+        <button class="choice" data-category="lunch">🍝 Обед</button>
+        <button class="choice" data-category="dinner">🍽 Ужин</button>
+        <button class="choice" data-category="dessert">🍰 Десерт</button>
     </div>
 </div>
 
-<script>
-let currentCategory = null;
-let lock = false;
-
-const data = {
-    breakfast: [
-        { t:"Омлет с сыром", i:["Яйца","Сыр"], s:["Взбить яйца","Обжарить"], time:"10 мин", cal:250 },
-        { t:"Овсянка с фруктами", i:["Овсянка","Фрукты"], s:["Сварить","Добавить фрукты"], time:"8 мин", cal:300 },
-        { t:"Тост с авокадо", i:["Хлеб","Авокадо"], s:["Поджарить","Намазать"], time:"5 мин", cal:280 }
-    ],
-    lunch: [
-        { t:"Паста с соусом", i:["Паста","Соус"], s:["Сварить","Смешать"], time:"15 мин", cal:420 },
-        { t:"Овощной суп", i:["Овощи"], s:["Нарезать","Варить"], time:"30 мин", cal:350 },
-        { t:"Лёгкий салат", i:["Овощи"], s:["Нарезать","Смешать"], time:"10 мин", cal:200 }
-    ],
-    dinner: [
-        { t:"Курица с овощами", i:["Курица","Овощи"], s:["Обжарить","Потушить"], time:"25 мин", cal:400 },
-        { t:"Рис с овощами", i:["Рис","Овощи"], s:["Сварить","Смешать"], time:"20 мин", cal:330 },
-        { t:"Запечённая рыба", i:["Рыба"], s:["Запечь"], time:"20 мин", cal:360 }
-    ],
-    dessert: [
-        { t:"Панкейки", i:["Мука","Яйца"], s:["Замесить тесто","Жарить"], time:"12 мин", cal:340 },
-        { t:"Йогурт с фруктами", i:["Йогурт","Фрукты"], s:["Смешать"], time:"5 мин", cal:220 },
-        { t:"Шоколадный десерт", i:["Какао"], s:["Растопить"], time:"10 мин", cal:300 }
-    ]
-};
-
-function openModal() {
-    modal.style.display = "flex";
-}
-
-function closeModal() {
-    modal.style.display = "none";
-}
-
-function selectCategory(cat) {
-    currentCategory = cat;
-    category.innerText = cat.toUpperCase();
-    refresh.style.display = "inline-block";
-    photo.style.display = "block";
-    closeModal();
-    generateRecipe();
-}
-
-function generateRecipe() {
-    if (lock) return;
-    lock = true;
-
-    requestAnimationFrame(() => {
-        const r = data[currentCategory][Math.floor(Math.random()*3)];
-        title.innerText = r.t;
-        ingredients.innerHTML = `<span>Ингредиенты:</span> ${r.i.join(", ")}`;
-        steps.innerHTML = r.s.map(x => `<li>${x}</li>`).join("");
-        time.innerHTML = `<span>Время:</span> ${r.time}`;
-        calories.innerHTML = `<span>Калории:</span> ${r.cal} ккал`;
-        lock = false;
-    });
-}
-
-refresh.onclick = generateRecipe;
-</script>
+<script src="recipes.js" defer></script>
 
 </body>
 </html>
