@@ -393,19 +393,23 @@ function preloadImages() {
             img.onload = () => {
                 loadedCount++;
                 imageCache.set(recipe.photo, img);
+                console.log(`✓ Загружено: ${recipe.title}`);
                 if (loadedCount === totalImages) {
-                    console.log('Все изображения загружены!');
+                    console.log('✅ Все изображения загружены!');
                 }
             };
             img.onerror = () => {
                 loadedCount++;
-                console.log(`Ошибка загрузки: ${recipe.photo}`);
-                // Используем fallback изображение
+                console.log(`✗ Ошибка загрузки: ${recipe.photo} для "${recipe.title}"`);
+                // Загружаем fallback изображение
                 const fallbackImg = new Image();
+                fallbackImg.onload = () => {
+                    imageCache.set(recipe.photo, fallbackImg);
+                };
                 fallbackImg.src = fallbackImage;
-                imageCache.set(recipe.photo, fallbackImg);
             };
-            img.src = recipe.photo;
+            // Добавляем таймстамп для избежания кэширования
+            img.src = recipe.photo + '?' + new Date().getTime();
         }
     });
 }
@@ -460,30 +464,31 @@ function generateRecipe() {
 
     const photoEl = document.getElementById("photo");
     
-    // Сначала скрываем изображение
-    photoEl.style.display = "none";
+    // Сначала показываем заглушку
+    photoEl.style.display = "block";
+    photoEl.src = fallbackImage;
+    photoEl.alt = recipe.title;
     
-    // Используем кэшированное изображение или загружаем новое
+    // Создаем новое изображение для загрузки
+    const img = new Image();
+    img.onload = function() {
+        console.log(`✅ Изображение загружено: ${recipe.title}`);
+        photoEl.src = this.src;
+        // Сохраняем в кэш
+        imageCache.set(recipe.photo, img);
+    };
+    img.onerror = function() {
+        console.log(`❌ Ошибка загрузки изображения: ${recipe.photo}`);
+        // Оставляем fallback изображение
+    };
+    // Пытаемся загрузить из кэша или напрямую
     if (imageCache.has(recipe.photo)) {
         const cachedImg = imageCache.get(recipe.photo);
         photoEl.src = cachedImg.src;
-        photoEl.style.display = "block";
-        console.log('Изображение загружено из кэша:', recipe.title);
     } else {
-        // Если нет в кэше, загружаем с обработкой ошибок
-        photoEl.onload = function() {
-            this.style.display = "block";
-            console.log('Изображение загружено напрямую:', recipe.title);
-        };
-        photoEl.onerror = function() {
-            console.log('Ошибка загрузки изображения, используем fallback:', recipe.title);
-            this.src = fallbackImage;
-            this.style.display = "block";
-        };
-        photoEl.src = recipe.photo;
+        // Добавляем таймстамп для избежания кэширования
+        img.src = recipe.photo + '?' + new Date().getTime();
     }
-    
-    photoEl.alt = recipe.title;
 
     // Отображаем ингредиенты
     const ingredientsText = recipe.ingredients.join(", ");
@@ -528,8 +533,8 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('Генератор рецептов загружен! Всего рецептов:', 
         Object.values(data).reduce((sum, arr) => sum + arr.length, 0));
     
-    // Предзагрузка изображений
-    setTimeout(preloadImages, 100);
+    // Предзагрузка изображений (начинаем через небольшой таймаут)
+    setTimeout(preloadImages, 500);
     
     // Назначаем обработчики для кнопок
     const refreshBtn = document.getElementById("refresh");
@@ -538,10 +543,10 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshBtn.style.display = "none";
     }
     
-    // Назначаем обработчики для кнопок в модальном окне
+    // Назначаем обработчики для кнопок категорий
     document.querySelectorAll('.choice').forEach(button => {
         button.addEventListener('click', function() {
-            const category = this.getAttribute('data-category') || this.getAttribute('onclick')?.match(/selectCategory\('(\w+)'\)/)?.[1];
+            const category = this.getAttribute('data-category');
             if (category) {
                 selectCategory(category);
             }
