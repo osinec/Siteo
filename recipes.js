@@ -75,7 +75,7 @@ const data = {
                 "1 яйцо",
                 "100 мл кефира (или йогурт/сметана)",
                 "50 г муки",
-                "15 г сливочного масла",
+                "15 г сливочное масло",
                 "соль (по необходимости — сулугуни и так солёный)"
             ],
             steps: [
@@ -639,7 +639,12 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshBtn.style.display = "none";
     }
     
-    // Назначаем обработчики для кнопок категорий
+    const randomBtn = document.querySelector('.main-btn');
+    if (randomBtn) {
+        randomBtn.addEventListener("click", openModal);
+    }
+    
+    // Назначаем обработчики для кнопок категорий в модальном окне
     document.querySelectorAll('.choice').forEach(button => {
         button.addEventListener('click', function() {
             const category = this.getAttribute('data-category');
@@ -657,6 +662,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 closeModal();
             }
         });
+        
+        // Закрытие по кнопке закрытия
+        const closeBtn = document.querySelector('.close');
+        if (closeBtn) {
+            closeBtn.addEventListener("click", closeModal);
+        }
     }
 
     // Закрытие модального окна по клавише Escape
@@ -673,7 +684,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Экспортируем функции для использования в HTML
+// Экспортируем функции для использования в HTML (добавляем в глобальную область видимости)
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.selectCategory = selectCategory;
