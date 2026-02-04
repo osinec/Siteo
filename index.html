@@ -5,110 +5,82 @@
     <title>Генератор рецептов</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #ffecd2, #fcb69f);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
             padding: 20px;
         }
 
         .card {
-            width: 100%;
             max-width: 420px;
+            margin: auto;
             background: #fff;
-            border-radius: 26px;
-            padding: 24px 20px;
-            text-align: center;
-            box-shadow: 0 30px 70px rgba(0,0,0,.18);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
         }
 
         button {
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            border: none;
-            border-radius: 40px;
-            font-weight: 600;
-            transition: all .3s;
             width: 100%;
+            padding: 14px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
         }
 
         .main-btn {
-            padding: 16px;
-            background: linear-gradient(135deg,#f6d365,#fda085);
+            background: #ffcc70;
         }
 
         .refresh {
-            display: none;
-            margin-top: 14px;
-            padding: 14px;
-            background: linear-gradient(135deg,#ff6a00,#ee0979);
+            background: #ff7a18;
             color: #fff;
-        }
-
-        .category {
-            margin-top: 18px;
-            font-size: 13px;
-            letter-spacing: 2px;
-            font-weight: 600;
-            color: #c7903d;
-        }
-
-        h2 {
-            margin: 10px 0;
-            font-size: 20px;
+            display: none;
         }
 
         img {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-radius: 16px;
+            border-radius: 12px;
             margin-top: 10px;
             display: none;
         }
 
-        .info {
-            text-align: left;
+        .category {
             margin-top: 10px;
-            font-size: 15px;
-            color: #444;
+            font-size: 12px;
+            font-weight: bold;
+            color: #888;
+            letter-spacing: 2px;
         }
 
         ul {
-            text-align: left;
-            margin-top: 10px;
-            padding-left: 18px;
+            padding-left: 20px;
         }
 
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,.55);
+            background: rgba(0,0,0,.6);
             justify-content: center;
             align-items: center;
         }
 
         .modal-box {
             background: #fff;
-            padding: 22px;
-            border-radius: 22px;
-            width: 100%;
-            max-width: 320px;
+            padding: 20px;
+            border-radius: 20px;
+            width: 300px;
         }
 
         .choice {
-            margin-top: 12px;
-            padding: 14px;
-            background: #f5f5f5;
+            background: #eee;
         }
     </style>
 </head>
@@ -122,13 +94,13 @@
     <div class="category" id="category"></div>
     <h2 id="title">Выберите категорию</h2>
 
-    <img id="photo" alt="Фото рецепта">
+    <img id="photo" alt="Фото блюда">
 
-    <div class="info" id="ingredients"></div>
+    <div id="ingredients"></div>
     <ul id="steps"></ul>
-    <div class="info" id="time"></div>
-    <div class="info" id="calories"></div>
-    <div class="info" id="note" style="display:none"></div>
+    <div id="time"></div>
+    <div id="calories"></div>
+    <div id="note" style="display:none"></div>
 </div>
 
 <div class="modal" id="modal">
@@ -140,7 +112,6 @@
     </div>
 </div>
 
-<!-- ПОДКЛЮЧАЕМ ТОЛЬКО ОДИН JS -->
 <script src="recipes.js"></script>
 </body>
 </html>
