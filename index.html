@@ -285,7 +285,7 @@
         <div class="category" id="category"></div>
         <h2 id="title">Выберите категорию</h2>
 
-        <img id="photo" alt="Фото рецепта" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjODg4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+PHQzc3Bhbj5Gb29kIEltYWdlPC90c3Bhbj48L3RleHQ+PC9zdmc+">
+        <img id="photo" alt="Фото рецепта" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjODg4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+PHQzc3Bhbj5Gb29kIEltYWdlPC90c3Bpbj48L3RleHQ+PC9zdmc+">
 
         <div id="ingredients" class="info"></div>
         <ul id="steps"></ul>
@@ -311,6 +311,10 @@
         let currentCategory = null;
         const imageCache = new Map();
         const fallbackImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjODg4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+PHQzc3Bhbj5Gb29kIEltYWdlPC90c3Bhbj48L3RleHQ+PC9zdmc+';
+        
+        // Для хранения порядка показа рецептов по категориям
+        const recipeIndices = new Map();
+        const recipeHistory = new Map();
 
         // DOM элементы
         const elements = {
@@ -343,6 +347,12 @@
                 recipesData = await response.json();
                 hideLoader();
                 console.log('Рецепты загружены успешно');
+                
+                // Инициализируем индексы для каждой категории
+                Object.keys(recipesData).forEach(category => {
+                    recipeIndices.set(category, 0);
+                    recipeHistory.set(category, []);
+                });
                 
                 // Предзагрузка изображений
                 preloadImages();
@@ -394,7 +404,69 @@
             generateRecipe();
         }
 
-        // Генерация случайного рецепта
+        // Получение следующего рецепта с элементами случайности
+        function getNextRecipe(category) {
+            if (!recipesData || !recipesData[category]) return null;
+            
+            const recipes = recipesData[category];
+            const history = recipeHistory.get(category) || [];
+            const currentIndex = recipeIndices.get(category) || 0;
+            
+            // 30% шанс выбрать случайный рецепт (для разнообразия)
+            if (Math.random() < 0.3) {
+                return getRandomRecipe(category, history);
+            }
+            
+            // 70% шанс идти по порядку
+            return getSequentialRecipe(category, currentIndex, history, recipes);
+        }
+
+        // Получение случайного рецепта (стараемся не повторяться)
+        function getRandomRecipe(category, history) {
+            const recipes = recipesData[category];
+            const availableRecipes = recipes.filter((_, index) => !history.includes(index));
+            
+            // Если все рецепты уже были показаны, сбрасываем историю
+            if (availableRecipes.length === 0) {
+                recipeHistory.set(category, []);
+                return recipes[Math.floor(Math.random() * recipes.length)];
+            }
+            
+            // Выбираем случайный из непоказанных
+            const randomIndex = Math.floor(Math.random() * availableRecipes.length);
+            const recipeIndex = recipes.indexOf(availableRecipes[randomIndex]);
+            
+            // Обновляем историю и индекс
+            history.push(recipeIndex);
+            if (history.length > recipes.length * 0.7) {
+                history.shift(); // Ограничиваем длину истории
+            }
+            recipeHistory.set(category, history);
+            recipeIndices.set(category, (recipeIndex + 1) % recipes.length);
+            
+            return recipes[recipeIndex];
+        }
+
+        // Получение рецепта по порядку
+        function getSequentialRecipe(category, currentIndex, history, recipes) {
+            // Получаем текущий рецепт
+            const recipe = recipes[currentIndex];
+            
+            // Обновляем историю
+            history.push(currentIndex);
+            if (history.length > recipes.length) {
+                history.shift(); // Ограничиваем длину истории
+            }
+            recipeHistory.set(category, history);
+            
+            // Обновляем индекс для следующего раза (идем по кругу)
+            const nextIndex = (currentIndex + 1) % recipes.length;
+            recipeIndices.set(category, nextIndex);
+            
+            return recipe;
+        }
+
+        // Генерация рецепта
         function generateRecipe() {
             // Проверяем, загружены ли рецепты
             if (!recipesData) {
@@ -413,12 +485,11 @@
                 return;
             }
 
-            // Выбираем случайный рецепт
-            const categoryRecipes = recipesData[currentCategory];
-            const randomRecipe = categoryRecipes[Math.floor(Math.random() * categoryRecipes.length)];
+            // Получаем следующий рецепт
+            const recipe = getNextRecipe(currentCategory);
 
             // Обновляем UI
-            updateUI(randomRecipe);
+            updateUI(recipe);
             
             // Показываем кнопку обновления
             elements.refreshBtn.style.display = 'inline-block';
