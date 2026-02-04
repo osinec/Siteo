@@ -2,19 +2,19 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <!-- Отключаем масштабирование на мобильных -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Генератор рецептов</title>
-
-    <!-- Предзагрузка шрифта Inter -->
+    
+    <!-- Предзагрузка шрифта -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
-
-    <!-- Критические стили -->
+    
+    <!-- Предзагрузка критического CSS -->
     <style>
+        /* КРИТИЧЕСКИЕ СТИЛИ - видимые при загрузке */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
+        body { 
             font-family: system-ui, -apple-system, sans-serif;
             background: linear-gradient(135deg, #ffecd2, #fcb69f);
             min-height: 100vh;
@@ -85,13 +85,16 @@
             border-radius: 16px;
             text-align: left;
         }
-
+        
         /* Спрятать невидимые элементы */
         img, .loader, .error, .note, .category, #ingredients, #steps, #time, #calories {
             display: none;
         }
         h2 { margin: 12px 0; font-size: 20px; min-height: 28px; }
     </style>
+    
+    <!-- Остальные стили загружаются асинхронно -->
+    <link rel="preload" as="style" href="data:text/css,.non-critical-styles{display:none}" onload="this.onload=null;this.rel='stylesheet'">
 </head>
 
 <body>
@@ -126,16 +129,167 @@
         </div>
     </div>
 
+    <!-- Встроенный JSON с рецептами для максимальной скорости -->
+    <script type="application/json" id="recipes-data">
+    {
+        "breakfast": [
+            {
+                "title": "Грибной омлет",
+                "photo": "грибной_омлет.png",
+                "ingredients": ["шампиньоны 100-150 гр", "2 яйца", "соль и специи", "лук 1/4"],
+                "steps": [
+                    "Грибы режем произвольно, лук измельчаем",
+                    "Обжариваем на масле до золотистого цвета",
+                    "Яйца взбиваем вилкой и выливаем на обжаренные грибы",
+                    "Можно все перемешать - получится скрамбл / пожарить на каждой стороне, как блин"
+                ],
+                "time": "10 минут",
+                "calories": 250
+            },
+            {
+                "title": "Бутерброды из отрубей",
+                "photo": "Бутерброды_из_отрубей.png",
+                "ingredients": [
+                    "2 ст. л. отрубей",
+                    "1 яйцо",
+                    "1,5 ст. л. творога или сметаны",
+                    "1/3 ч. л. разрыхлителя",
+                    "соль, перец, зелень"
+                ],
+                "steps": [
+                    "Смешать все ингредиенты",
+                    "Выпекать в микроволновке 4 минуты",
+                    "Дать остыть",
+                    "Добавить начинку по вкусу"
+                ],
+                "time": "8 минут",
+                "calories": 180
+            },
+            {
+                "title": "Ленивые пирожки с зеленым луком",
+                "photo": "ленивые_пирожки.png",
+                "ingredients": [
+                    "2 яйца (вареные)",
+                    "1 яичный белок",
+                    "зелёный лук",
+                    "1 ст. ложка сметаны",
+                    "½ ст. ложки муки",
+                    "специи"
+                ],
+                "steps": [
+                    "Нарежьте яйца кубиками, смешайте с луком",
+                    "Взбейте белок со сметаной, мукой и специями",
+                    "Соедините обе смеси",
+                    "Жарьте по 3 минуты с каждой стороны"
+                ],
+                "time": "15 минут",
+                "calories": 200
+            }
+        ],
+        "lunch": [
+            {
+                "title": "Куриная запеканка с овощами",
+                "photo": "куриная_запеканка.png",
+                "ingredients": [
+                    "Куриное филе — 100 г",
+                    "Баклажан — 100 г",
+                    "Помидор — 1 шт.",
+                    "Лук — 1 шт.",
+                    "Сыр — 1 ст. л.",
+                    "Сметана — 20 г",
+                    "Специи"
+                ],
+                "steps": [
+                    "Обжарьте курицу и баклажаны с луком",
+                    "Добавьте специи и помидор",
+                    "Залейте сметаной и посыпьте сыром",
+                    "Запекайте 30 минут при 180°C"
+                ],
+                "time": "40 минут",
+                "calories": 320,
+                "note": "День: 1-й обед"
+            },
+            {
+                "title": "Рыба с горчицей и сметаной",
+                "photo": "рыба_с_горчицей.png",
+                "ingredients": [
+                    "Рыба (филе) — 150–200 г",
+                    "Сметана — 1 ст. л.",
+                    "Горчица — 1 ст. л.",
+                    "Сыр — 10 г"
+                ],
+                "steps": [
+                    "Посолите рыбу, выложите в форму",
+                    "Смешайте сметану с горчицей, намажьте на рыбу",
+                    "Запекайте при 180°C 15–20 минут",
+                    "За 5 минут до готовности добавьте сыр"
+                ],
+                "time": "25 минут",
+                "calories": 220,
+                "note": "День: 8-й обед"
+            }
+        ],
+        "dinner": [
+            {
+                "title": "Салат с креветками",
+                "photo": "салат_креветки.png",
+                "ingredients": [
+                    "креветки 100-150 г",
+                    "капуста пекинская 100 г",
+                    "помидоры черри 5-7 шт.",
+                    "соевый соус 1 ст. л.",
+                    "горчица 1 ч. л."
+                ],
+                "steps": [
+                    "Капусту нашинковать, помидоры разрезать",
+                    "Выложить капусту и помидоры на тарелку",
+                    "Креветки обжарить на сковороде 2-3 минуты",
+                    "Влить соевый соос, жарить ещё 2-3 минуты",
+                    "Выложить креветки на овощи"
+                ],
+                "time": "15 минут",
+                "calories": 190,
+                "note": "День: 8-й ужин"
+            }
+        ],
+        "dessert": [
+            {
+                "title": "Классический чизкейк",
+                "photo": "чизкейк.png",
+                "ingredients": [
+                    "Для основы: Крекеры — 200 г, Сливочное масло — 100 г, Сахар — 50 г",
+                    "Для начинки: Сливочный сыр — 1 кг, Сметана — 200 г, Яйца — 4 шт., Сахар — 1 стакан"
+                ],
+                "steps": [
+                    "Измельчить крекеры, добавить масло и сахар",
+                    "Выложить основу в форму",
+                    "Взбить сыр с сахаром и яйцами",
+                    "Добавить сметану, взбить",
+                    "Вылить начинку на основу",
+                    "Выпекать на водяной бане 1,5 часа"
+                ],
+                "time": "2 часа 30 минут",
+                "calories": 450,
+                "note": "Автор: Milania"
+            }
+        ]
+    }
+    </script>
+
     <script>
-        // Отложенная инициализация
+        // ОТЛОЖЕННАЯ ЗАГРУЗКА JS (не блокирует рендеринг)
         setTimeout(function() {
+            // Глобальные переменные
             let recipesData = null;
             let currentCategory = null;
             const imageCache = new Map();
             const fallbackImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjODg4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+PHQzc3Bpbj5Gb29kIEltYWdlPC90c3Bpbj48L3RleHQ+PC9zdmc+';
+            
+            // Для хранения порядка показа рецептов
             const recipeIndices = new Map();
             const recipeHistory = new Map();
 
+            // Кэш DOM элементов
             const elements = {
                 modal: document.getElementById('modal'),
                 mainBtn: document.getElementById('mainBtn'),
@@ -153,47 +307,65 @@
                 note: document.getElementById('note')
             };
 
-            // Загрузка рецептов из внешнего JSON-файла
-            async function loadRecipes() {
+            // БЫСТРАЯ загрузка рецептов из встроенного JSON
+            function loadRecipes() {
                 try {
                     showLoader();
-                    const response = await fetch('recipes.json'); // ← внешний файл
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    recipesData = await response.json();
+                    // Читаем данные из встроенного JSON
+                    const recipesJson = document.getElementById('recipes-data').textContent;
+                    recipesData = JSON.parse(recipesJson);
                     hideLoader();
-
+                    
+                    // Инициализируем индексы для каждой категории
                     Object.keys(recipesData).forEach(category => {
                         recipeIndices.set(category, 0);
                         recipeHistory.set(category, []);
                     });
-
+                    
+                    // Предзагрузка изображений в фоновом режиме
                     setTimeout(preloadImages, 500);
+                    
                 } catch (error) {
                     hideLoader();
-                    showError(`Не удалось загрузить рецепты: ${error.message}`);
-                    console.error('Ошибка загрузки recipes.json:', error);
+                    showError(`Ошибка загрузки рецептов: ${error.message}`);
+                    console.error('Ошибка загрузки рецептов:', error);
                 }
             }
 
+            // Оптимизированная предзагрузка изображений
             function preloadImages() {
                 if (!recipesData) return;
+                
                 const allRecipes = Object.values(recipesData).flat();
-                const loadImage = (recipe) => {
-                    if (recipe.photo) {
-                        const img = new Image();
-                        img.loading = 'lazy';
-                        img.onload = () => imageCache.set(recipe.photo, img);
-                        img.src = recipe.photo;
-                    }
-                };
-
+                
+                // Используем requestIdleCallback для фоновой загрузки
                 if ('requestIdleCallback' in window) {
-                    requestIdleCallback(() => allRecipes.forEach(loadImage));
+                    requestIdleCallback(() => {
+                        allRecipes.forEach(recipe => {
+                            if (recipe.photo) {
+                                const img = new Image();
+                                img.loading = 'lazy';
+                                img.onload = () => imageCache.set(recipe.photo, img);
+                                img.src = recipe.photo;
+                            }
+                        });
+                    });
                 } else {
-                    setTimeout(() => allRecipes.forEach(loadImage), 1000);
+                    // Фолбэк для старых браузеров
+                    setTimeout(() => {
+                        allRecipes.forEach(recipe => {
+                            if (recipe.photo) {
+                                const img = new Image();
+                                img.loading = 'lazy';
+                                img.onload = () => imageCache.set(recipe.photo, img);
+                                img.src = recipe.photo;
+                            }
+                        });
+                    }, 1000);
                 }
             }
 
+            // Быстрые функции UI
             function openModal() {
                 elements.modal.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
@@ -210,37 +382,45 @@
                 generateRecipe();
             }
 
+            // Оптимизированный алгоритм выбора рецептов
             function getNextRecipe(category) {
                 const recipes = recipesData[category];
                 const history = recipeHistory.get(category) || [];
                 let currentIndex = recipeIndices.get(category) || 0;
-
-                if (Math.random() < 0.25 && recipes.length > 1) {
+                
+                // Упрощенный алгоритм: 25% случайный, 75% по порядку
+                if (Math.random() < 0.25) {
+                    // Случайный, но избегаем недавних
                     const recentCount = Math.min(3, recipes.length - 1);
                     const recentIndices = history.slice(-recentCount);
                     let randomIndex;
                     do {
                         randomIndex = Math.floor(Math.random() * recipes.length);
                     } while (recentIndices.includes(randomIndex) && recipes.length > 1);
+                    
                     currentIndex = randomIndex;
                 }
-
+                
+                // Обновляем историю
                 history.push(currentIndex);
                 if (history.length > 5) history.shift();
                 recipeHistory.set(category, history);
-
+                
+                // Обновляем индекс
                 const nextIndex = (currentIndex + 1) % recipes.length;
                 recipeIndices.set(category, nextIndex);
-
+                
                 return recipes[currentIndex];
             }
 
+            // Быстрая генерация рецепта
             function generateRecipe() {
                 if (!recipesData) {
-                    showError('Рецепты ещё не загружены');
+                    showError('Рецепты еще не загружены');
                     openModal();
                     return;
                 }
+
                 if (!currentCategory) {
                     showError('Сначала выберите категорию!');
                     openModal();
@@ -249,56 +429,69 @@
 
                 const recipes = recipesData[currentCategory];
                 if (!recipes || recipes.length === 0) {
-                    showError('Нет рецептов в этой категории');
+                    showError('Рецепты для этой категории не найдены!');
                     return;
                 }
 
                 const recipe = getNextRecipe(currentCategory);
                 updateUI(recipe);
                 elements.refreshBtn.style.display = 'inline-block';
-
+                
+                // Плавная прокрутка без блокировки
                 requestAnimationFrame(() => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             }
 
+            // Оптимизированное обновление UI с минимальными перерисовками
             function updateUI(recipe) {
+                // Батчинг обновлений
                 requestAnimationFrame(() => {
+                    // Категория и заголовок
                     elements.category.textContent = currentCategory.toUpperCase();
                     elements.title.textContent = recipe.title;
                     elements.category.style.display = 'block';
-
+                    
+                    // Изображение
                     elements.photo.style.display = 'block';
                     elements.photo.alt = recipe.title;
-
+                    
+                    // Оптимизированная загрузка изображения
                     const cachedImg = imageCache.get(recipe.photo);
-                    if (cachedImg?.complete) {
+                    if (cachedImg && cachedImg.complete) {
                         elements.photo.src = cachedImg.src;
                     } else {
-                        elements.photo.src = recipe.photo || fallbackImage;
+                        elements.photo.src = recipe.photo;
                         const img = new Image();
                         img.onload = () => imageCache.set(recipe.photo, img);
-                        img.src = recipe.photo || fallbackImage;
+                        img.src = recipe.photo;
                     }
-
+                    
+                    // Ингредиенты
                     elements.ingredients.innerHTML = `<span>Ингредиенты:</span> ${recipe.ingredients.join(", ")}`;
                     elements.ingredients.style.display = 'block';
-
-                    elements.steps.innerHTML = '';
-                    elements.steps.style.display = 'block';
+                    
+                    // Шаги
+                    const stepsList = elements.steps;
+                    stepsList.innerHTML = '';
+                    stepsList.style.display = 'block';
+                    
+                    // Используем DocumentFragment для минимальных перерисовок
                     const fragment = document.createDocumentFragment();
-                    recipe.steps.forEach((step, i) => {
+                    recipe.steps.forEach((step, index) => {
                         const li = document.createElement('li');
-                        li.textContent = `${i + 1}. ${step}`;
+                        li.textContent = `${index + 1}. ${step}`;
                         fragment.appendChild(li);
                     });
-                    elements.steps.appendChild(fragment);
-
+                    stepsList.appendChild(fragment);
+                    
+                    // Время и калории
                     elements.time.innerHTML = `<span>Время приготовления:</span> ${recipe.time}`;
                     elements.calories.innerHTML = `<span>Калорийность:</span> ${recipe.calories} ккал`;
                     elements.time.style.display = 'block';
                     elements.calories.style.display = 'block';
-
+                    
+                    // Примечание
                     if (recipe.note) {
                         elements.note.innerHTML = `<span>Примечание:</span> ${recipe.note}`;
                         elements.note.style.display = 'block';
@@ -308,6 +501,7 @@
                 });
             }
 
+            // Упрощенные вспомогательные функции
             function showLoader() {
                 elements.loader.style.display = 'block';
                 elements.error.style.display = 'none';
@@ -322,9 +516,48 @@
                 elements.error.style.display = 'block';
             }
 
+            // Инициализация
+            function init() {
+                // Загружаем рецепты сразу
+                loadRecipes();
+                
+                // Вешаем обработчики
+                elements.mainBtn.addEventListener('click', openModal);
+                elements.refreshBtn.addEventListener('click', generateRecipe);
+                elements.closeBtn.addEventListener('click', closeModal);
+                
+                // Делегирование событий для кнопок категорий
+                elements.modal.addEventListener('click', function(e) {
+                    const button = e.target.closest('.choice');
+                    if (button) {
+                        const category = button.getAttribute('data-category');
+                        if (category) selectCategory(category);
+                    }
+                    
+                    if (e.target === this || e.target.id === 'closeBtn') {
+                        closeModal();
+                    }
+                });
+                
+                // Escape для закрытия модалки
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && elements.modal.style.display === 'flex') {
+                        closeModal();
+                    }
+                });
+                
+                // Изначально скрываем кнопку обновления
+                elements.refreshBtn.style.display = 'none';
+                
+                // Загружаем остальные стили
+                loadNonCriticalStyles();
+            }
+
+            // Загрузка некритических стилей
             function loadNonCriticalStyles() {
                 const style = document.createElement('style');
                 style.textContent = `
+                    /* НЕКРИТИЧЕСКИЕ СТИЛИ */
                     .main-btn:hover, .main-btn:active { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,.15); }
                     .refresh:hover, .refresh:active { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(238, 9, 121, 0.3); }
                     .modal { backdrop-filter: blur(6px); }
@@ -339,52 +572,31 @@
                     img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-top: 10px; max-height: 40vh; background: #f0f0f0; }
                     .note { text-align: left; margin-top: 12px; font-size: 14px; color: #666; font-style: italic; padding: 8px; background: #f9f9f9; border-radius: 8px; }
                     .note span { font-weight: 600; color: #444; }
-
+                    
                     @media (max-width: 360px) {
                         .card { padding: 20px 16px; border-radius: 20px; }
                         h2 { font-size: 18px; }
                         img { height: 180px; }
                         .modal-box { padding: 20px 16px; }
                     }
+                    
                     @media (min-width: 768px) {
                         body { align-items: center; padding: 40px 20px; }
                         .card { padding: 28px; }
                     }
+                    
                     body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
                 `;
                 document.head.appendChild(style);
             }
 
-            function init() {
-                loadRecipes(); // ← теперь грузим из recipes.json
-
-                elements.mainBtn.addEventListener('click', openModal);
-                elements.refreshBtn.addEventListener('click', generateRecipe);
-                elements.closeBtn.addEventListener('click', closeModal);
-
-                elements.modal.addEventListener('click', function(e) {
-                    const button = e.target.closest('.choice');
-                    if (button) {
-                        const category = button.getAttribute('data-category');
-                        if (category) selectCategory(category);
-                    }
-                    if (e.target === this || e.target.id === 'closeBtn') closeModal();
-                });
-
-                document.addEventListener('keydown', e => {
-                    if (e.key === 'Escape' && elements.modal.style.display === 'flex') closeModal();
-                });
-
-                elements.refreshBtn.style.display = 'none';
-                loadNonCriticalStyles();
-            }
-
+            // Запускаем инициализацию
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {
                 init();
             }
-        }, 100);
+        }, 100); // Небольшая задержка для приоритизации рендеринга
     </script>
 </body>
 </html>
