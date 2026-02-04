@@ -272,9 +272,6 @@
     <script src="recipes.js"></script>
     
     <script>
-        // Глобальная переменная для текущей категории
-        let currentCategory = null;
-
         // Функции для работы с модальным окном
         function openModal() {
             document.getElementById('modal').style.display = 'flex';
@@ -286,83 +283,86 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Выбор категории
+        // Выбор категории - эта функция должна быть в recipes.js, но оставляем здесь для связи
         function selectCategory(category) {
-            currentCategory = category;
-            closeModal();
-            generateRecipe();
+            if (typeof window.selectCategory === 'function') {
+                // Если функция есть в recipes.js, используем её
+                window.selectCategory(category);
+            } else {
+                // Запасной вариант
+                currentCategory = category;
+                closeModal();
+                generateRecipe();
+            }
         }
 
         // Генерация случайного рецепта
         function generateRecipe() {
-            // Проверяем, загружены ли рецепты
-            if (typeof data === 'undefined') {
-                alert('Рецепты не загружены! Проверьте файл recipes.js');
-                return;
-            }
-
-            if (!currentCategory) {
-                alert('Сначала выберите категорию!');
-                openModal();
-                return;
-            }
-
-            if (!data[currentCategory]) {
-                alert('Рецепты для этой категории не найдены!');
-                return;
-            }
-
-            const categoryRecipes = data[currentCategory];
-            const randomRecipe = categoryRecipes[Math.floor(Math.random() * categoryRecipes.length)];
-
-            // Обновляем данные на странице
-            document.getElementById('category').textContent = currentCategory.toUpperCase();
-            document.getElementById('title').textContent = randomRecipe.title;
-            
-            const photoEl = document.getElementById('photo');
-            photoEl.style.display = 'block';
-            photoEl.alt = randomRecipe.title;
-            
-            // Создаем новое изображение для предзагрузки
-            const img = new Image();
-            img.onload = function() {
-                photoEl.src = this.src;
-            };
-            img.onerror = function() {
-                console.log('Ошибка загрузки изображения');
-            };
-            img.src = randomRecipe.photo;
-            
-            // Проверяем тип ingredients (массив или строка)
-            let ingredientsText;
-            if (Array.isArray(randomRecipe.ingredients)) {
-                ingredientsText = randomRecipe.ingredients.join(", ");
+            if (typeof window.generateRecipe === 'function') {
+                // Если функция есть в recipes.js, используем её
+                window.generateRecipe();
             } else {
-                ingredientsText = randomRecipe.ingredients;
-            }
-            document.getElementById('ingredients').innerHTML = `<span>Ингредиенты:</span> ${ingredientsText}`;
-            
-            document.getElementById('time').innerHTML = `<span>Время приготовления:</span> ${randomRecipe.time}`;
-            document.getElementById('calories').innerHTML = `<span>Калорийность:</span> ${randomRecipe.calories} ккал`;
-
-            // Формируем список шагов
-            const stepsList = document.getElementById('steps');
-            stepsList.innerHTML = '';
-            randomRecipe.steps.forEach((stepObj, index) => {
-                const li = document.createElement('li');
-                if (typeof stepObj === 'object' && stepObj.step) {
-                    li.textContent = stepObj.step;
-                } else {
-                    li.textContent = stepObj;
+                // Запасной вариант
+                if (!currentCategory) {
+                    alert('Сначала выберите категорию!');
+                    openModal();
+                    return;
                 }
-                stepsList.appendChild(li);
-            });
 
-            // Показываем кнопку "Обновить рецепт"
-            document.getElementById('refresh').style.display = 'inline-block';
-            
-            // Прокручиваем к началу карточки для удобства
-            document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (!data || !data[currentCategory]) {
+                    alert('Рецепты не загружены!');
+                    return;
+                }
+
+                const categoryRecipes = data[currentCategory];
+                const randomRecipe = categoryRecipes[Math.floor(Math.random() * categoryRecipes.length)];
+
+                // Обновляем данные на странице
+                document.getElementById('category').textContent = currentCategory.toUpperCase();
+                document.getElementById('title').textContent = randomRecipe.title;
+                
+                const photoEl = document.getElementById('photo');
+                photoEl.style.display = 'block';
+                photoEl.alt = randomRecipe.title;
+                
+                // Создаем новое изображение для предзагрузки
+                const img = new Image();
+                img.onload = function() {
+                    photoEl.src = this.src;
+                };
+                img.onerror = function() {
+                    console.log('Ошибка загрузки изображения');
+                };
+                img.src = randomRecipe.photo;
+                
+                // Ингредиенты
+                let ingredientsText;
+                if (Array.isArray(randomRecipe.ingredients)) {
+                    ingredientsText = randomRecipe.ingredients.join(", ");
+                } else {
+                    ingredientsText = randomRecipe.ingredients;
+                }
+                document.getElementById('ingredients').innerHTML = `<span>Ингредиенты:</span> ${ingredientsText}`;
+                
+                document.getElementById('time').innerHTML = `<span>Время приготовления:</span> ${randomRecipe.time}`;
+                document.getElementById('calories').innerHTML = `<span>Калорийность:</span> ${randomRecipe.calories} ккал`;
+
+                // Шаги приготовления
+                const stepsList = document.getElementById('steps');
+                stepsList.innerHTML = '';
+                randomRecipe.steps.forEach((stepObj, index) => {
+                    const li = document.createElement('li');
+                    if (typeof stepObj === 'object' && stepObj.step) {
+                        li.textContent = stepObj.step;
+                    } else {
+                        li.textContent = stepObj;
+                    }
+                    stepsList.appendChild(li);
+                });
+
+                // Показываем кнопку "Обновить рецепт"
+                document.getElementById('refresh').style.display = 'inline-block';
+            }
         }
 
         // Закрытие модального окна при клике вне его
