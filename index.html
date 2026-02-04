@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Генератор рецептов</title>
     
     <!-- Предзагрузка шрифта -->
@@ -10,266 +10,91 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
     
+    <!-- Предзагрузка критического CSS -->
     <style>
         /* КРИТИЧЕСКИЕ СТИЛИ - видимые при загрузке */
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-        }
-        
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow-x: hidden;
-            position: fixed; /* Фиксируем чтобы не было скролла за пределы экрана */
-        }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             font-family: system-ui, -apple-system, sans-serif;
             background: linear-gradient(135deg, #ffecd2, #fcb69f);
             min-height: 100vh;
-            height: -webkit-fill-available; /* Для Safari */
             color: #222;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            touch-action: pan-y; /* Разрешаем только вертикальный скролл */
-            -webkit-overflow-scrolling: touch;
+            align-items: flex-start;
+            -webkit-tap-highlight-color: transparent;
         }
-        
-        /* Отключаем зум на iOS */
-        input, textarea, select {
-            font-size: 16px; /* Предотвращает автоматический зум на iOS */
-        }
-        
         .card {
             width: 100%;
-            max-width: 100%;
-            height: 100vh;
-            max-height: -webkit-fill-available;
+            max-width: 420px;
             background: rgba(255,255,255,.96);
-            padding: 20px;
+            border-radius: 26px;
+            padding: 24px 20px;
             text-align: center;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            border-radius: 0;
+            box-shadow: 0 30px 70px rgba(0,0,0,.18);
+            margin: 0 auto;
         }
-        
-        .card-content {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 20px;
-        }
-        
         button {
             font-family: inherit;
             cursor: pointer;
             border: none;
-            border-radius: 50px;
+            border-radius: 40px;
             font-weight: 600;
             transition: transform 0.2s ease;
             -webkit-appearance: none;
             touch-action: manipulation;
-            min-height: 44px; /* Минимальная высота для удобного нажатия на мобильных */
         }
-        
         .main-btn {
-            padding: 20px 28px;
+            padding: 16px 28px;
             background: linear-gradient(135deg,#f6d365,#fda085);
-            font-size: 18px;
+            font-size: 16px;
             color: #222;
             width: 100%;
-            margin-bottom: 15px;
         }
-        
         .refresh {
             display: none;
-            padding: 20px 28px;
+            margin-top: 15px;
+            padding: 14px 24px;
             background: linear-gradient(135deg,#ff6a00,#ee0979);
             color: #fff;
-            font-size: 18px;
+            font-size: 15px;
             width: 100%;
-            margin-top: 15px;
         }
-        
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,.75);
+            background: rgba(0,0,0,.55);
             justify-content: center;
             align-items: center;
             z-index: 1000;
             padding: 20px;
-            overflow: hidden;
-        }
-        
-        .modal-box {
-            background: #fff;
-            padding: 30px 25px;
-            border-radius: 30px;
-            width: 100%;
-            max-width: 100%;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
-        
+        .modal-box {
+            background: #fff;
+            padding: 24px 20px;
+            border-radius: 22px;
+            width: 100%;
+            max-width: 320px;
+            position: relative;
+        }
         .choice {
             width: 100%;
-            margin-top: 20px;
-            padding: 22px 20px;
+            margin-top: 14px;
+            padding: 16px 12px;
             background: #f5f5f5;
-            font-size: 18px;
-            border-radius: 25px;
+            font-size: 15px;
+            border-radius: 16px;
             text-align: left;
-            min-height: 60px;
-        }
-        
-        .close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            opacity: .6;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
         }
         
         /* Спрятать невидимые элементы */
         img, .loader, .error, .note, .category, #ingredients, #steps, #time, #calories {
             display: none;
         }
-        
-        h2 { 
-            margin: 20px 0; 
-            font-size: 24px; 
-            min-height: 34px;
-            line-height: 1.4;
-            padding: 0 10px;
-        }
-        
-        /* Мобильная версия - крупные элементы */
-        @media (max-width: 768px) {
-            body {
-                padding: 0;
-            }
-            
-            .card {
-                padding: 15px;
-                height: 100vh;
-                max-height: -webkit-fill-available;
-                border-radius: 0;
-            }
-            
-            .main-btn, .refresh {
-                padding: 22px 30px;
-                font-size: 20px;
-                border-radius: 60px;
-                margin: 10px 0;
-            }
-            
-            .modal-box {
-                padding: 25px 20px;
-                border-radius: 25px;
-                margin: 0 10px;
-            }
-            
-            .choice {
-                padding: 24px 20px;
-                font-size: 19px;
-                border-radius: 30px;
-                margin-top: 15px;
-                min-height: 66px;
-            }
-            
-            .close {
-                top: 15px;
-                right: 15px;
-                font-size: 32px;
-                width: 50px;
-                height: 50px;
-            }
-            
-            h2 {
-                font-size: 26px;
-                margin: 25px 0 15px 0;
-            }
-            
-            /* Убираем горизонтальный скролл */
-            * {
-                max-width: 100%;
-            }
-        }
-        
-        /* Еще больше увеличиваем для маленьких экранов */
-        @media (max-width: 360px) {
-            .main-btn, .refresh {
-                padding: 24px 32px;
-                font-size: 19px;
-            }
-            
-            .choice {
-                padding: 26px 22px;
-                font-size: 18px;
-                min-height: 70px;
-            }
-            
-            h2 {
-                font-size: 24px;
-            }
-            
-            .modal-box {
-                padding: 20px 15px;
-            }
-        }
-        
-        /* Ландшафтная ориентация */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .card {
-                padding: 10px;
-            }
-            
-            .card-content {
-                max-height: calc(100vh - 120px);
-            }
-            
-            .main-btn, .refresh {
-                padding: 15px 20px;
-                font-size: 16px;
-                margin: 5px 0;
-            }
-            
-            h2 {
-                font-size: 20px;
-                margin: 10px 0;
-            }
-        }
-        
-        /* Предотвращение масштабирования на iOS */
-        @supports (-webkit-touch-callout: none) {
-            body {
-                height: -webkit-fill-available;
-            }
-            
-            .card {
-                height: -webkit-fill-available;
-            }
-        }
+        h2 { margin: 12px 0; font-size: 20px; min-height: 28px; }
     </style>
     
     <!-- Остальные стили загружаются асинхронно -->
@@ -278,31 +103,29 @@
 
 <body>
     <div class="card">
-        <div class="card-content">
-            <button class="main-btn" id="mainBtn">Случайный рецепт</button>
-            <button class="refresh" id="refreshBtn">Обновить рецепт 🔄</button>
+        <button class="main-btn" id="mainBtn">Случайный рецепт</button>
+        <button class="refresh" id="refreshBtn">Обновить рецепт 🔄</button>
 
-            <div class="loader" id="loader">Загрузка рецептов...</div>
-            <div class="error" id="error"></div>
+        <div class="loader" id="loader">Загрузка рецептов...</div>
+        <div class="error" id="error"></div>
 
-            <div class="category" id="category"></div>
-            <h2 id="title">Выберите категорию</h2>
+        <div class="category" id="category"></div>
+        <h2 id="title">Выберите категорию</h2>
 
-            <img id="photo" alt="Фото рецепта" width="400" height="200" loading="lazy"
-                 src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjODg4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+PHQzc3Bpbj5Gb29kIEltYWdlPC90c3Bpbj48L3RleHQ+PC9zdmc+">
+        <img id="photo" alt="Фото рецепта" width="400" height="200" loading="lazy"
+             src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjODg4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+PHQzc3Bpbj5Gb29kIEltYWdlPC90c3Bpbj48L3RleHQ+PC9zdmc+">
 
-            <div id="ingredients" class="info"></div>
-            <ul id="steps"></ul>
-            <div id="time" class="info"></div>
-            <div id="calories" class="info"></div>
-            <div id="note" class="note"></div>
-        </div>
+        <div id="ingredients" class="info"></div>
+        <ul id="steps"></ul>
+        <div id="time" class="info"></div>
+        <div id="calories" class="info"></div>
+        <div id="note" class="note"></div>
     </div>
 
     <div class="modal" id="modal">
         <div class="modal-box">
             <div class="close" id="closeBtn">✕</div>
-            <h3 style="margin-bottom: 25px; font-size: 22px; text-align: center;">Выберите категорию</h3>
+            <h3 style="margin-bottom: 18px; font-size: 18px;">Выберите категорию</h3>
             <button class="choice" data-category="breakfast">🍳 Завтрак</button>
             <button class="choice" data-category="lunch">🍝 Обед</button>
             <button class="choice" data-category="dinner">🍽 Ужин</button>
@@ -310,13 +133,13 @@
         </div>
     </div>
 
-    <!-- Встроенный JSON с рецептами -->
+    <!-- Встроенный JSON с рецептами для максимальной скорости -->
     <script type="application/json" id="recipes-data">
     {
         "breakfast": [
             {
                 "title": "Грибной омлет",
-                "photo": "грибной_омлет.png",
+                "photo": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=200&fit=crop",
                 "ingredients": ["шампиньоны 100-150 гр", "2 яйца", "соль и специи", "лук 1/4"],
                 "steps": [
                     "Грибы режем произвольно, лук измельчаем",
@@ -329,7 +152,7 @@
             },
             {
                 "title": "Бутерброды из отрубей",
-                "photo": "Бутерброды_из_отрубей.png",
+                "photo": "https://images.unsplash.com/photo-1481070555726-e2fe8357725c?w=400&h=200&fit=crop",
                 "ingredients": [
                     "2 ст. л. отрубей",
                     "1 яйцо",
@@ -345,12 +168,32 @@
                 ],
                 "time": "8 минут",
                 "calories": 180
+            },
+            {
+                "title": "Ленивые пирожки с зеленым луком",
+                "photo": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&h=200&fit=crop",
+                "ingredients": [
+                    "2 яйца (вареные)",
+                    "1 яичный белок",
+                    "зелёный лук",
+                    "1 ст. ложка сметаны",
+                    "½ ст. ложки муки",
+                    "специи"
+                ],
+                "steps": [
+                    "Нарежьте яйца кубиками, смешайте с луком",
+                    "Взбейте белок со сметаной, мукой и специями",
+                    "Соедините обе смеси",
+                    "Жарьте по 3 минуты с каждой стороны"
+                ],
+                "time": "15 минут",
+                "calories": 200
             }
         ],
         "lunch": [
             {
                 "title": "Куриная запеканка с овощами",
-                "photo": "куриная_запеканка.png",
+                "photo": "https://images.unsplash.com/photo-1606728035253-49e8a23146de?w=400&h=200&fit=crop",
                 "ingredients": [
                     "Куриное филе — 100 г",
                     "Баклажан — 100 г",
@@ -369,12 +212,31 @@
                 "time": "40 минут",
                 "calories": 320,
                 "note": "День: 1-й обед"
+            },
+            {
+                "title": "Рыба с горчицей и сметаной",
+                "photo": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=200&fit=crop",
+                "ingredients": [
+                    "Рыба (филе) — 150–200 г",
+                    "Сметана — 1 ст. л.",
+                    "Горчица — 1 ст. л.",
+                    "Сыр — 10 г"
+                ],
+                "steps": [
+                    "Посолите рыбу, выложите в форму",
+                    "Смешайте сметану с горчицей, намажьте на рыбу",
+                    "Запекайте при 180°C 15–20 минут",
+                    "За 5 минут до готовности добавьте сыр"
+                ],
+                "time": "25 минут",
+                "calories": 220,
+                "note": "День: 8-й обед"
             }
         ],
         "dinner": [
             {
                 "title": "Салат с креветками",
-                "photo": "салат_креветки.png",
+                "photo": "https://images.unsplash.com/photo-1551248429-40975aa4de74?w=400&h=200&fit=crop",
                 "ingredients": [
                     "креветки 100-150 г",
                     "капуста пекинская 100 г",
@@ -386,7 +248,7 @@
                     "Капусту нашинковать, помидоры разрезать",
                     "Выложить капусту и помидоры на тарелку",
                     "Креветки обжарить на сковороде 2-3 минуты",
-                    "Влить соевый соус, жарить ещё 2-3 минуты",
+                    "Влить соевый соос, жарить ещё 2-3 минуты",
                     "Выложить креветки на овощи"
                 ],
                 "time": "15 минут",
@@ -397,7 +259,7 @@
         "dessert": [
             {
                 "title": "Классический чизкейк",
-                "photo": "чизкейк.png",
+                "photo": "https://images.unsplash.com/photo-1567306301408-9b74779a11af?w=400&h=200&fit=crop",
                 "ingredients": [
                     "Для основы: Крекеры — 200 г, Сливочное масло — 100 г, Сахар — 50 г",
                     "Для начинки: Сливочный сыр — 1 кг, Сметана — 200 г, Яйца — 4 шт., Сахар — 1 стакан"
@@ -419,18 +281,7 @@
     </script>
 
     <script>
-        // Блокируем зум на мобильных
-        document.addEventListener('touchstart', function(event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
-
-        document.addEventListener('gesturestart', function(event) {
-            event.preventDefault();
-        });
-
-        // Отложенная загрузка JS
+        // ОТЛОЖЕННАЯ ЗАГРУЗКА JS (не блокирует рендеринг)
         setTimeout(function() {
             // Глобальные переменные
             let recipesData = null;
@@ -457,8 +308,7 @@
                 steps: document.getElementById('steps'),
                 time: document.getElementById('time'),
                 calories: document.getElementById('calories'),
-                note: document.getElementById('note'),
-                cardContent: document.querySelector('.card-content')
+                note: document.getElementById('note')
             };
 
             // БЫСТРАЯ загрузка рецептов из встроенного JSON
@@ -492,17 +342,44 @@
                 
                 const allRecipes = Object.values(recipesData).flat();
                 
+                // Используем requestIdleCallback для фоновой загрузки
                 if ('requestIdleCallback' in window) {
                     requestIdleCallback(() => {
                         allRecipes.forEach(recipe => {
                             if (recipe.photo) {
                                 const img = new Image();
                                 img.loading = 'lazy';
-                                img.onload = () => imageCache.set(recipe.photo, img);
+                                img.onload = () => {
+                                    imageCache.set(recipe.photo, img);
+                                    console.log('Изображение загружено:', recipe.title);
+                                };
+                                img.onerror = () => {
+                                    console.error('Ошибка загрузки изображения:', recipe.photo);
+                                    imageCache.set(recipe.photo, null);
+                                };
                                 img.src = recipe.photo;
                             }
                         });
                     });
+                } else {
+                    // Фолбэк для старых браузеров
+                    setTimeout(() => {
+                        allRecipes.forEach(recipe => {
+                            if (recipe.photo) {
+                                const img = new Image();
+                                img.loading = 'lazy';
+                                img.onload = () => {
+                                    imageCache.set(recipe.photo, img);
+                                    console.log('Изображение загружено:', recipe.title);
+                                };
+                                img.onerror = () => {
+                                    console.error('Ошибка загрузки изображения:', recipe.photo);
+                                    imageCache.set(recipe.photo, null);
+                                };
+                                img.src = recipe.photo;
+                            }
+                        });
+                    }, 1000);
                 }
             }
 
@@ -529,7 +406,9 @@
                 const history = recipeHistory.get(category) || [];
                 let currentIndex = recipeIndices.get(category) || 0;
                 
+                // Упрощенный алгоритм: 25% случайный, 75% по порядку
                 if (Math.random() < 0.25) {
+                    // Случайный, но избегаем недавних
                     const recentCount = Math.min(3, recipes.length - 1);
                     const recentIndices = history.slice(-recentCount);
                     let randomIndex;
@@ -540,10 +419,12 @@
                     currentIndex = randomIndex;
                 }
                 
+                // Обновляем историю
                 history.push(currentIndex);
                 if (history.length > 5) history.shift();
                 recipeHistory.set(category, history);
                 
+                // Обновляем индекс
                 const nextIndex = (currentIndex + 1) % recipes.length;
                 recipeIndices.set(category, nextIndex);
                 
@@ -574,12 +455,15 @@
                 updateUI(recipe);
                 elements.refreshBtn.style.display = 'inline-block';
                 
-                // Прокручиваем вверх
-                elements.cardContent.scrollTo({ top: 0, behavior: 'smooth' });
+                // Плавная прокрутка без блокировки
+                requestAnimationFrame(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
             }
 
-            // Оптимизированное обновление UI
+            // Оптимизированное обновление UI с минимальными перерисовками
             function updateUI(recipe) {
+                // Батчинг обновлений
                 requestAnimationFrame(() => {
                     // Категория и заголовок
                     elements.category.textContent = currentCategory.toUpperCase();
@@ -590,13 +474,24 @@
                     elements.photo.style.display = 'block';
                     elements.photo.alt = recipe.title;
                     
+                    // Проверяем кэш и загружаем изображение
                     const cachedImg = imageCache.get(recipe.photo);
-                    if (cachedImg && cachedImg.complete) {
+                    if (cachedImg && cachedImg.complete && cachedImg.naturalWidth > 0) {
                         elements.photo.src = cachedImg.src;
                     } else {
-                        elements.photo.src = recipe.photo;
+                        // Сначала показываем фолбэк
+                        elements.photo.src = fallbackImage;
+                        
+                        // Затем загружаем настоящее изображение
                         const img = new Image();
-                        img.onload = () => imageCache.set(recipe.photo, img);
+                        img.onload = () => {
+                            elements.photo.src = recipe.photo;
+                            imageCache.set(recipe.photo, img);
+                        };
+                        img.onerror = () => {
+                            console.error('Не удалось загрузить изображение:', recipe.photo);
+                            // Оставляем фолбэк изображение
+                        };
                         img.src = recipe.photo;
                     }
                     
@@ -609,6 +504,7 @@
                     stepsList.innerHTML = '';
                     stepsList.style.display = 'block';
                     
+                    // Используем DocumentFragment для минимальных перерисовок
                     const fragment = document.createDocumentFragment();
                     recipe.steps.forEach((step, index) => {
                         const li = document.createElement('li');
@@ -650,7 +546,7 @@
 
             // Инициализация
             function init() {
-                // Загружаем рецепты
+                // Загружаем рецепты сразу
                 loadRecipes();
                 
                 // Вешаем обработчики
@@ -685,7 +581,7 @@
                 loadNonCriticalStyles();
             }
 
-            // Загрузка некритических стилей с адаптацией для мобильных
+            // Загрузка некритических стилей
             function loadNonCriticalStyles() {
                 const style = document.createElement('style');
                 style.textContent = `
@@ -695,120 +591,52 @@
                     .modal { backdrop-filter: blur(6px); }
                     .modal-box { animation: modalAppear 0.3s ease; }
                     @keyframes modalAppear { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+                    .close { position: absolute; top: 12px; right: 14px; font-size: 22px; cursor: pointer; opacity: .6; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
                     .close:hover, .close:active { opacity: 1; }
                     .choice:hover, .choice:active { background: #eee; transform: translateY(-2px); transition: all 0.3s ease; }
+                    .info { text-align: left; margin-top: 12px; font-size: 15px; color: #555; line-height: 1.5; }
+                    .info span { font-weight: 600; color: #333; }
+                    ul { text-align: left; margin-top: 12px; padding-left: 20px; font-size: 15px; color: #444; line-height: 1.6; }
+                    img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-top: 10px; max-height: 40vh; background: #f0f0f0; }
+                    .note { text-align: left; margin-top: 12px; font-size: 14px; color: #666; font-style: italic; padding: 8px; background: #f9f9f9; border-radius: 8px; }
+                    .note span { font-weight: 600; color: #444; }
                     
-                    /* Крупные стили для мобильных */
-                    .info { 
-                        text-align: left; 
-                        margin-top: 20px; 
-                        font-size: 18px; 
-                        color: #555; 
-                        line-height: 1.6;
-                        padding: 0 5px;
+                    /* Запрет выделения текста на кнопках для мобильных */
+                    button {
+                        -webkit-user-select: none;
+                        -moz-user-select: none;
+                        -ms-user-select: none;
+                        user-select: none;
                     }
                     
-                    .info span { 
-                        font-weight: 600; 
-                        color: #333; 
-                        font-size: 19px;
-                    }
-                    
-                    ul { 
-                        text-align: left; 
-                        margin-top: 20px; 
-                        padding-left: 25px; 
-                        font-size: 18px; 
-                        color: #444; 
-                        line-height: 1.7;
-                    }
-                    
-                    li { 
-                        margin-bottom: 12px;
-                        padding-right: 10px;
-                    }
-                    
-                    img { 
-                        width: 100%; 
-                        height: 220px; 
-                        object-fit: cover; 
-                        border-radius: 20px; 
-                        margin-top: 15px; 
-                        margin-bottom: 15px;
-                        background: #f0f0f0;
-                        display: block;
-                    }
-                    
-                    .note { 
-                        text-align: left; 
-                        margin-top: 20px; 
-                        font-size: 17px; 
-                        color: #666; 
-                        font-style: italic; 
-                        padding: 12px; 
-                        background: #f9f9f9; 
-                        border-radius: 15px;
-                    }
-                    
-                    .note span { 
-                        font-weight: 600; 
-                        color: #444;
-                        font-size: 18px;
-                    }
-                    
-                    .loader {
-                        text-align: center;
-                        padding: 30px;
-                        color: #666;
-                        font-size: 18px;
-                    }
-                    
-                    .error {
-                        color: #d32f2f;
-                        background: #ffebee;
-                        padding: 15px;
-                        border-radius: 12px;
-                        margin-top: 15px;
-                        font-size: 17px;
-                        text-align: center;
-                    }
-                    
-                    /* Адаптация для мобильных */
-                    @media (max-width: 768px) {
-                        .info { font-size: 19px; margin-top: 22px; }
-                        .info span { font-size: 20px; }
-                        ul { font-size: 19px; margin-top: 22px; padding-left: 30px; }
-                        li { margin-bottom: 14px; }
-                        img { height: 240px; border-radius: 25px; margin-top: 20px; margin-bottom: 20px; }
-                        .note { font-size: 18px; padding: 15px; margin-top: 22px; }
-                        .note span { font-size: 19px; }
-                        .category { 
-                            font-size: 16px; 
-                            letter-spacing: 2px; 
-                            font-weight: 600; 
-                            color: #c7903d; 
-                            text-transform: uppercase;
-                            margin-top: 25px;
-                            padding: 0 10px;
-                        }
-                    }
-                    
-                    /* Для очень маленьких экранов */
                     @media (max-width: 360px) {
-                        .info { font-size: 18px; }
-                        ul { font-size: 18px; padding-left: 25px; }
-                        img { height: 200px; }
+                        .card { padding: 20px 16px; border-radius: 20px; }
+                        h2 { font-size: 18px; }
+                        img { height: 180px; }
+                        .modal-box { padding: 20px 16px; }
                     }
                     
-                    /* Ландшафтная ориентация */
-                    @media (max-height: 500px) and (orientation: landscape) {
-                        .info { font-size: 16px; margin-top: 10px; }
-                        ul { font-size: 16px; margin-top: 10px; }
-                        img { height: 150px; margin-top: 10px; margin-bottom: 10px; }
-                        .note { font-size: 15px; margin-top: 10px; padding: 8px; }
+                    @media (min-width: 768px) {
+                        body { align-items: center; padding: 40px 20px; }
+                        .card { padding: 28px; }
                     }
                     
                     body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+                    
+                    /* Улучшения для мобильных устройств */
+                    @media (max-width: 768px) {
+                        html {
+                            -webkit-text-size-adjust: 100%;
+                            -ms-text-size-adjust: 100%;
+                            text-size-adjust: 100%;
+                        }
+                        body {
+                            touch-action: pan-y;
+                        }
+                        button, input, select, textarea {
+                            font-size: 16px; /* Предотвращает зум в iOS */
+                        }
+                    }
                 `;
                 document.head.appendChild(style);
             }
@@ -819,7 +647,7 @@
             } else {
                 init();
             }
-        }, 100);
+        }, 100); // Небольшая задержка для приоритизации рендеринга
     </script>
 </body>
 </html>
