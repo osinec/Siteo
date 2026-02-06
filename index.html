@@ -87,99 +87,40 @@
             max-height: 40vh;
             background: #f0f0f0;
         }
-        .info {
-            text-align: left;
-            margin-top: 15px;
-            font-size: 17px;
-            color: #555;
-            line-height: 1.5;
-        }
+        .info { text-align: left; margin-top: 15px; font-size: 17px; color: #555; line-height: 1.5; }
         .info span { font-weight: 600; color: #333; }
-        ul {
-            text-align: left;
-            margin-top: 15px;
-            padding-left: 20px;
-            font-size: 17px;
-            color: #444;
-            line-height: 1.6;
-        }
+        ul { text-align: left; margin-top: 15px; padding-left: 20px; font-size: 17px; color: #444; line-height: 1.6; }
         li { margin-bottom: 10px; }
         .note {
-            text-align: left;
-            margin-top: 15px;
-            font-size: 16px;
-            color: #666;
-            font-style: italic;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            display: none;
+            text-align: left; margin-top: 15px; font-size: 16px; color: #666; font-style: italic;
+            padding: 10px; background: #f9f9f9; border-radius: 8px; display: none;
         }
         .note span { font-weight: 600; color: #444; }
         .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.55);
-            backdrop-filter: blur(6px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55);
+            backdrop-filter: blur(6px); justify-content: center; align-items: center;
+            z-index: 1000; padding: 20px;
         }
         .modal-box {
-            background: #fff;
-            padding: 32px 28px;
-            border-radius: 22px;
-            width: 100%;
-            max-width: 380px;
-            position: relative;
-            animation: modalAppear 0.3s ease;
+            background: #fff; padding: 32px 28px; border-radius: 22px;
+            width: 100%; max-width: 380px; position: relative; animation: modalAppear 0.3s ease;
         }
-        @keyframes modalAppear {
-            from { opacity: 0; transform: translateY(-20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes modalAppear { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         .close {
-            position: absolute;
-            top: 12px; right: 14px;
-            font-size: 26px;
-            cursor: pointer;
-            opacity: .6;
-            transition: opacity 0.2s;
-            width: 36px; height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: 12px; right: 14px; font-size: 26px; cursor: pointer;
+            opacity: .6; transition: opacity 0.2s; width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
         }
         .close:hover, .close:active { opacity: 1; }
         .choice {
-            width: 100%;
-            margin-top: 18px;
-            padding: 20px 15px;
-            background: #f5f5f5;
-            font-size: 17px;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            text-align: left;
+            width: 100%; margin-top: 18px; padding: 20px 15px; background: #f5f5f5;
+            font-size: 17px; border-radius: 16px; transition: all 0.3s ease; text-align: left;
         }
-        .choice:hover, .choice:active {
-            background: #eee;
-            transform: translateY(-2px);
-        }
-        .loader {
-            display: none;
-            text-align: center;
-            padding: 25px;
-            color: #666;
-        }
+        .choice:hover, .choice:active { background: #eee; transform: translateY(-2px); }
+        .loader { display: none; text-align: center; padding: 25px; color: #666; }
         .error {
-            color: #d32f2f;
-            background: #ffebee;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: none;
+            color: #d32f2f; background: #ffebee; padding: 12px; border-radius: 8px;
+            margin-top: 10px; display: none;
         }
         @media (max-width: 360px) {
             .card { padding: 28px 24px; border-radius: 20px; }
@@ -190,9 +131,6 @@
         @media (min-width: 768px) {
             body { align-items: center; padding: 50px 30px; }
             .card { padding: 36px; }
-        }
-        @media screen and (max-device-width: 480px) {
-            body { -webkit-text-size-adjust: 100%; }
         }
     </style>
 </head>
@@ -225,7 +163,6 @@
     </div>
 
     <script>
-        // ────────────────────────────────────────────────
         let recipesData = null;
         let currentCategory = null;
         const fallbackImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjODg4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+PHQzc3Bhbj5Gb29kIEltYWdlPC90c3Bhbj48L3RleHQ+PC9zdmc+';
@@ -249,32 +186,6 @@
             calories: document.getElementById('calories'),
             note: document.getElementById('note')
         };
-
-        // Обновлённая функция обработки пути к картинке
-        function getImageUrl(photoPath) {
-            if (!photoPath) return fallbackImage;
-
-            // Уже абсолютный интернет-адрес или data-uri
-            if (/^https?:\/\//i.test(photoPath) || /^data:/i.test(photoPath)) {
-                return photoPath;
-            }
-
-            // Убираем начальные ./ или ../
-            let path = photoPath.replace(/^\.*\//, '').trim();
-
-            // Если уже начинается с /images/ — оставляем как есть
-            if (path.startsWith('images/')) {
-                return '/' + path;
-            }
-
-            // Если начинается с / — тоже хорошо
-            if (path.startsWith('/')) {
-                return path;
-            }
-
-            // Самый частый случай — просто имя файла → добавляем /images/
-            return '/images/' + path;
-        }
 
         async function loadRecipes() {
             try {
@@ -312,7 +223,7 @@
         }
 
         function getNextRecipe(category) {
-            if (!recipesData || !recipesData[category]) return null;
+            if (!recipesData?.[category]?.length) return null;
             const recipes = recipesData[category];
             let idx = recipeIndices.get(category) || 0;
             const recipe = recipes[idx];
@@ -322,7 +233,8 @@
 
         function generateRecipe() {
             if (!recipesData) {
-                showError('Рецепты ещё не загружены...');
+                elements.error.textContent = 'Рецепты ещё не загружены';
+                elements.error.style.display = 'block';
                 return;
             }
             if (!currentCategory) {
@@ -331,41 +243,43 @@
             }
             const recipe = getNextRecipe(currentCategory);
             if (!recipe) {
-                showError('Рецепты в категории закончились');
+                elements.error.textContent = 'Нет рецептов в категории';
+                elements.error.style.display = 'block';
                 return;
             }
             updateUI(recipe);
-            elements.refreshBtn.style.display = 'inline-block';
+            elements.refreshBtn.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateUI(recipe) {
             elements.category.textContent = currentCategory.toUpperCase();
-            elements.title.textContent = recipe.title;
+            elements.title.textContent = recipe.title || 'Без названия';
 
             elements.photo.style.display = 'block';
-            elements.photo.alt = recipe.title;
-            elements.photo.onerror = function() {
-                console.warn('Ошибка загрузки изображения:', recipe.photo);
-                this.src = fallbackImage;
+            elements.photo.alt = recipe.title || 'Рецепт';
+            elements.photo.onerror = () => {
+                console.warn('Не загрузилась картинка:', recipe.photo);
+                elements.photo.src = fallbackImage;
             };
-            elements.photo.src = getImageUrl(recipe.photo);
+            // Самое важное — используем путь ИЗ JSON БЕЗ изменений
+            elements.photo.src = recipe.photo || fallbackImage;
 
-            const ingredientsText = Array.isArray(recipe.ingredients)
-                ? recipe.ingredients.join(", ")
-                : recipe.ingredients || "";
-            elements.ingredients.innerHTML = `<span>Ингредиенты:</span> ${ingredientsText}`;
+            const ing = Array.isArray(recipe.ingredients)
+                ? recipe.ingredients.join(', ')
+                : (recipe.ingredients || '—');
+            elements.ingredients.innerHTML = `<span>Ингредиенты:</span> ${ing}`;
 
             elements.steps.innerHTML = '';
             if (Array.isArray(recipe.steps)) {
-                recipe.steps.forEach((step, index) => {
+                recipe.steps.forEach((step, i) => {
                     const li = document.createElement('li');
-                    li.textContent = `${index + 1}. ${step}`;
+                    li.textContent = `${i+1}. ${step}`;
                     elements.steps.appendChild(li);
                 });
             }
 
-            elements.time.innerHTML = `<span>Время приготовления:</span> ${recipe.time || '—'}`;
+            elements.time.innerHTML     = `<span>Время приготовления:</span> ${recipe.time || '—'}`;
             elements.calories.innerHTML = `<span>Калорийность:</span> ${recipe.calories || '—'} ккал`;
 
             if (recipe.note) {
@@ -376,33 +290,25 @@
             }
         }
 
-        function showError(message) {
-            elements.error.textContent = message;
-            elements.error.style.display = 'block';
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             loadRecipes();
 
             elements.mainBtn.addEventListener('click', openModal);
             elements.refreshBtn.addEventListener('click', generateRecipe);
             elements.closeBtn.addEventListener('click', closeModal);
 
-            document.querySelectorAll('.choice').forEach(button => {
-                button.addEventListener('click', function() {
-                    const category = this.getAttribute('data-category');
-                    selectCategory(category);
+            document.querySelectorAll('.choice').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectCategory(btn.dataset.category);
                 });
             });
 
-            elements.modal.addEventListener('click', function(e) {
-                if (e.target === this) closeModal();
+            elements.modal.addEventListener('click', e => {
+                if (e.target === elements.modal) closeModal();
             });
 
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && elements.modal.style.display === 'flex') {
-                    closeModal();
-                }
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && elements.modal.style.display === 'flex') closeModal();
             });
 
             elements.refreshBtn.style.display = 'none';
