@@ -249,10 +249,32 @@
         }
 
         function getNextRecipe(category) {
-            if (!recipesData?.[category]?.length) return null;
+            if (!recipesData || !recipesData[category] || !recipesData[category].length) return null;
             const recipes = recipesData[category];
+            const history = recipeHistory.get(category) || [];
             let idx = recipeIndices.get(category) || 0;
+
+            // 30% шанс случайного рецепта для разнообразия
+            if (Math.random() < 0.3) {
+                const available = recipes.filter((_, i) => !history.includes(i));
+                if (available.length === 0) {
+                    recipeHistory.set(category, []);
+                    return recipes[Math.floor(Math.random() * recipes.length)];
+                }
+                const randomIdx = Math.floor(Math.random() * available.length);
+                const recipeIdx = recipes.indexOf(available[randomIdx]);
+                history.push(recipeIdx);
+                if (history.length > recipes.length * 0.7) history.shift();
+                recipeHistory.set(category, history);
+                recipeIndices.set(category, (recipeIdx + 1) % recipes.length);
+                return recipes[recipeIdx];
+            }
+
+            // По порядку
             const recipe = recipes[idx];
+            history.push(idx);
+            if (history.length > recipes.length) history.shift();
+            recipeHistory.set(category, history);
             recipeIndices.set(category, (idx + 1) % recipes.length);
             return recipe;
         }
