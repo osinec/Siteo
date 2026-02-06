@@ -4,16 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Генератор рецептов</title>
-    <!-- КРАСИВЫЙ ШРИФТ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: linear-gradient(135deg, #ffecd2, #fcb69f);
@@ -99,10 +94,7 @@
             color: #555;
             line-height: 1.5;
         }
-        .info span {
-            font-weight: 600;
-            color: #333;
-        }
+        .info span { font-weight: 600; color: #333; }
         ul {
             text-align: left;
             margin-top: 15px;
@@ -111,9 +103,7 @@
             color: #444;
             line-height: 1.6;
         }
-        li {
-            margin-bottom: 10px;
-        }
+        li { margin-bottom: 10px; }
         .note {
             text-align: left;
             margin-top: 15px;
@@ -125,11 +115,7 @@
             border-radius: 8px;
             display: none;
         }
-        .note span {
-            font-weight: 600;
-            color: #444;
-        }
-        /* MODAL */
+        .note span { font-weight: 600; color: #444; }
         .modal {
             display: none;
             position: fixed;
@@ -156,21 +142,17 @@
         }
         .close {
             position: absolute;
-            top: 12px;
-            right: 14px;
+            top: 12px; right: 14px;
             font-size: 26px;
             cursor: pointer;
             opacity: .6;
             transition: opacity 0.2s;
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .close:hover, .close:active {
-            opacity: 1;
-        }
+        .close:hover, .close:active { opacity: 1; }
         .choice {
             width: 100%;
             margin-top: 18px;
@@ -243,7 +225,7 @@
     </div>
 
     <script>
-        // Глобальные переменные
+        // ────────────────────────────────────────────────
         let recipesData = null;
         let currentCategory = null;
         const fallbackImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE0IiBmaWxsPSIjODg4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+PHQzc3Bhbj5Gb29kIEltYWdlPC90c3Bhbj48L3RleHQ+PC9zdmc+';
@@ -268,28 +250,37 @@
             note: document.getElementById('note')
         };
 
-        // ─── Самая важная функция: получение правильного пути к картинке ───
-        function getImageUrl(photo) {
-            if (!photo) return fallbackImage;
+        // Обновлённая функция обработки пути к картинке
+        function getImageUrl(photoPath) {
+            if (!photoPath) return fallbackImage;
 
-            // Уже готовый URL
-            if (photo.startsWith('http') || photo.startsWith('data:') || photo.startsWith('//')) {
-                return photo;
+            // Уже абсолютный интернет-адрес или data-uri
+            if (/^https?:\/\//i.test(photoPath) || /^data:/i.test(photoPath)) {
+                return photoPath;
             }
 
-            // Убираем начальные ./ или ../ и ведущие слеши для унификации
-            let path = photo.replace(/^\.*\//, '').replace(/^\/+/, '');
+            // Убираем начальные ./ или ../
+            let path = photoPath.replace(/^\.*\//, '').trim();
 
-            // Самый надёжный вариант для file:// на Android/iOS — начинаем с /
-            // Предполагаем структуру: index.html  и  images/ рядом
-            return '/' + path;
+            // Если уже начинается с /images/ — оставляем как есть
+            if (path.startsWith('images/')) {
+                return '/' + path;
+            }
+
+            // Если начинается с / — тоже хорошо
+            if (path.startsWith('/')) {
+                return path;
+            }
+
+            // Самый частый случай — просто имя файла → добавляем /images/
+            return '/images/' + path;
         }
 
         async function loadRecipes() {
             try {
                 elements.loader.style.display = 'block';
                 const response = await fetch('recipes.json');
-                if (!response.ok) throw new Error(`Ошибка ${response.status}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 recipesData = await response.json();
                 elements.loader.style.display = 'none';
 
@@ -297,13 +288,10 @@
                     recipeIndices.set(cat, 0);
                     recipeHistory.set(cat, []);
                 });
-
-                console.log('Рецепты загружены');
             } catch (err) {
                 elements.loader.style.display = 'none';
                 elements.error.textContent = 'Не удалось загрузить рецепты: ' + err.message;
                 elements.error.style.display = 'block';
-                console.error(err);
             }
         }
 
@@ -326,10 +314,9 @@
         function getNextRecipe(category) {
             if (!recipesData || !recipesData[category]) return null;
             const recipes = recipesData[category];
-            const currentIndex = recipeIndices.get(category) || 0;
-            const recipe = recipes[currentIndex];
-
-            recipeIndices.set(category, (currentIndex + 1) % recipes.length);
+            let idx = recipeIndices.get(category) || 0;
+            const recipe = recipes[idx];
+            recipeIndices.set(category, (idx + 1) % recipes.length);
             return recipe;
         }
 
@@ -358,24 +345,27 @@
 
             elements.photo.style.display = 'block';
             elements.photo.alt = recipe.title;
-            elements.photo.onerror = () => elements.photo.src = fallbackImage;
+            elements.photo.onerror = function() {
+                console.warn('Ошибка загрузки изображения:', recipe.photo);
+                this.src = fallbackImage;
+            };
             elements.photo.src = getImageUrl(recipe.photo);
 
-            const ing = Array.isArray(recipe.ingredients)
-                ? recipe.ingredients.join(', ')
-                : recipe.ingredients;
-            elements.ingredients.innerHTML = `<span>Ингредиенты:</span> ${ing}`;
+            const ingredientsText = Array.isArray(recipe.ingredients)
+                ? recipe.ingredients.join(", ")
+                : recipe.ingredients || "";
+            elements.ingredients.innerHTML = `<span>Ингредиенты:</span> ${ingredientsText}`;
 
             elements.steps.innerHTML = '';
             if (Array.isArray(recipe.steps)) {
-                recipe.steps.forEach((step, i) => {
+                recipe.steps.forEach((step, index) => {
                     const li = document.createElement('li');
-                    li.textContent = `${i + 1}. ${step}`;
+                    li.textContent = `${index + 1}. ${step}`;
                     elements.steps.appendChild(li);
                 });
             }
 
-            elements.time.innerHTML     = `<span>Время приготовления:</span> ${recipe.time || '—'}`;
+            elements.time.innerHTML = `<span>Время приготовления:</span> ${recipe.time || '—'}`;
             elements.calories.innerHTML = `<span>Калорийность:</span> ${recipe.calories || '—'} ккал`;
 
             if (recipe.note) {
@@ -386,30 +376,30 @@
             }
         }
 
-        function showError(msg) {
-            elements.error.textContent = msg;
+        function showError(message) {
+            elements.error.textContent = message;
             elements.error.style.display = 'block';
         }
 
-        // ─── Инициализация ───
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             loadRecipes();
 
             elements.mainBtn.addEventListener('click', openModal);
             elements.refreshBtn.addEventListener('click', generateRecipe);
             elements.closeBtn.addEventListener('click', closeModal);
 
-            document.querySelectorAll('.choice').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    selectCategory(btn.getAttribute('data-category'));
+            document.querySelectorAll('.choice').forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    selectCategory(category);
                 });
             });
 
-            elements.modal.addEventListener('click', e => {
-                if (e.target === elements.modal) closeModal();
+            elements.modal.addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
             });
 
-            document.addEventListener('keydown', e => {
+            document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && elements.modal.style.display === 'flex') {
                     closeModal();
                 }
