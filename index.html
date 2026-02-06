@@ -2,22 +2,13 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Генератор рецептов</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow-x: hidden;
-      -webkit-text-size-adjust: 100%;
-      touch-action: manipulation;           /* отключает двойной тап-зум на мобильных */
-    }
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: linear-gradient(135deg, #ffecd2, #fcb69f);
@@ -95,7 +86,6 @@
       max-height: 40vh;
       background: #f0f0f0;
       transition: opacity 0.4s ease;
-      pointer-events: none;           /* картинка не реагирует на тапы */
     }
     #photo.loaded { opacity: 1; }
     .section-title {
@@ -136,7 +126,6 @@
       align-items: center;
       z-index: 1000;
       padding: 20px;
-      -webkit-overflow-scrolling: touch;
     }
     .modal-box {
       background: #fff;
@@ -193,7 +182,7 @@
     @media (max-width:360px) {
       .card { padding: 24px 18px; border-radius: 20px; }
       h2 { font-size: 22px; }
-      #photo { height: 200px; }
+      img { height: 200px; }
     }
     @media (min-width:768px) {
       body { align-items: center; padding: 50px 30px; }
@@ -231,7 +220,6 @@
 </div>
 
 <script>
-// ────────────────────────────────────────────────
 const elements = {
   modal: document.getElementById('modal'),
   mainBtn: document.getElementById('mainBtn'),
@@ -253,7 +241,7 @@ let recipesData = null;
 let currentCategory = null;
 let recipeIndices = {};
 
-const fallbackImage = 'data:image/svg+xml;utf8,<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="200" fill="%23F0F0F0"/><text x="50%" y="50%" font-family="system-ui" font-size="18" fill="%23888" text-anchor="middle" dy=".3em">Фото блюда</text></svg>';
+const fallbackImage = 'data:image/svg+xml;utf8,<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="200" fill="%23F0F0F0"/><text x="50%" y="50%" font-family="Inter" font-size="14" fill="%23888" text-anchor="middle" dy=".3em">Фото блюда</text></svg>';
 
 async function loadRecipes() {
   try {
@@ -262,10 +250,13 @@ async function loadRecipes() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     recipesData = await res.json();
     elements.loader.style.display = 'none';
+
+    // Предзагрузка ВСЕХ картинок сразу после получения данных
     preloadAllImages();
+
   } catch (err) {
     elements.loader.style.display = 'none';
-    elements.error.textContent = 'Не удалось загрузить • ' + err.message;
+    elements.error.textContent = 'Не удалось загрузить рецепты • ' + err.message;
     elements.error.style.display = 'block';
   }
 }
@@ -305,7 +296,7 @@ function generateRecipe() {
   if (!currentCategory) return openModal();
   const recipe = getNextRecipe(currentCategory);
   if (!recipe) {
-    elements.error.textContent = 'Рецепты закончились';
+    elements.error.textContent = 'Рецепты в этой категории закончились';
     elements.error.style.display = 'block';
     return;
   }
@@ -318,36 +309,39 @@ function updateUI(r) {
   elements.category.textContent = currentCategory.toUpperCase();
   elements.title.textContent = (r.title || 'Без названия').trim();
 
+  // Фото — показываем сразу, но с плавным появлением
   elements.photo.src = r.photo || fallbackImage;
   elements.photo.alt = r.title || 'Рецепт';
   elements.photo.style.display = 'block';
   elements.photo.classList.remove('loaded');
   elements.photo.onload = () => elements.photo.classList.add('loaded');
 
+  // Ингредиенты в столбик
   elements.ingredients.innerHTML = '';
   if (Array.isArray(r.ingredients) && r.ingredients.length) {
-    const t = document.createElement('div');
-    t.className = 'section-title';
-    t.textContent = 'Ингредиенты:';
-    elements.ingredients.appendChild(t);
+    const title = document.createElement('div');
+    title.className = 'section-title';
+    title.textContent = 'Ингредиенты:';
+    elements.ingredients.appendChild(title);
 
-    const c = document.createElement('div');
-    c.className = 'plain-list';
-    c.innerHTML = r.ingredients.map(item => item.trim()).join('<br>');
-    elements.ingredients.appendChild(c);
+    const content = document.createElement('div');
+    content.className = 'plain-list';
+    content.innerHTML = r.ingredients.map(item => item.trim()).join('<br>');
+    elements.ingredients.appendChild(content);
   }
 
+  // Шаги в столбик с номерами
   elements.steps.innerHTML = '';
   if (Array.isArray(r.steps) && r.steps.length) {
-    const t = document.createElement('div');
-    t.className = 'section-title';
-    t.textContent = 'Приготовление:';
-    elements.steps.appendChild(t);
+    const title = document.createElement('div');
+    title.className = 'section-title';
+    title.textContent = 'Приготовление:';
+    elements.steps.appendChild(title);
 
-    const c = document.createElement('div');
-    c.className = 'plain-list';
-    c.innerHTML = r.steps.map((step, i) => `${i + 1}. ${step.trim()}`).join('<br>');
-    elements.steps.appendChild(c);
+    const content = document.createElement('div');
+    content.className = 'plain-list';
+    content.innerHTML = r.steps.map((step, i) => `${i + 1}. ${step.trim()}`).join('<br>');
+    elements.steps.appendChild(content);
   }
 
   elements.time.innerHTML = `<strong>Время приготовления:</strong> ${r.time || '—'}`;
@@ -363,7 +357,7 @@ function updateUI(r) {
 
 document.addEventListener('DOMContentLoaded', () => {
   elements.title.textContent = 'Выберите категорию';
-  elements.photo.src = fallbackImage;
+  elements.photo.src = fallbackImage; // сразу ставим лёгкий плейсхолдер
   loadRecipes();
 
   elements.mainBtn.onclick = openModal;
@@ -380,21 +374,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   elements.refreshBtn.style.display = 'none';
-
-  // Отключение двойного тап-зум (самый надёжный способ)
-  document.addEventListener('touchstart', function(e) {
-    if (e.touches.length > 1) e.preventDefault();
-  }, { passive: false });
-
-  let lastTap = 0;
-  document.addEventListener('touchend', function(e) {
-    const currentTime = new Date().getTime();
-    const tapLength = currentTime - lastTap;
-    if (tapLength < 500 && tapLength > 0) {
-      e.preventDefault();
-    }
-    lastTap = currentTime;
-  }, { passive: false });
 });
 </script>
 </body>
