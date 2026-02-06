@@ -187,6 +187,28 @@
             note: document.getElementById('note')
         };
 
+        // Предзагрузка всех изображений (самый важный блок для скорости)
+        function preloadAllImages() {
+            if (!recipesData) return;
+
+            const allPhotos = new Set();
+
+            Object.values(recipesData).forEach(category => {
+                category.forEach(recipe => {
+                    if (recipe.photo) allPhotos.add(recipe.photo);
+                });
+            });
+
+            allPhotos.forEach(src => {
+                const img = new Image();
+                img.src = src;
+                img.onload = () => console.log(`Preloaded OK: ${src}`);
+                img.onerror = () => console.warn(`Preload failed: ${src}`);
+            });
+
+            console.log(`Запущена предзагрузка ${allPhotos.size} уникальных изображений`);
+        }
+
         async function loadRecipes() {
             try {
                 elements.loader.style.display = 'block';
@@ -199,6 +221,10 @@
                     recipeIndices.set(cat, 0);
                     recipeHistory.set(cat, []);
                 });
+
+                // Запускаем предзагрузку сразу после получения данных
+                preloadAllImages();
+
             } catch (err) {
                 elements.loader.style.display = 'none';
                 elements.error.textContent = 'Не удалось загрузить рецепты: ' + err.message;
@@ -259,10 +285,9 @@
             elements.photo.style.display = 'block';
             elements.photo.alt = recipe.title || 'Рецепт';
             elements.photo.onerror = () => {
-                console.warn('Не загрузилась картинка:', recipe.photo);
+                console.warn('Ошибка загрузки изображения:', recipe.photo);
                 elements.photo.src = fallbackImage;
             };
-            // Самое важное — используем путь ИЗ JSON БЕЗ изменений
             elements.photo.src = recipe.photo || fallbackImage;
 
             const ing = Array.isArray(recipe.ingredients)
@@ -274,7 +299,7 @@
             if (Array.isArray(recipe.steps)) {
                 recipe.steps.forEach((step, i) => {
                     const li = document.createElement('li');
-                    li.textContent = `${i+1}. ${step}`;
+                    li.textContent = `${i + 1}. ${step}`;
                     elements.steps.appendChild(li);
                 });
             }
@@ -298,9 +323,7 @@
             elements.closeBtn.addEventListener('click', closeModal);
 
             document.querySelectorAll('.choice').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    selectCategory(btn.dataset.category);
-                });
+                btn.addEventListener('click', () => selectCategory(btn.dataset.category));
             });
 
             elements.modal.addEventListener('click', e => {
